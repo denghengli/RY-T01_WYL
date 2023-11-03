@@ -2355,6 +2355,9 @@
     <group>
         <name>driver</name>
         <file>
+            <name>$PROJ_DIR$\..\driver\bsp_mcp7428.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\driver\drv_adc.c</name>
         </file>
         <file>
@@ -2365,6 +2368,9 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\driver\drv_i2c.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\driver\drv_soft_i2c.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\driver\drv_soft_timer.c</name>
@@ -2385,7 +2391,7 @@
     <group>
         <name>hal</name>
         <file>
-            <name>$PROJ_DIR$\..\hal\CMSIS\Device\ST\STM32F1xx\Source\Templates\iar\startup_stm32f103xb.s</name>
+            <name>$PROJ_DIR$\..\hal\CMSIS\Device\ST\STM32F1xx\Source\Templates\iar\startup_stm32f103xe.s</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\hal\STM32F1xx_HAL_Driver\Src\stm32f1xx_hal.c</name>
@@ -2498,11 +2504,5 @@
         <file>
             <name>$PROJ_DIR$\RTE\RTE_Components.h</name>
         </file>
-        <group>
-            <name>CMSIS CORE</name>
-            <file>
-                <name>${CMSIS_PACK_PATH_ARM#CMSIS#5.4.0}$\CMSIS\Documentation\Core\html\index.html</name>
-            </file>
-        </group>
     </group>
 </project>

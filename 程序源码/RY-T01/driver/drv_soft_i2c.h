@@ -1,29 +1,25 @@
-/*
- * Copyright (c) 20019-2020, wanweiyingchuang
- *
- * Change Logs:
- * Date           Author       Notes
- * 2019-09-03     Denghengli   the first version
- */
-#ifndef _DRIVER_SOFTI2C_
-#define _DRIVER_SOFTI2C_
+#ifndef _DRIVER_IIC_
+#define _DRIVER_IIC_
 #include "drv_gpio.h"
 
-#define CMD_MODE_READ   0x01
-#define CMD_MODE_WRITE  0x00
+//#define CMD_MODE_READ   0x01
+//#define CMD_MODE_WRITE  0x00
+//
+//typedef struct
+//{
+//    struct DRV_Pin  SCL;
+//    struct DRV_Pin  SDA;
+//	
+//}DRV_I2C_T;
 
-struct soft_i2c_config
-{
-	struct DRV_Pin  SCL;
-	struct DRV_Pin  SDA;
-}
-
-
-
-
-
-
-
-
+extern void    DRV_SoftI2C_Init(DRV_I2C_T  I2C_Interface);
+extern void    DRV_SoftI2C_Start(DRV_I2C_T  I2C_Interface);
+extern void    DRV_SoftI2C_Stop (DRV_I2C_T  I2C_Interface);
+extern uint8_t DRV_SoftI2C_WriteByteWaiteAck(DRV_I2C_T  I2C_Interface,uint8_t _cByte);
+extern uint8_t DRV_SoftI2C_ReadByteWithAck  (DRV_I2C_T  I2C_Interface);
+extern uint8_t DRV_SoftI2C_ReadByteWithNoAck(DRV_I2C_T  I2C_Interface);
+	
 
 #endif
+
+

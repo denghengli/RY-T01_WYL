@@ -26,7 +26,7 @@
 #include "stm32f1xx_hal.h"
 #include "stm32f1xx_hal_flash.h"
 #include "core_cm3.h"
-#include "stm32f103xb.h"
+#include "stm32f103xe.h"
 #include "main.h"
 #include "common.h"
 #include "app_ad.h"
@@ -45,7 +45,9 @@
 #include "drv_uart.h"
 #include "drv_adc.h"
 #include "drv_i2c.h"
+#include "drv_soft_i2c.h"
 #include "drv_timer.h"
+#include "bsp_mcp7428.h"
 
 #include "FreeRTOS.h"
 #include "task.h"
