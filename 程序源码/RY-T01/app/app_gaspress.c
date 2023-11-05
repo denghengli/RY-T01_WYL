@@ -6,10 +6,10 @@
 #define PF 0
 #define GROW_DIR_NUM  5
 
-static DRV_I2C_T       s_tFGDynPresI2C;  //动压传感器I2C IO口
-static DRV_I2C_T       s_tFGSticPresI2C; //静压传感器I2C IO口
-static SM9541_DATA_T   s_tFGDynPresDat; //动压传感器数据结构体
-static SM9541_DATA_T   s_tFGSticPresDat;//静压传感器数据结构体
+static DRV_I2C_T s_tFGDynPresI2C;  //动压传感器I2C IO口
+static DRV_I2C_T s_tFGSticPresI2C; //静压传感器I2C IO口
+static SM9541_DATA_T s_tFGDynPresDat; //动压传感器数据结构体
+static SM9541_DATA_T s_tFGSticPresDat;//静压传感器数据结构体
 
 /********************************************************************************************************
 *	函 数 名: FlueGasPress_DataInit
@@ -27,7 +27,7 @@ void FlueGasPress_DataInit(void)
     s_tFGSticPresI2C.SCL.ePinName   = epin_gas_scl2;
     s_tFGSticPresI2C.SDA.ePinName   = epin_gas_sda2;
 	
-	/*SM9541_020C_D 全压传感器*/
+	/*SM9541_020C_D 动压传感器*/
 	s_tFGDynPresDat.MaxCount = 14745;
 	s_tFGDynPresDat.MinCount = 1638;
 	s_tFGDynPresDat.MaxPress = 1961; //单位Pa,1.961KPa;cmH2O单位换算得来https://www.si-micro.com/
@@ -55,18 +55,18 @@ void FlueGasPress_DataInit(void)
 ********************************************************************************************************/
 static void FlueGasDynPress_Measure(void)
 {
-	unsigned char   i,cRdBuf[4];
-	float           sum=0.0,fTemp = 0.0;
-    static float    fDynPresBuf[SAMP_FREQ_MAX] = {0.0};
-	static unsigned char AvgCnt = 0;
-	static unsigned char BufCnt = 0;
+	uint8_t i,cRdBuf[4];
+	float sum=0.0,fTemp = 0.0;
+    static float fDynPresBuf[SAMP_FREQ_MAX] = {0.0};
+	static uint8_t AvgCnt = 0;
+	static uint8_t BufCnt = 0;
 	
-	static int      PresCntOld = 0, PresCntNew = 0;
-	static int      PresCntBuf[SAMP_FREQ_MAX] = {0};
-	static unsigned char PresAvgCnt = 0;
-	static unsigned char PresBufCnt = 0;  
+	static int PresCntOld = 0, PresCntNew = 0;
+	static int PresCntBuf[SAMP_FREQ_MAX] = {0};
+	static uint8_t PresAvgCnt = 0;
+	static uint8_t PresBufCnt = 0;  
 	int Pressum = 0, PresTemp = 0;
-	int PresCntMax = g_SysData.Data.Para.PresCnt;
+	int PresCntMax = g_SysData.Data.Para.smoothTime;
 	
 	DRV_I2C_Start(s_tFGDynPresI2C);
 	
@@ -122,12 +122,12 @@ static void FlueGasDynPress_Measure(void)
 		fDynPresBuf[BufCnt++] = s_tFGDynPresDat.Press;/*将数据存入环形buf中*/
 		for(i=0;i<AvgCnt;i++)/*对环形buf中数据求和*/
 		{
-			sum   +=  fDynPresBuf[i];
+			sum += fDynPresBuf[i];
 		}
-        s_tFGDynPresDat.OffSet       = g_SysData.Data.Para.DynPRatioB;
-        s_tFGDynPresDat.AdjFactor    = g_SysData.Data.Para.DynPRatioK;
-		s_tFGDynPresDat.Pressavg     = sum / (float)AvgCnt;
-		s_tFGDynPresDat.PressavgAdj  = s_tFGDynPresDat.Pressavg + s_tFGDynPresDat.OffSet;/*计算环形buf中数据均值*/
+        s_tFGDynPresDat.OffSet = g_SysData.Data.Para.dynPRatioB;
+        s_tFGDynPresDat.AdjFactor = g_SysData.Data.Para.dynPRatioK;
+		s_tFGDynPresDat.Pressavg = sum / (float)AvgCnt;
+		s_tFGDynPresDat.PressavgAdj = s_tFGDynPresDat.Pressavg + s_tFGDynPresDat.OffSet;/*计算环形buf中数据均值*/
 		if(s_tFGDynPresDat.AdjFactor > 0.0001)
         {
             s_tFGDynPresDat.PressavgAdj *= s_tFGDynPresDat.AdjFactor;
@@ -135,28 +135,6 @@ static void FlueGasDynPress_Measure(void)
         
         /* 把测量数据存入全局变量中 */
         FloatLimit(&s_tFGDynPresDat.PressavgAdj,FLOAT_DECNUM);
-//		g_SysData.Data.Sample.DynMsTem = s_tFGDynPresDat.Temp;
-//		g_SysData.Data.Sample.DynMsState = s_tFGDynPresDat.MsState;
-//		g_SysData.Data.Sample.DynMsPresCnt = s_tFGDynPresDat.MsPresCnt;
-//		g_SysData.Data.Sample.DynMsTempCnt = s_tFGDynPresDat.MsTempCnt;
-//        g_SysData.Data.Sample.DynP = s_tFGDynPresDat.PressavgAdj;
-//		
-//		if(s_tFGDynPresDat.Pressavg > 0.0001 || s_tFGDynPresDat.Pressavg < -0.0001)//置位测量完成标志,非0时说明有测量值
-//		{
-//			SetFlg_Measover(FLG_MEASOVER_DYNP);
-//		}
-		
-//        LOG_PRINT(DEBUG_GASPRESS,"fDynPresBuf[0] = %f\r\n",  fDynPresBuf[0]);
-//        LOG_PRINT(DEBUG_GASPRESS,"fDynPresBuf[1] = %f\r\n",  fDynPresBuf[1]);
-//        LOG_PRINT(DEBUG_GASPRESS,"fDynPresBuf[2] = %f\r\n",  fDynPresBuf[2]);
-//        LOG_PRINT(DEBUG_GASPRESS,"fDynPresBuf[3] = %f\r\n",  fDynPresBuf[3]);
-//        LOG_PRINT(DEBUG_GASPRESS,"fDynPresBuf[4] = %f\r\n",  fDynPresBuf[4]);
-//        LOG_PRINT(DEBUG_GASPRESS,"TolPress.Cnt = %d\r\n",     s_tFGDynPresDat.MsPresCnt);
-//		LOG_PRINT(DEBUG_GASPRESS,"TolPress.Pressavg = %f\r\n",s_tFGDynPresDat.Pressavg);
-//        LOG_PRINT(DEBUG_GASPRESS,"TolPress.Press = %f\r\n",   s_tFGDynPresDat.Press);
-//		LOG_PRINT(DEBUG_GASPRESS,"TolPress.sum = %f\r\n",     sum);
-//		LOG_PRINT(DEBUG_GASPRESS,"TolPress.AvgCnt = %d\r\n",  AvgCnt);
-//		LOG_PRINT(DEBUG_GASPRESS,"TolPress.Temp = %f\r\n\r\n", s_tFGDynPresDat.Temp);
 	}
 }
 
@@ -168,18 +146,18 @@ static void FlueGasDynPress_Measure(void)
 ********************************************************************************************************/
 static void FlueGasSticPress_Measure(void)
 {
-	unsigned char   i,cRdBuf[4];
-	float           sum=0.0,fTemp = 0.0;
-    static float    fSticPresBuf[SAMP_FREQ_MAX] = {0.0};
-	static unsigned char AvgCnt = 0;
-	static unsigned char BufCnt = 0;
+	uint8_t i,cRdBuf[4];
+	float sum=0.0,fTemp = 0.0;
+    static float fSticPresBuf[SAMP_FREQ_MAX] = {0.0};
+	static uint8_t AvgCnt = 0;
+	static uint8_t BufCnt = 0;
 	
-	static int      PresCntOld = 0, PresCntNew = 0;
-	static int      PresCntBuf[SAMP_FREQ_MAX] = {0};
-	static unsigned char PresAvgCnt = 0;
-	static unsigned char PresBufCnt = 0;  
+	static int PresCntOld = 0, PresCntNew = 0;
+	static int PresCntBuf[SAMP_FREQ_MAX] = {0};
+	static uint8_t PresAvgCnt = 0;
+	static uint8_t PresBufCnt = 0;  
 	int Pressum = 0, PresTemp = 0;
-	int PresCntMax = g_SysData.Data.Para.PresCnt;
+	int PresCntMax = g_SysData.Data.Para.smoothTime;
 		
 	DRV_I2C_Start(s_tFGSticPresI2C);
 	
@@ -234,29 +212,19 @@ static void FlueGasSticPress_Measure(void)
 		fSticPresBuf[BufCnt++] = s_tFGSticPresDat.Press;/*将数据存入环形buf中单位为Pa*/ 
 		for(i=0;i<AvgCnt;i++)/*对环形buf中数据求和*/
 		{
-			sum   +=  fSticPresBuf[i];
+			sum += fSticPresBuf[i];
 		}
-        s_tFGSticPresDat.OffSet       = g_SysData.Data.Para.SticPRatioB;
-        s_tFGSticPresDat.AdjFactor    = g_SysData.Data.Para.SticPRatioK;
-		s_tFGSticPresDat.Pressavg     = sum / (float)AvgCnt;/*计算环形buf中数据均值*/
-		s_tFGSticPresDat.PressavgAdj  = s_tFGSticPresDat.Pressavg + s_tFGSticPresDat.OffSet;
+        s_tFGSticPresDat.OffSet = g_SysData.Data.Para.sticPRatioB;
+        s_tFGSticPresDat.AdjFactor = g_SysData.Data.Para.sticPRatioK;
+		s_tFGSticPresDat.Pressavg = sum / (float)AvgCnt;/*计算环形buf中数据均值*/
+		s_tFGSticPresDat.PressavgAdj = s_tFGSticPresDat.Pressavg + s_tFGSticPresDat.OffSet;
         if(s_tFGSticPresDat.AdjFactor > 0.0001)
         {
             s_tFGSticPresDat.PressavgAdj *= s_tFGSticPresDat.AdjFactor;
         }
         
         /* 把测量数据存入全局变量中 */
-        FloatLimit(&s_tFGSticPresDat.PressavgAdj,FLOAT_DECNUM);
-//		g_SysData.Data.Sample.SticMsTem = s_tFGSticPresDat.Temp;
-//		g_SysData.Data.Sample.SticMsState = s_tFGSticPresDat.MsState;
-//		g_SysData.Data.Sample.SticMsPresCnt = s_tFGSticPresDat.MsPresCnt;
-//		g_SysData.Data.Sample.SticMsTempCnt = s_tFGSticPresDat.MsTempCnt;
-//        g_SysData.Data.Sample.SticP = s_tFGSticPresDat.PressavgAdj;                
-//		
-//		if(s_tFGSticPresDat.Pressavg > 0.0001 || s_tFGSticPresDat.Pressavg < -0.0001)//置位测量完成标志,非0时说明有测量值
-//		{
-//			SetFlg_Measover(FLG_MEASOVER_STICP);
-//		}		
+        FloatLimit(&s_tFGSticPresDat.PressavgAdj,FLOAT_DECNUM);	
 	}
 }
 
@@ -268,13 +236,13 @@ static void FlueGasSticPress_Measure(void)
 ********************************************************************************************************/
 static void FlueGasPress_AutoAdj(void)
 {
-	unsigned char   i = 0;
-	static float    fAutoAdjDynPBuf [AUTOADJ_FREQ] = {0.0};//全压
-	static float    fAutoAdjSticPBuf[AUTOADJ_FREQ] = {0.0};//静压
-	static unsigned char AdjBufCnt = 0;
-	float DynPsum=0.0,SticPsum = 0.0;
+	uint8_t   i = 0;
+	static float fAutoAdjDynPBuf [AUTOADJ_FREQ] = {0.0};//全压
+	static float fAutoAdjSticPBuf[AUTOADJ_FREQ] = {0.0};//静压
+	static uint8_t AdjBufCnt = 0;
+	float DynPsum=0.0, SticPsum = 0.0;
 	
-	if(g_SysData.Data.Para.SpeedAtAdjFlg == 1)//是否开启了自动校准 1启动，0关闭；默认关闭
+	if(g_SysData.Data.Para.speedCalibZeroFlg == 1)//是否开启了自动校准 1启动，0关闭；默认关闭
 	{
 		fAutoAdjDynPBuf [AdjBufCnt] = s_tFGDynPresDat.Pressavg;/*将数据存入buf中*/
 		fAutoAdjSticPBuf[AdjBufCnt] = s_tFGSticPresDat.Pressavg;
@@ -283,17 +251,17 @@ static void FlueGasPress_AutoAdj(void)
 		{
 			for(i=0;i<AUTOADJ_FREQ;i++)
 			{
-				DynPsum  += fAutoAdjDynPBuf[i];
+				DynPsum += fAutoAdjDynPBuf[i];
 				SticPsum += fAutoAdjSticPBuf[i];
 			}
             /* 把测量数据存入全局变量中 */
-            g_SysData.Data.Para.DynPRatioB  = - (DynPsum   / (float)AUTOADJ_FREQ);
-            g_SysData.Data.Para.SticPRatioB   = - (SticPsum  / (float)AUTOADJ_FREQ);
+            g_SysData.Data.Para.dynPRatioB = -(DynPsum / (float)AUTOADJ_FREQ);
+            g_SysData.Data.Para.sticPRatioB = -(SticPsum  / (float)AUTOADJ_FREQ);
 
-            g_SysData.Data.Para.DynPRatioB = (float)((int)(g_SysData.Data.Para.DynPRatioB * pow(10,FLOAT_DECNUM))) /pow(10,FLOAT_DECNUM);
-            g_SysData.Data.Para.SticPRatioB  = (float)((int)(g_SysData.Data.Para.SticPRatioB * pow(10,FLOAT_DECNUM))) /pow(10,FLOAT_DECNUM);
+            g_SysData.Data.Para.dynPRatioB = (float)((int)(g_SysData.Data.Para.dynPRatioB * pow(10,FLOAT_DECNUM))) /pow(10,FLOAT_DECNUM);
+            g_SysData.Data.Para.sticPRatioB  = (float)((int)(g_SysData.Data.Para.sticPRatioB * pow(10,FLOAT_DECNUM))) /pow(10,FLOAT_DECNUM);
     
-            g_SysData.Data.Para.SpeedAtAdjFlg = 0;
+            g_SysData.Data.Para.speedCalibZeroFlg = 0;
                 
 			ParaData_Save(0);//将校准参数存入FLASH
 			
@@ -313,15 +281,15 @@ static void PiTG_Dir(void)
 	/*不管皮托管在风机前还是后，动压大于0都是正向，小于0都是反向*/
 	if (s_tFGDynPresDat.PressavgAdj >= 0)
 	{
-	  	g_SysData.Data.Sample.DynP = s_tFGDynPresDat.PressavgAdj;
-		g_SysData.Data.Sample.SticP = s_tFGSticPresDat.PressavgAdj;
-		g_SysData.Data.Sample.TotalP = s_tFGSticPresDat.PressavgAdj + s_tFGDynPresDat.PressavgAdj;
+	  	g_SysData.Data.Sample.dynPress = s_tFGDynPresDat.PressavgAdj;
+		g_SysData.Data.Sample.sticPress = s_tFGSticPresDat.PressavgAdj;
+		g_SysData.Data.Sample.totalPress = s_tFGSticPresDat.PressavgAdj + s_tFGDynPresDat.PressavgAdj;
 	}
 	else
 	{
-	  	g_SysData.Data.Sample.DynP = -s_tFGDynPresDat.PressavgAdj;
-		g_SysData.Data.Sample.SticP = s_tFGSticPresDat.PressavgAdj + s_tFGDynPresDat.PressavgAdj;
-		g_SysData.Data.Sample.TotalP = s_tFGSticPresDat.PressavgAdj;
+	  	g_SysData.Data.Sample.dynPress = -s_tFGDynPresDat.PressavgAdj;
+		g_SysData.Data.Sample.sticPress = s_tFGSticPresDat.PressavgAdj + s_tFGDynPresDat.PressavgAdj;
+		g_SysData.Data.Sample.totalPress = s_tFGSticPresDat.PressavgAdj;
 	}
 	
 	if(s_tFGDynPresDat.Pressavg > 0.0001 || s_tFGDynPresDat.Pressavg < -0.0001)//置位测量完成标志,非0时说明有测量值
@@ -343,11 +311,8 @@ static void PiTG_Dir(void)
 void FlueGasPress_Measure(void)
 {
 	FlueGasDynPress_Measure();
-	
 	FlueGasSticPress_Measure();
-	
 	PiTG_Dir();
-	
 	FlueGasPress_AutoAdj();
     
     SampleData_ToModbus();
@@ -363,13 +328,13 @@ void FlueGasPress_Measure(void)
 **********************************************************************************************************/
 void APP_FlueGasP(void  * argument)
 {
-    TickType_t sMaxBlockTime =	pdMS_TO_TICKS(1000);
+    TickType_t sMaxBlockTime = pdMS_TO_TICKS(1000);
     
 	FlueGasPress_DataInit();
 	
 	while(1)
 	{
-	    if (g_SysData.Data.Sample.SysSta == SYS_STA_MEASU)
+	    if (g_SysData.Data.Sample.sysSta == SYS_STA_MEASU)
 		{
 			FlueGasPress_Measure();       
 

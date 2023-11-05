@@ -1,5 +1,5 @@
-#ifndef _DRIVER_IIC_
-#define _DRIVER_IIC_
+#ifndef _DRIVER_SOFT_IIC_
+#define _DRIVER_SOFT_IIC_
 #include "drv_gpio.h"
 
 //#define CMD_MODE_READ   0x01

@@ -14,15 +14,15 @@ void LOG_PRINT(char n,char *format, ...)
   
 #if UART_DEG_EN
   
-    char     buf_str[150 + 1];
-    va_list   v_args;
+    char buf_str[150 + 1];
+    va_list v_args;
 
     if(n)
     {
         va_start(v_args, format);
         
-        (void)vsnprintf((char       *)&buf_str[0],
-                        (size_t       ) sizeof(buf_str),
+        (void)vsnprintf((char *)&buf_str[0],
+                        (size_t) sizeof(buf_str),
                         (char const *) format,
                         v_args);
          

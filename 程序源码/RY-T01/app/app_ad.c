@@ -43,7 +43,6 @@ static void AD_Conver_Start(void)
     }
 
     LL_ADC_REG_StartConversionSWStart(ADC1);  
-
 }
 
 /**********************************************************************************************************
@@ -128,7 +127,7 @@ void App_AD(void *pvParameters)
             
         if(xSemaphoreTake(AdSem,sMaxBlockTime) == pdTRUE)
         {
-            AD_Data_Analysis();//«Î«ÛΩ‚Œˆ
+            AD_Data_Analysis();
 
             LOG_PRINT(DEBUG_TASK,"App_AD \r\n");
             

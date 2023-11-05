@@ -70,7 +70,7 @@ float CalculateTemperature(float fR)
 	}
 
 	cBottom = 0; 
-	cTop    = TAB_MAXNUM - 1;
+	cTop = TAB_MAXNUM - 1;
 
 	for(i=TAB_MAXNUM/2; (cTop-cBottom)!=1; )    // 2分法查找
 	{
@@ -105,7 +105,7 @@ float CalculateTemperature(float fR)
 
 
 static PT100_DATA_T   s_tPT100Data;  /*PT100数据*/
-static unsigned char  PT100_Ref_Flag;/*PT100参考值校准*/
+static uint8_t  PT100_Ref_Flag;/*PT100参考值校准*/
 
 
 /********************************************************************************************************
@@ -126,7 +126,7 @@ static unsigned short PT100_GetAD()
 *	形    参: NONE
 *	返 回 值: 
 ********************************************************************************************************/
-void PT100_RefCal_Flag(unsigned char flag)
+void PT100_RefCal_Flag(uint8_t flag)
 {
 	PT100_Ref_Flag = flag;
 }
@@ -141,13 +141,12 @@ void PT100_RefCal_Flag(unsigned char flag)
 void PT100_TempMeasure(void)
 {
 	char  i;
-	static float    fTempBuf[10] = {0.0};
-	static unsigned char AvgCnt = 0;
-	static unsigned char BufCnt = 0;
+	static float fTempBuf[10] = {0.0};
+	static uint8_t AvgCnt = 0;
+	static uint8_t BufCnt = 0;
     float  fTemp = 0;
     
 	s_tPT100Data.AD = PT100_GetAD();//读取PT100的电压AD值
-    
 	s_tPT100Data.Vol = (float)(3 / 4096.0) * s_tPT100Data.AD;//Pt100的电压值
     
 //    fTemp = s_tPT100Data.Vol * 8.87 / 150 + 300.0 / 1100.0;
@@ -155,8 +154,7 @@ void PT100_TempMeasure(void)
 
 	fTemp = s_tPT100Data.Vol * 10 / 88.7 + 300.0 / 1100.0;
 	s_tPT100Data.ResVal = 1000 * fTemp / (3 - fTemp);
-	
-	s_tPT100Data.Temp   = CalculateTemperature(s_tPT100Data.ResVal);//根据电阻计算温度
+	s_tPT100Data.Temp = CalculateTemperature(s_tPT100Data.ResVal);//根据电阻计算温度
 	
 	/*将数据存入环形buf中*/
 	if(BufCnt <= 10)
@@ -165,7 +163,7 @@ void PT100_TempMeasure(void)
 		if(AvgCnt < 10)AvgCnt++;
 	}
 	fTempBuf[BufCnt++] = s_tPT100Data.Temp;
-  /*对环形buf中数据求和*/
+    /*对环形buf中数据求和*/
 	s_tPT100Data.Tempsum = 0.0;
 	for(i=0;i<AvgCnt;i++)
 	{
@@ -181,13 +179,12 @@ void PT100_TempMeasure(void)
     
     /* 把测量数据存入全局变量中 */
     FloatLimit(&s_tPT100Data.Tempavg, FLOAT_DECNUM);
-//    g_SysData.Data.Sample.PTAD  = s_tPT100Data.AD;
-    g_SysData.Data.Sample.PTTem = s_tPT100Data.Tempavg + g_SysData.Data.Para.PTTemRatioB;
+    g_SysData.Data.Sample.ptTem = s_tPT100Data.Tempavg + g_SysData.Data.Para.ptTemRatioB;
 	
 	/*参考值校准*/
 	if (PT100_Ref_Flag)
 	{
-		g_SysData.Data.Para.PTTemRatioB = g_SysData.Data.Para.PTTemRef - s_tPT100Data.Tempavg;
+		g_SysData.Data.Para.ptTemRatioB = g_SysData.Data.Para.ptTemRef - s_tPT100Data.Tempavg;
 		PT100_Ref_Flag = 0;
 		ParaData_Save(0);//将校准参数存入FLASH
 	}
@@ -199,7 +196,6 @@ void PT100_TempMeasure(void)
 	LOG_PRINT(DEBUG_PT100,"T100.ResVal = %f ",    s_tPT100Data.ResVal);
 	LOG_PRINT(DEBUG_PT100,"T100.Temp = %f ",      s_tPT100Data.Temp);
 	LOG_PRINT(DEBUG_PT100,"T100.Tempavg = %f\r\n",s_tPT100Data.Tempavg);
-	
 }
 
 
@@ -216,7 +212,7 @@ void APP_PT100(void  * argument)
     
 	while(1)
 	{
-	  	if (g_SysData.Data.Sample.SysSta == SYS_STA_MEASU)
+	  	if (g_SysData.Data.Sample.sysSta == SYS_STA_MEASU)
 		{
 			PT100_TempMeasure();
 			

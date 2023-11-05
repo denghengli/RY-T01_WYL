@@ -2319,6 +2319,9 @@
             <name>$PROJ_DIR$\..\app\app_ad.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\app\app_atppress.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\app\app_comm.c</name>
         </file>
         <file>
@@ -2326,6 +2329,9 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\app\app_gaspress.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\app\app_humit.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\app\app_pt100.c</name>
@@ -2350,6 +2356,12 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\app\systemdata.c</name>
+        </file>
+    </group>
+    <group>
+        <name>CMSIS-Pack</name>
+        <file>
+            <name>$PROJ_DIR$\RTE\RTE_Components.h</name>
         </file>
     </group>
     <group>
@@ -2497,12 +2509,6 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\os\timers.c</name>
-        </file>
-    </group>
-    <group>
-        <name>CMSIS-Pack</name>
-        <file>
-            <name>$PROJ_DIR$\RTE\RTE_Components.h</name>
         </file>
     </group>
 </project>

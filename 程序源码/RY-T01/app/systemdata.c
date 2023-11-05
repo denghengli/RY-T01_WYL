@@ -3,7 +3,7 @@
 #define FLASH_INITFLG 20200331
 
 volatile SYSTEM_DATA_UN g_SysData;
-static PARA_FLASH_T     s_ParaData;
+static PARA_FLASH_T s_ParaData;
 
 /**********************************************************************************************************
 *	函 数 名: FlashSave
@@ -33,38 +33,30 @@ void ParaData_Init(void)
 	if(s_ParaData.InitFlag != FLASH_INITFLG)
 	{
 		/*给全局变量赋初始值*/
-        s_ParaData.InitFlag            = FLASH_INITFLG;
-        s_ParaData.Para.DevId          = 1;
-        s_ParaData.Para.SoftVer        = SOFTVER;
-        s_ParaData.Para.BlowIntvar     = 4;
-        s_ParaData.Para.SpeedAtAdjFlg  = 0;
-		s_ParaData.Para.Density        = 1.34;
-        s_ParaData.Para.PiTGRatioK     = 0.83;
-        s_ParaData.Para.SpeedRatioK    = 1;
-        s_ParaData.Para.DynPRatioB     = 0;
-        s_ParaData.Para.SticPRatioB    = 0;
-        s_ParaData.Para.DynPRatioK     = 1;
-        s_ParaData.Para.SticPRatioK    = 1;
-		s_ParaData.Para.PTTemRef       = 0;
-		s_ParaData.Para.PTTemRatioB    = 0;
-		s_ParaData.Para.PresCnt        = 25;
+        s_ParaData.InitFlag = FLASH_INITFLG;
+        s_ParaData.Para.devId = 1;
+//        s_ParaData.Para.BlowIntvar     = 4;
+//        s_ParaData.Para.SpeedAtAdjFlg  = 0;
+//		s_ParaData.Para.Density        = 1.34;
+//        s_ParaData.Para.PiTGRatioK     = 0.83;
+//        s_ParaData.Para.SpeedRatioK    = 1;
+//        s_ParaData.Para.DynPRatioB     = 0;
+//        s_ParaData.Para.SticPRatioB    = 0;
+//        s_ParaData.Para.DynPRatioK     = 1;
+//        s_ParaData.Para.SticPRatioK    = 1;
+//		s_ParaData.Para.PTTemRef       = 0;
+//		s_ParaData.Para.PTTemRatioB    = 0;
+//		s_ParaData.Para.PresCnt        = 25;
         
-		FlashSave(FLASH_ADDR_UASER,(unsigned int*)&s_ParaData,sizeof(s_ParaData)/4);
-	}
-	
-	/*版本号更新*/
-	if(s_ParaData.Para.SoftVer != SOFTVER)
-	{
-	  	s_ParaData.Para.SoftVer = SOFTVER;
 		FlashSave(FLASH_ADDR_UASER,(unsigned int*)&s_ParaData,sizeof(s_ParaData)/4);
 	}
 	  
 	/*不管是不是第一次赋值，的需要写到g_SysData中*/
     g_SysData.Data.Para = s_ParaData.Para;
-    g_SysData.Data.Para.SpeedAtAdjFlg = 0;
+    g_SysData.Data.Para.speedCalibZeroFlg = 0;
     
     /*写入MODBUS寄存器*/
-    Write_Hold_Reg(SAMPLE_DATA_LEN,PARA_DATA_LEN,(unsigned char *)&g_SysData.RegBuf[SAMPLE_DATA_LEN]);
+    Write_Hold_Reg(SAMPLE_DATA_LEN,PARA_DATA_LEN,(unsigned char *)&g_SysData.regBuf[SAMPLE_DATA_LEN]);
 }
 
 /**********************************************************************************************************
@@ -78,16 +70,16 @@ void ParaData_Save(unsigned char opt)
     if(opt == 1)
     {
         /*更新g_SysData.Para*/
-        Read_Hold_Reg(SAMPLE_DATA_LEN,PARA_DATA_LEN,(unsigned char *)&g_SysData.RegBuf[SAMPLE_DATA_LEN]);
+        Read_Hold_Reg(SAMPLE_DATA_LEN,PARA_DATA_LEN,(unsigned char *)&g_SysData.regBuf[SAMPLE_DATA_LEN]);
     }
     else
     {
         /*更新MODBUS寄存器*/
-        Write_Hold_Reg(SAMPLE_DATA_LEN,PARA_DATA_LEN,(unsigned char *)&g_SysData.RegBuf[SAMPLE_DATA_LEN]);
+        Write_Hold_Reg(SAMPLE_DATA_LEN,PARA_DATA_LEN,(unsigned char *)&g_SysData.regBuf[SAMPLE_DATA_LEN]);
     }
         
     s_ParaData.InitFlag = FLASH_INITFLG;
-    s_ParaData.Para     = g_SysData.Data.Para;
+    s_ParaData.Para = g_SysData.Data.Para;
 
     FlashSave(FLASH_ADDR_UASER,(unsigned int*)&s_ParaData,sizeof(s_ParaData)/4);
 }
@@ -101,7 +93,7 @@ void ParaData_Save(unsigned char opt)
 void ParaData_Updata(void)
 {
     /*更新g_SysData.Para*/
-    Read_Hold_Reg(SAMPLE_DATA_LEN,PARA_DATA_LEN,(unsigned char *)&g_SysData.RegBuf[SAMPLE_DATA_LEN]);
+    Read_Hold_Reg(SAMPLE_DATA_LEN,PARA_DATA_LEN,(unsigned char *)&g_SysData.regBuf[SAMPLE_DATA_LEN]);
 }
 
 /**********************************************************************************************************
@@ -112,7 +104,7 @@ void ParaData_Updata(void)
 **********************************************************************************************************/
 unsigned short  DevId_Get(void)
 {
-    return g_SysData.Data.Para.DevId;
+    return g_SysData.Data.Para.devId;
 }
 
 /**********************************************************************************************************
@@ -123,13 +115,7 @@ unsigned short  DevId_Get(void)
 **********************************************************************************************************/
 void SampleData_ToModbus(void)
 {
-	Write_Hold_Reg(0,SAMPLE_DATA_LEN,(unsigned char *)&g_SysData.RegBuf[0]);
+	Write_Hold_Reg(0,SAMPLE_DATA_LEN,(unsigned char *)&g_SysData.regBuf[0]);
 }
-
-
-
-
-
-
 
 

@@ -29,7 +29,7 @@ static void Timing_Blow_Proc(void)
     unsigned int Bsd  = 2;//反吹开始延时时间
     unsigned int Bbsd = 5;//反吹吹扫开始延时时间
     unsigned int Bbed = 2;//反吹吹扫结束延时时间
-    unsigned int Bed  = g_SysData.Data.Para.BlowIntvar * 60 * 60;//反吹结束延时时间    
+    unsigned int Bed  = g_SysData.Data.Para.blowInterval * 60;//反吹结束延时时间    
 //	unsigned int Bed = 5;
     static unsigned int  Ts=0,Te=0;
     static unsigned char Blow_Cnt=0;//吹扫计数
@@ -41,7 +41,7 @@ static void Timing_Blow_Proc(void)
             if (Ts == 0)
             {
                 Ts = Tb;
-                g_SysData.Data.Sample.SysSta = SYS_STA_BLOW;
+                g_SysData.Data.Sample.sysSta = SYS_STA_BLOW;
             }
             else
             {
@@ -103,7 +103,7 @@ static void Timing_Blow_Proc(void)
             if (Ts == 0)
             {
                 Ts = Tb;
-                g_SysData.Data.Sample.SysSta = SYS_STA_MEASU;
+                g_SysData.Data.Sample.sysSta = SYS_STA_MEASU;
             }
             else
             {

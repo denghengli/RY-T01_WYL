@@ -2,7 +2,7 @@
 
 #define SPEEDCAL_AVG_NUM 5
 
-static unsigned char Flag_Measover = 0;  //È«Ñ¹¡¢¾²Ñ¹¡¢´óÆøÑ¹¡¢ÎÂ¶È²âÁ¿Íê³É±êÖ¾£»ÕâÀï¼ÆËã·çËÙÊ±ÐèÒª¸÷²ÎÊýµÄ²É¼¯Íê³É
+static uint8_t Flag_Measover = 0;  //È«Ñ¹¡¢¾²Ñ¹¡¢´óÆøÑ¹¡¢ÎÂ¶È²âÁ¿Íê³É±êÖ¾£»ÕâÀï¼ÆËã·çËÙÊ±ÐèÒª¸÷²ÎÊýµÄ²É¼¯Íê³É
 
 /**********************************************************************************************************
 *	º¯ Êý Ãû: SetFlg_Measover
@@ -10,10 +10,9 @@ static unsigned char Flag_Measover = 0;  //È«Ñ¹¡¢¾²Ñ¹¡¢´óÆøÑ¹¡¢ÎÂ¶È²âÁ¿Íê³É±êÖ¾£
 *	ÐÎ    ²Î: _cflg Íê³É±êÖ¾Î»
 *	·µ »Ø Öµ: NONE
 **********************************************************************************************************/
-void SetFlg_Measover(unsigned char _cflg)
+void SetFlg_Measover(uint8_t _cflg)
 {
     xEventGroupSetBits(EventGSpeedCal, _cflg);//ÊÂ¼þ±êÖ¾×é·½·¨
-    
 }
 
 /**********************************************************************************************************
@@ -22,7 +21,7 @@ void SetFlg_Measover(unsigned char _cflg)
 *	ÐÎ    ²Î: »ñÈ¡È«Ñ¹¡¢¾²Ñ¹¡¢´óÆøÑ¹¡¢ÎÂ¶È²âÁ¿Íê³É±êÖ¾
 *	·µ »Ø Öµ: Íê³É±êÖ¾Î»
 **********************************************************************************************************/
-unsigned char GetFlg_Measover(void)
+uint8_t GetFlg_Measover(void)
 {
 	return Flag_Measover;
 }
@@ -36,17 +35,16 @@ unsigned char GetFlg_Measover(void)
 **********************************************************************************************************/
 void FlueGasSpeedCal_Proc(void)
 {
-    float fAdjFactor    =   g_SysData.Data.Para.PiTGRatioK;
-    float fAssistFactor =   g_SysData.Data.Para.SpeedRatioK;
-    float fDynPress     =   g_SysData.Data.Sample.DynP;
-    float fAirDensity   =   g_SysData.Data.Para.Density;//¿ÕÆøÃÜ¶È
+    float fAdjFactor = g_SysData.Data.Para.piTGRatioK;
+    float fAssistFactor = g_SysData.Data.Para.speedRatioK;
+    float fDynPress = g_SysData.Data.Sample.dynPress;
+    float fAirDensity = g_SysData.Data.Para.density;//¿ÕÆøÃÜ¶È
 	float fSpend,fSpeedavg,sum=0.0;
-	static float    fSpeedBuf[SPEEDCAL_AVG_NUM] = {0.0};
-	static unsigned char AvgCnt = 0;
-	static unsigned char BufCnt = 0;
-	unsigned char i = 0;
+	static float fSpeedBuf[SPEEDCAL_AVG_NUM] = {0.0};
+	static uint8_t AvgCnt = 0;
+	static uint8_t BufCnt = 0;
+	uint8_t i = 0;
 	
-
     /*¼ÆËã·çËÙ*/
     if(fDynPress > 0.0001)//¶¯Ñ¹´óÓÚ0
     {
@@ -59,17 +57,19 @@ void FlueGasSpeedCal_Proc(void)
     {
 	  fSpend = 0;
     }
-    
-    if(BufCnt <= SPEEDCAL_AVG_NUM)/*½«Êý¾Ý´æÈë»·ÐÎbufÖÐ*/
+
+    /*½«Êý¾Ý´æÈë»·ÐÎbufÖÐ*/
+    if(BufCnt <= SPEEDCAL_AVG_NUM)
     {
         if(BufCnt == SPEEDCAL_AVG_NUM)BufCnt = 0;
         if(AvgCnt < SPEEDCAL_AVG_NUM)AvgCnt++;
     }
     fSpeedBuf[BufCnt++] = fSpend;
-    
-    for(i=0;i<AvgCnt;i++)/*¶Ô»·ÐÎbufÖÐÊý¾ÝÇóºÍ*/
+
+    /*¶Ô»·ÐÎbufÖÐÊý¾ÝÇóºÍ*/
+    for(i=0;i<AvgCnt;i++)
     {
-        sum   +=  fSpeedBuf[i];
+        sum += fSpeedBuf[i];
     }
     fSpeedavg = sum / (float)AvgCnt;/*¼ÆËã»·ÐÎbufÖÐÊý¾Ý¾ùÖµ*/
     
@@ -78,11 +78,10 @@ void FlueGasSpeedCal_Proc(void)
     /* °Ñ²âÁ¿Êý¾Ý´æÈëÈ«¾Ö±äÁ¿ÖÐ */
     FloatLimit(&fDynPress,FLOAT_DECNUM);
     FloatLimit(&fSpeedavg,FLOAT_DECNUM);
-    g_SysData.Data.Sample.DynP  = fDynPress;
-    g_SysData.Data.Sample.Speed = fSpeedavg;
+    g_SysData.Data.Sample.dynPress = fDynPress;
+    g_SysData.Data.Sample.speed = fSpeedavg;
     
     SampleData_ToModbus();
-    
 }
 
 
@@ -95,14 +94,11 @@ void FlueGasSpeedCal_Proc(void)
 **********************************************************************************************************/
 void APP_SpeedCal(void  * argument)
 {
-    
     TickType_t  sMaxBlockTime =	pdMS_TO_TICKS(2000);
-    
     EventBits_t uxBits;
     
 	while(1)
 	{
-	  
         LOG_PRINT(DEBUG_TASK,"APP_SpeedCal \r\n");
          
         uxBits = xEventGroupWaitBits(EventGSpeedCal, /* ÊÂ¼þ±êÖ¾×é¾ä±ú */

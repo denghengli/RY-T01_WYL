@@ -7,7 +7,7 @@
 
 /*系统状态*/
 #define SYS_STA_MEASU  1
-#define SYS_STA_BLOW   0
+#define SYS_STA_BLOW   2
 
 /*浮点数据小数位数*/
 #define FLOAT_DECNUM 3
@@ -23,85 +23,82 @@
 /*串口传输时使用的结构体*/
 typedef struct
 {
-	unsigned char RxBuf[UART_RXBUF_SIZE];
-	unsigned char RxCount;
-	unsigned char RxNewFlag;
-	unsigned char TxBuf[UART_TXBUF_SIZE];  
-	unsigned char TxRspCode;   /*通讯异常时，需要发送的错误码*/
-	unsigned char TxCount;
-	
+	uint8_t RxBuf[UART_RXBUF_SIZE];
+	uint8_t RxCount;
+	uint8_t RxNewFlag;
+	uint8_t TxBuf[UART_TXBUF_SIZE];  
+	uint8_t TxRspCode;   /*通讯异常时，需要发送的错误码*/
+	uint8_t TxCount;
 }UART_TRANS_T;
 
 /*AD采样数据*/
 typedef struct 
 {
-	unsigned int   AdBuf[ADC_CH_MAX][ADC_AVG_MAX];    //AD采集裸数缓冲区
-	unsigned int   AdAver[ADC_CH_MAX]; //采集中间平均值
-	unsigned char  AdCnt;		       //当前记录缓冲区位置
-    unsigned char  AdCh;		       //当前接收的ADC通道
-	
+	uint32_t AdBuf[ADC_CH_MAX][ADC_AVG_MAX]; //AD采集裸数缓冲区
+	uint32_t AdAver[ADC_CH_MAX]; //采集中间平均值
+	uint8_t AdCnt;  //当前记录缓冲区位置
+    uint8_t AdCh;   //当前接收的ADC通道
 }AD_DATA_T;
 
 /*实时采样数据，当有不是4字节时一定要强制单字节对齐*/
 __packed typedef struct 
 {
-  	unsigned int SysSta; //系统状态 1：测量 0：反吹
-	float  TotalP; 		//全压(Pa)
-	float  SticP; 		//静压(Pa)
-	float  DynP; 		//动压(Pa)
-    float  Speed; 		//烟气流速(m/s)
-    float  PTTem; 		//PT100温度
-	
-//	float DynMsTem;
-//	unsigned int DynMsState;
-//	unsigned int DynMsPresCnt;
-//	unsigned int DynMsTempCnt;
-//	float SticMsTem;
-//	unsigned int SticMsState;
-//	unsigned int SticMsPresCnt;
-//	unsigned int SticMsTempCnt;
-	
-	float  NONE1;//预留
-	float  NONE2;//预留
-	float  NONE3;//预留
-	float  NONE4;//预留
-	float  NONE5;//预留
-    float  NONE6;//预留
-    float  NONE7;//预留
-	float  NONE8;//预留
-	float  NONE9;//预留
-	
+    uint32_t softVer;   //软件版本，例如：V00.90记0x30303930
+    uint32_t MSN;       //MSN地址
+    uint32_t sysSta;    //系统状态，1:测量状态 2:反吹状态
+    float totalPress;   //全压(Pa)
+    float dynPress;     //动压(Pa)
+    float sticPress;    //静压(Pa)
+    float airPress;     //大气压(KPa)
+    float blowGasPress; //反吹气压力(MPa)
+    float speed;        //流速(m/s)
+    float flow;         //流量(m³/s)
+    float ptTem;        //温度
+    float humit;        //湿度
 }SAMPLE_DATA_T;
 
 /*掉电存储的参数，当有不是4字节时一定要强制单字节对齐*/
 __packed typedef struct
 {
-	unsigned short 	DevId;	//设备ID
-	unsigned short  SoftVer;//软件版本号
-    unsigned short  SpeedAtAdjFlg;//风速计自动校准标志
-    unsigned short  BlowIntvar;//反吹间隔时间(h)
-	
-    float  PiTGRatioK;      //皮托管风速计系数
-    float  SpeedRatioK;     //风速校准系数
-    float  Density;         //空气密度
-	float  DynPRatioB; 	    //动压零点偏移量(Pa)
-	float  SticPRatioB; 	//静压零点偏移量(Pa)
-    float  DynPRatioK; 	    //动压校准系数
-	float  SticPRatioK; 	//静压校准系数
-	float  PTTemRef;        //PT100温度参考值
-	float  PTTemRatioB; 	//PT100温度偏移量
-	int    PresCnt;         //全压静压计数值,越大响应时间越长,平滑度越好，越小则相反，最大50，默认20
-	
+    uint16_t devId;
+    uint32_t baudRate;  //波特率
+    uint16_t blowFreq;  //反吹频次
+    uint16_t blowInterval;  //反吹间隔(min)
+    float piTGRatioK;   //皮托管系数
+    float speedRatioK;  //风速校准系数
+    float density;      //空气密度
+	float dynPRatioB;   //动压零点偏移量(Pa)
+	float sticPRatioB;  //静压零点偏移量(Pa)
+    float dynPRatioK;   //动压校准系数
+	float sticPRatioK;  //静压校准系数
+    uint16_t autoCalibZero; //自动校零，1=开启 0=关闭
+    float ptTemRef;         //PT100温度参考值
+    float ptTemRatioB;      //PT100温度偏移量
+    float humitZero;        //湿度零点
+    uint16_t humitZreoValib;//湿度零点有效，1=有效 0=无效
+    uint16_t humitDispUnit; //湿度显示单位，1=相对 0=绝对
+    float sectionArea;      //烟道截面积(㎡)
+    uint16_t smoothTime;    //平滑时间(s),越大响应时间越长,平滑度越好，越小则相反，最大50，默认20
+    uint16_t dynPressRange; //动压量程(Pa)，300:0-300 1000:0-1000 2000:0-2000
+    uint16_t speedRange;    //流速量程(m/s)，15:0-15 30:0-30 40:0-40
+    uint16_t sticPressMax;  //压力/静压量程上限(KPa)，2:±2 5:±5 10:±10 130:70-130
+    uint16_t sticPressMin;  //压力/静压量程下限(KPa)
+	uint16_t flowRange;     //流量量程(m³/s)
+    uint16_t reserve[20];   //预留
+    
+	uint16_t blowCtrlFlg;   //手动反吹控制标志，1开启反吹
+    uint16_t speedCalibZeroFlg; //压力校零标志，1开启校准
+    uint16_t humitCalibFlg; //湿度校准标志，1开启校准
+    uint16_t factoryFlg;    //恢复出厂标志，1恢复出厂
 }PARA_DATA_T;
+
 
 /*存入FLASH的参数*/
 __packed typedef struct
 {
-    unsigned int InitFlag;
-    PARA_DATA_T  Para;
-	
+    uint32_t InitFlag;
+    PARA_DATA_T Para;
 }PARA_FLASH_T;
-
 
 /*系统数据*/
 typedef union
@@ -109,30 +106,25 @@ typedef union
     #define SAMPLE_DATA_LEN  (sizeof(SAMPLE_DATA_T) / 2)
     #define PARA_DATA_LEN    (sizeof(PARA_DATA_T) / 2)
     #define SYSTEM_DATA_LEN  (SAMPLE_DATA_LEN + PARA_DATA_LEN)
-    
 	struct
 	{
-		SAMPLE_DATA_T	Sample;
-		PARA_DATA_T		Para;
-		
+		SAMPLE_DATA_T Sample;
+		PARA_DATA_T Para;
 	}Data;
-	
-	unsigned short	RegBuf[SYSTEM_DATA_LEN]; //2字节数据字节序为AB，4字节数据字节序为CDAB
-		
+	unsigned short regBuf[SYSTEM_DATA_LEN]; //2字节数据字节序为AB，4字节数据字节序为CDAB
 }SYSTEM_DATA_UN;
 
-
-extern volatile SYSTEM_DATA_UN   g_SysData;
+extern volatile SYSTEM_DATA_UN g_SysData;
 extern xSemaphoreHandle CommSem;
 extern xSemaphoreHandle AdSem;
 extern xSemaphoreHandle FlashMutex;
 extern xSemaphoreHandle MutexPrint;
-extern EventGroupHandle_t  EventGSpeedCal;
+extern EventGroupHandle_t EventGSpeedCal;
     
 extern unsigned short DevId_Get(void);
 extern void SampleData_ToModbus(void);
 extern void ParaData_Init(void);
-extern void ParaData_Save(unsigned char opt);
+extern void ParaData_Save(uint8_t opt);
 extern void ParaData_Updata(void);
 
 

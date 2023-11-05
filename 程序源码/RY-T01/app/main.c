@@ -11,15 +11,16 @@
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
-extern void App_Comm     (void *pvParameters);
-extern void App_AD       (void *pvParameters);
-extern void App_WDT      (void *pvParameters);
-extern void APP_AtspP    (void *pvParameters);
-extern void APP_FlueGasP (void *pvParameters);
-extern void APP_PT100    (void *pvParameters);
-extern void APP_SpeedCal (void *pvParameters);
-extern void APP_DA       (void *pvParameters);
-extern void APP_Timing   (void *pvParameters);
+extern void App_Comm(void *pvParameters);
+extern void App_AD(void *pvParameters);
+extern void App_WDT(void *pvParameters);
+extern void APP_AtspP(void *pvParameters);
+extern void APP_FlueGasP(void *pvParameters);
+extern void APP_PT100(void *pvParameters);
+extern void APP_SpeedCal(void *pvParameters);
+extern void APP_DA(void *pvParameters);
+extern void APP_Timing(void *pvParameters);
+extern void APP_Humit(void *pvParameters);
 
 xSemaphoreHandle CommSem;
 xSemaphoreHandle AdSem;
@@ -29,59 +30,56 @@ EventGroupHandle_t  EventGSpeedCal = NULL;
 
 void SystemClock_Config(void)
 {
+    LL_FLASH_SetLatency(LL_FLASH_LATENCY_2);
 
-  LL_FLASH_SetLatency(LL_FLASH_LATENCY_2);
+    if(LL_FLASH_GetLatency() != LL_FLASH_LATENCY_2)
+    {
+        Error_Handler();  
+    }
+    LL_RCC_HSE_Enable();
 
-   if(LL_FLASH_GetLatency() != LL_FLASH_LATENCY_2)
-  {
-    Error_Handler();  
-  }
-  LL_RCC_HSE_Enable();
+    /* Wait till HSE is ready */
+    while(LL_RCC_HSE_IsReady() != 1)
+    {
 
-   /* Wait till HSE is ready */
-  while(LL_RCC_HSE_IsReady() != 1)
-  {
-    
-  }
-  LL_RCC_PLL_ConfigDomain_SYS(LL_RCC_PLLSOURCE_HSE_DIV_1, LL_RCC_PLL_MUL_9);
+    }
+    LL_RCC_PLL_ConfigDomain_SYS(LL_RCC_PLLSOURCE_HSE_DIV_1, LL_RCC_PLL_MUL_9);
 
-  LL_RCC_PLL_Enable();
+    LL_RCC_PLL_Enable();
 
-   /* Wait till PLL is ready */
-  while(LL_RCC_PLL_IsReady() != 1)
-  {
-    
-  }
-  LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
+    /* Wait till PLL is ready */
+    while(LL_RCC_PLL_IsReady() != 1)
+    {
 
-  LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_2);
+    }
+    LL_RCC_SetAHBPrescaler(LL_RCC_SYSCLK_DIV_1);
 
-  LL_RCC_SetAPB2Prescaler(LL_RCC_APB2_DIV_1);
+    LL_RCC_SetAPB1Prescaler(LL_RCC_APB1_DIV_2);
 
-  LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_PLL);
+    LL_RCC_SetAPB2Prescaler(LL_RCC_APB2_DIV_1);
 
-   /* Wait till System clock is ready */
-  while(LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_PLL)
-  {
-  
-  }
-  LL_Init1msTick(72000000);
+    LL_RCC_SetSysClkSource(LL_RCC_SYS_CLKSOURCE_PLL);
 
-  LL_SYSTICK_SetClkSource(LL_SYSTICK_CLKSOURCE_HCLK);
+    /* Wait till System clock is ready */
+    while(LL_RCC_GetSysClkSource() != LL_RCC_SYS_CLKSOURCE_STATUS_PLL)
+    {
 
-  LL_SetSystemCoreClock(72000000);
+    }
+    LL_Init1msTick(72000000);
 
-  LL_RCC_SetADCClockSource(LL_RCC_ADC_CLKSRC_PCLK2_DIV_6);
+    LL_SYSTICK_SetClkSource(LL_SYSTICK_CLKSOURCE_HCLK);
 
-  LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_FLASH);
-  
+    LL_SetSystemCoreClock(72000000);
+
+    LL_RCC_SetADCClockSource(LL_RCC_ADC_CLKSRC_PCLK2_DIV_6);
+
+    LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_FLASH);
 }
 
 
 /* IWDG init function */
 static void MX_IWDG_Init(void)
 {
-
   LL_IWDG_Enable(IWDG);
 
   LL_IWDG_EnableWriteAccess(IWDG);
@@ -95,7 +93,6 @@ static void MX_IWDG_Init(void)
   }
 
   LL_IWDG_ReloadCounter(IWDG);
-
 }
 
 
@@ -126,7 +123,9 @@ static void LL_Init(void)
     NVIC_SetPriority(USART2_IRQn,  NVIC_EncodePriority(NVIC_GetPriorityGrouping(),7, 0));
     NVIC_SetPriority(USART3_IRQn,  NVIC_EncodePriority(NVIC_GetPriorityGrouping(),5, 0));
 	NVIC_SetPriority(ADC1_2_IRQn,  NVIC_EncodePriority(NVIC_GetPriorityGrouping(),6, 0));
-	NVIC_SetPriority(TIM2_IRQn,    NVIC_EncodePriority(NVIC_GetPriorityGrouping(),2, 0));//TIM2用作定时1S
+	NVIC_SetPriority(TIM1_UP_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),3, 0));//TIM1用作湿度传感器外部脉冲计数
+    NVIC_SetPriority(TIM1_CC_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),6, 0));
+    NVIC_SetPriority(TIM2_IRQn,    NVIC_EncodePriority(NVIC_GetPriorityGrouping(),2, 0));//TIM2用作湿度传感器定时1S
     /**NOJTAG: JTAG-DP Disabled and SW-DP Enabled 
     */
     LL_GPIO_AF_Remap_SWJ_NOJTAG();
@@ -163,6 +162,7 @@ int main()
     MX_USART2_UART_Init();//485通讯
 	MX_USART1_UART_Init();
     MX_IWDG_Init();
+    MX_TIM1_Init();
 	MX_TIM2_Init();
     ParaData_Init();
       
@@ -170,6 +170,7 @@ int main()
     xTaskCreate(App_AD,      "App_AD",       configMINIMAL_STACK_SIZE*4,  NULL, 	tskIDLE_PRIORITY + 9, 	NULL);//n
     xTaskCreate(APP_FlueGasP,"APP_FlueGasP", configMINIMAL_STACK_SIZE*6,  NULL, 	tskIDLE_PRIORITY + 8, 	NULL);//y
     xTaskCreate(APP_PT100,   "APP_PT100",    configMINIMAL_STACK_SIZE*4,  NULL, 	tskIDLE_PRIORITY + 7, 	NULL);
+    xTaskCreate(APP_Humit,   "APP_Humit",    configMINIMAL_STACK_SIZE*4,  NULL, 	tskIDLE_PRIORITY + 7, 	NULL);
     xTaskCreate(APP_SpeedCal,"APP_SpeedCal", configMINIMAL_STACK_SIZE*4,  NULL, 	tskIDLE_PRIORITY + 6, 	NULL);
     xTaskCreate(APP_DA,      "APP_DA",       configMINIMAL_STACK_SIZE*2,  NULL, 	tskIDLE_PRIORITY + 5, 	NULL);
     xTaskCreate(APP_Timing,  "APP_Timing",   configMINIMAL_STACK_SIZE,    NULL, 	tskIDLE_PRIORITY + 4, 	NULL);

@@ -2,8 +2,6 @@
 #include  "stm32f1xx_hal_flash.h"
 #include  "stm32f1xx_hal_flash_ex.h"
 
-
-
 /**********************************************************************************************************
 *                                          FlashReadHalfWord
 *
@@ -71,15 +69,14 @@ HAL_StatusTypeDef Flash_If_Erase(unsigned int Add)
 unsigned char FlashWrite(unsigned int _iStartAddr,  const unsigned int * _piBuf, unsigned int _iBufSize)
 {
 	volatile HAL_StatusTypeDef FLASHStatus = HAL_ERROR;
-	unsigned char	cRet = 1;
+	unsigned char cRet = 1;
 
-	unsigned int	i	= 0;
-	unsigned int	j	= 0;
+	unsigned int i = 0;
+	unsigned int j = 0;
 
-	unsigned char	cRes = 0;
-	unsigned int	iStartAddr    = _iStartAddr; //写入的起始地址
-	unsigned int	iEndAddr      = iStartAddr + _iBufSize * SINGLE_WORD_LEN; //写入的结束地址
-
+	unsigned char cRes = 0;
+	unsigned int iStartAddr = _iStartAddr; //写入的起始地址
+	unsigned int iEndAddr = iStartAddr + _iBufSize * SINGLE_WORD_LEN; //写入的结束地址
 		
 	HAL_FLASH_Unlock();
 	
@@ -92,7 +89,7 @@ unsigned char FlashWrite(unsigned int _iStartAddr,  const unsigned int * _piBuf,
 	
 	__HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_BSY | FLASH_FLAG_EOP | FLASH_FLAG_PGERR | FLASH_FLAG_WRPERR);
 	
-	FLASHStatus  = HAL_OK; //操作完成
+	FLASHStatus = HAL_OK; //操作完成
    
 	//看是否需要擦除此页，对非FFFFFFFF的地方,先擦除
 	while(iStartAddr < iEndAddr)
@@ -114,32 +111,32 @@ unsigned char FlashWrite(unsigned int _iStartAddr,  const unsigned int * _piBuf,
 
 	// Wr flash.
 	FLASH_WaitForLastOperation(2);
-	iStartAddr   =  _iStartAddr; //写入的起始地址,因擦除的时候累加了,所以得从新赋值
+	iStartAddr = _iStartAddr; //写入的起始地址,因擦除的时候累加了,所以得从新赋值
 	while ((iStartAddr < iEndAddr) && (FLASHStatus == HAL_OK))
 	{
 		FLASHStatus = HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, iStartAddr,_piBuf[i++]);
 		if(FLASHStatus == HAL_OK)
 		{
-			iStartAddr	 += SINGLE_WORD_OFFSET;
+			iStartAddr += SINGLE_WORD_OFFSET;
 		}
 		else
 		{
-			cRet	=  0;
+			cRet = 0;
 			goto Finish;
 		}
 	}
 
 	// Chk wr result.
-	iStartAddr   =  _iStartAddr; //写入的起始地址,因擦除的时候累加了,所以得从新赋值
+	iStartAddr = _iStartAddr; //写入的起始地址,因擦除的时候累加了,所以得从新赋值
 	while ((iStartAddr < iEndAddr) && (cRes == 0))
 	{
 		if (FlashReadWord(iStartAddr) != _piBuf[j++])
 		{
-			cRes				= 1;
-			cRet				= 0;
+			cRes = 1;
+			cRet = 0;
 			goto Finish;
 		}
-		iStartAddr	 += SINGLE_WORD_OFFSET;
+		iStartAddr += SINGLE_WORD_OFFSET;
 	}
 	
 	Finish:
@@ -159,22 +156,16 @@ unsigned char FlashWrite(unsigned int _iStartAddr,  const unsigned int * _piBuf,
 **********************************************************************************************************/	
 void FlashRead(unsigned int * _piBuf, unsigned int _iStartAddr, unsigned int _iBufSize)
 {
-	unsigned int	i	= 0;
+	unsigned int i = 0;
 
-	unsigned int	iStartAddr = _iStartAddr;
-	unsigned int	iEndAddr = iStartAddr + _iBufSize * SINGLE_WORD_LEN;
+	unsigned int iStartAddr = _iStartAddr;
+	unsigned int iEndAddr = iStartAddr + _iBufSize * SINGLE_WORD_LEN;
 
 	while ((iStartAddr < iEndAddr) && (i < _iBufSize))
 	{
-		_piBuf[i++] 		= FlashReadWord (iStartAddr);
-		iStartAddr			+= SINGLE_WORD_OFFSET;
+		_piBuf[i++] = FlashReadWord (iStartAddr);
+		iStartAddr += SINGLE_WORD_OFFSET;
 	}
 }
-
-
-
-
-
-
 
 

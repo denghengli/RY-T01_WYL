@@ -10,6 +10,5 @@ extern unsigned char GetFlg_Measover(void);
 extern void SetFlg_Measover(unsigned char _cflg);
 extern void FlueGasSpeedCal_Proc(void);
 
-
 #endif
 

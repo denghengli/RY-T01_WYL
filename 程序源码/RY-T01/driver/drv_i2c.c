@@ -89,7 +89,7 @@ void DRV_I2C_Stop(DRV_I2C_T  I2C_Interface)
 *	返 回 值: 0，接收应答失败 1，接收应答成功
 *********************************************************************************************************
 */
-static unsigned char DRV_I2C_Wait_Ack(DRV_I2C_T  I2C_Interface)
+static uint8_t DRV_I2C_Wait_Ack(DRV_I2C_T  I2C_Interface)
 {
 	unsigned int ucErrTime = 0;
 	
@@ -159,9 +159,9 @@ static void DRV_I2C_Send_NoAck(DRV_I2C_T  I2C_Interface)
 *	形    参: _cByte 待发送的字节数据
 *	返 回 值:  0，接收应答失败 1，接收应答成功
 **********************************************************************************************************/
-unsigned char DRV_I2C_WriteByteWaiteAck(DRV_I2C_T  I2C_Interface,unsigned char _cByte)
+uint8_t DRV_I2C_WriteByteWaiteAck(DRV_I2C_T  I2C_Interface,uint8_t _cByte)
 {
-	unsigned char i = 0;
+	uint8_t i = 0;
 	
 	//DRV_I2C_SDA_SETOUT(I2C_Interface);//经调试这里不能有这个
 	
@@ -192,9 +192,9 @@ unsigned char DRV_I2C_WriteByteWaiteAck(DRV_I2C_T  I2C_Interface,unsigned char _
 *	形    参: NONE
 *	返 回 值: 接收到的字节
 **********************************************************************************************************/
-unsigned char DRV_I2C_ReadByteWithAck(DRV_I2C_T  I2C_Interface)
+uint8_t DRV_I2C_ReadByteWithAck(DRV_I2C_T  I2C_Interface)
 {
-	unsigned char i,receive=0;
+	uint8_t i,receive=0;
 	
 	DRV_I2C_SDA_SETIN(I2C_Interface);
 	SM9541_Delay_us(1);
@@ -220,9 +220,9 @@ unsigned char DRV_I2C_ReadByteWithAck(DRV_I2C_T  I2C_Interface)
 *	形    参: NONE
 *	返 回 值: 接收到的字节
 **********************************************************************************************************/
-unsigned char DRV_I2C_ReadByteWithNoAck(DRV_I2C_T  I2C_Interface)
+uint8_t DRV_I2C_ReadByteWithNoAck(DRV_I2C_T  I2C_Interface)
 {
-	unsigned char i,receive=0;
+	uint8_t i,receive=0;
 	
 	DRV_I2C_SDA_SETIN(I2C_Interface);
 	

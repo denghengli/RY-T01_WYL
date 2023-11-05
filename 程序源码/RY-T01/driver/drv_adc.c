@@ -39,18 +39,11 @@ void MX_ADC1_Init(void)
 
     LL_ADC_Enable(ADC1);
     
-	LL_ADC_StartCalibration(ADC1);
+    LL_ADC_StartCalibration(ADC1);
     while(LL_ADC_IsCalibrationOnGoing(ADC1) == 1)
     {};
-    
-     LL_ADC_EnableIT_EOS(ADC1);//使能转换结束后产生中断
 
+    LL_ADC_EnableIT_EOS(ADC1);//使能转换结束后产生中断
 }
-
-
-
-
-
-
 
 

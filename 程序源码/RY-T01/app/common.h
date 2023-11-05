@@ -42,7 +42,7 @@ extern void FloatLimit(float *fDat,unsigned char n);
 #define  DEBUG_PT100    0
 #define  DEBUG_ATPPRESS 0
 #define  DEBUG_GASPRESS 0
-#define  DEBUG_PM10     0	
+#define  DEBUG_HUMIT    0	
 							
 #define  UART_DEG_EN    1  //调试 与参数设置 不能同时打开																			
         
