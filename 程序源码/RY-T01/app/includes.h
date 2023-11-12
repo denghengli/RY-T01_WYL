@@ -42,6 +42,7 @@
 #include "app_humit.h"
 #include "systemdata.h"
 #include "modbus.h"
+#include "mb_cmd_proc.h"
 #include "drv_flash.h"
 #include "drv_gpio.h"
 #include "drv_uart.h"

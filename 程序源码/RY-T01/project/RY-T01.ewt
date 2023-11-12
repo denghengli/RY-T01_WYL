@@ -2352,6 +2352,9 @@
             <name>$PROJ_DIR$\..\app\main.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\app\mb_cmd_proc.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\hal\stm32f1xx_it.c</name>
         </file>
         <file>
@@ -2395,9 +2398,6 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\driver\drv_uart.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\driver\modbus.c</name>
         </file>
     </group>
     <group>
@@ -2476,6 +2476,18 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\hal\CMSIS\Device\ST\STM32F1xx\Source\Templates\system_stm32f1xx.c</name>
+        </file>
+    </group>
+    <group>
+        <name>modbus</name>
+        <file>
+            <name>$PROJ_DIR$\..\modbus\modbus.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\modbus\modbus_master.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\modbus\modbus_slave.c</name>
         </file>
     </group>
     <group>

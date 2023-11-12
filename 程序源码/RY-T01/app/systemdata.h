@@ -23,6 +23,7 @@
 /*串口传输时使用的结构体*/
 typedef struct
 {
+    uint8_t Num; /*主机时从机号*/
 	uint8_t RxBuf[UART_RXBUF_SIZE];
 	uint8_t RxCount;
 	uint8_t RxNewFlag;
@@ -114,6 +115,9 @@ typedef union
 	unsigned short regBuf[SYSTEM_DATA_LEN]; //2字节数据字节序为AB，4字节数据字节序为CDAB
 }SYSTEM_DATA_UN;
 
+#define HOLD_REGNUM PARA_DATA_LEN
+#define INPUT_REGNUM SAMPLE_DATA_LEN
+
 extern volatile SYSTEM_DATA_UN g_SysData;
 extern xSemaphoreHandle CommSem;
 extern xSemaphoreHandle AdSem;
@@ -121,12 +125,11 @@ extern xSemaphoreHandle FlashMutex;
 extern xSemaphoreHandle MutexPrint;
 extern EventGroupHandle_t EventGSpeedCal;
     
-extern unsigned short DevId_Get(void);
 extern void SampleData_ToModbus(void);
 extern void ParaData_Init(void);
 extern void ParaData_Save(uint8_t opt);
 extern void ParaData_Updata(void);
-
+extern void ParaData_Factory(void);
 
 #endif
 

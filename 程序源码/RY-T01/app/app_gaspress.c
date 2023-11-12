@@ -1,7 +1,7 @@
 #include "includes.h"
 
 #define SM9541_ADDR 0X28
-#define SAMP_FREQ_MAX  50 //采样次数 
+#define SAMP_FREQ_MAX  120 //采样次数 
 #define AUTOADJ_FREQ   5//自动校准采样次数
 #define PF 0
 #define GROW_DIR_NUM  5
@@ -68,6 +68,14 @@ static void FlueGasDynPress_Measure(void)
 	int Pressum = 0, PresTemp = 0;
 	int PresCntMax = g_SysData.Data.Para.smoothTime;
 	
+    //设置超限
+    if(PresCntMax > SAMP_FREQ_MAX)
+    {
+        PresCntMax = SAMP_FREQ_MAX;
+        g_SysData.Data.Para.smoothTime = SAMP_FREQ_MAX;
+        ParaData_Save(0);
+    }
+    
 	DRV_I2C_Start(s_tFGDynPresI2C);
 	
 	if(DRV_I2C_WriteByteWaiteAck(s_tFGDynPresI2C,SM9541_ADDR<<1 | CMD_MODE_READ))
@@ -159,6 +167,14 @@ static void FlueGasSticPress_Measure(void)
 	int Pressum = 0, PresTemp = 0;
 	int PresCntMax = g_SysData.Data.Para.smoothTime;
 		
+    //设置超限
+    if(PresCntMax > SAMP_FREQ_MAX)
+    {
+        PresCntMax = SAMP_FREQ_MAX;
+        g_SysData.Data.Para.smoothTime = SAMP_FREQ_MAX;
+        ParaData_Save(0);
+    }
+    
 	DRV_I2C_Start(s_tFGSticPresI2C);
 	
 	if(DRV_I2C_WriteByteWaiteAck(s_tFGSticPresI2C,SM9541_ADDR<<1 | CMD_MODE_READ))

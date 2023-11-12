@@ -2,7 +2,6 @@
 
 UART_TRANS_T  stComTrans;
 
-
 /**********************************************************************************************************
 *	函 数 名: SetComRcvNewFlg
 *	功能说明: 设置接收标志
@@ -34,7 +33,7 @@ unsigned char IsComRcvNew (void)
 **********************************************************************************************************/
 unsigned char IsComRcvDone(unsigned char _cDat)
 {
-    return IsModsRecvDone(&stComTrans,_cDat);
+    return Slave_IsRecvDone(&stComTrans,_cDat);
 }
 
 
@@ -46,7 +45,7 @@ unsigned char IsComRcvDone(unsigned char _cDat)
 **********************************************************************************************************/
 static void Com_Recv_Analysis(void)
 {
-    Mods_Recv_Analysis(&stComTrans);
+    Slave_Recv_Proc(&stComTrans);
 }
 
 /**********************************************************************************************************
@@ -57,9 +56,7 @@ static void Com_Recv_Analysis(void)
 **********************************************************************************************************/
 static void Com_Resp_Send(void)
 {
-
     Uart_SendData(UARTPORT_COM,stComTrans.TxBuf,stComTrans.TxCount);
-
 }
 
 /**********************************************************************************************************
@@ -72,6 +69,59 @@ void Com_DataInit(void)
 {
     memset(&stComTrans,0,sizeof(stComTrans));
 	stComTrans.RxNewFlag = 1;
+}
+
+//1、将数据从modbus缓存中读取到g_sysData
+//2、处理反控命令
+void dealMbWriteCmd(UART_TRANS_T *_pTrans)
+{
+    uint16_t addr, reg_addr = (_pTrans->RxBuf[2] << 8) | _pTrans->RxBuf[3];
+    uint16_t reg_num = 0;
+    
+    if (_pTrans->RxBuf[1] == MODBUS_SIMCOIL_REG_WR)/*0x5 写单个线圈寄存器 */
+    {
+        addr = reg_addr / 8;
+    }
+    else if (_pTrans->RxBuf[1] == MODBUS_MULCOIL_REG_WR)/*0x0F 写多个线圈寄存器 */
+    {
+        reg_num = (_pTrans->RxBuf[4] << 8) | _pTrans->RxBuf[5];
+        reg_num = (reg_num + 7) / 8;
+        reg_addr = reg_addr / 8;
+    }
+    else if (_pTrans->RxBuf[1] == MODBUS_SIMHOLD_REG_WR)/*0x6写单个保持寄存器*/
+    {
+        //控制类
+        if(reg_addr >= 50)
+        {
+            ParaData_Updata();
+            dealMbCmd(MODBUS_SIMHOLD_REG_WR, reg_addr + 40000, 1);
+        }
+        //参数类需要存入FLASH
+        else
+        {
+            ParaData_Updata();
+            dealMbCmd(MODBUS_SIMHOLD_REG_WR, reg_addr + 40000, 1);
+            ParaData_Save(1);
+        }
+    }
+    else if (_pTrans->RxBuf[1] == MODBUS_MULHOLD_REG_WR)/*0x10 写多个保持寄存器  */ 
+    {
+        reg_num = (_pTrans->RxBuf[4] << 8) | _pTrans->RxBuf[5];
+
+        //控制类
+        if(reg_addr >= 50)
+        {
+            ParaData_Updata();
+            dealMbCmd(MODBUS_MULHOLD_REG_WR, reg_addr + 40000, reg_num);
+        }
+        //参数类需要存入FLASH
+        else
+        {
+            ParaData_Updata();
+            dealMbCmd(MODBUS_MULHOLD_REG_WR, reg_addr + 40000, reg_num);
+            ParaData_Save(1);
+        }
+    }
 }
 
 /**********************************************************************************************************
@@ -91,13 +141,11 @@ void App_Comm(void *pvParameters)
         if(xSemaphoreTake(CommSem,sMaxBlockTime) == pdTRUE)
         {
             Com_Recv_Analysis();//请求解析
-
             Com_Resp_Send();//应答发送
-
+            dealMbWriteCmd(&stComTrans); //处理modbus写指令
             Com_DataInit();//解析完后清空缓冲区
 
             LOG_PRINT(DEBUG_TASK,"App_Comm \r\n");
-
             vTaskDelay(sMaxBlockTime);
         }
     }

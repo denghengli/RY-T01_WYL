@@ -6,7 +6,6 @@ extern UART_TRANS_T     stUart3Trans;
 /* USART1 init function */
 void MX_USART1_UART_Init(void)
 {
-
     LL_USART_InitTypeDef USART_InitStruct;
 
     LL_GPIO_InitTypeDef GPIO_InitStruct;
@@ -44,13 +43,11 @@ void MX_USART1_UART_Init(void)
     LL_USART_DisableIT_CTS(USART1);
     LL_USART_ClearFlag_RXNE(USART1);
     LL_USART_EnableIT_RXNE(USART1);
-
 }
 
 /* USART2 init function */
 void MX_USART2_UART_Init(void)
 {
-
     LL_USART_InitTypeDef USART_InitStruct;
     LL_GPIO_InitTypeDef GPIO_InitStruct;
 
@@ -90,13 +87,11 @@ void MX_USART2_UART_Init(void)
     LL_USART_Enable(USART2);
     LL_USART_ClearFlag_RXNE(USART2);
     LL_USART_EnableIT_RXNE(USART2);
-
 }
 
 /* USART3 init function */
 void MX_USART3_UART_Init(void)
 {
-
     LL_USART_InitTypeDef USART_InitStruct;
 
     LL_GPIO_InitTypeDef GPIO_InitStruct;
@@ -136,9 +131,57 @@ void MX_USART3_UART_Init(void)
     LL_USART_EnableIT_RXNE(USART3);
 }
 
+//修改串口波特率
+void Modify_UART_BaudRate(USART_TypeDef *USARTx, UART_CONFIG *Config)
+{
+    LL_USART_InitTypeDef USART_InitStruct;
 
-
-
+    //更改串口设置需要先关闭串口才能设置成功
+    LL_USART_DisableIT_RXNE(USARTx);
+    LL_USART_Disable(USARTx); 
+    LL_USART_DeInit(USARTx);
+    //baudrate
+    USART_InitStruct.BaudRate = Config->BaudRate;
+    //data bit
+    if (Config->DataBits == DATA_BITS_8)
+    {
+        USART_InitStruct.DataWidth = LL_USART_DATAWIDTH_8B;
+    }
+    else if (Config->DataBits == DATA_BITS_9)
+    {
+        USART_InitStruct.DataWidth = LL_USART_DATAWIDTH_9B;
+    }
+    //stop bit
+    if (Config->StopBits == STOP_BITS_1)
+    {
+        USART_InitStruct.StopBits = LL_USART_STOPBITS_1;
+    }
+    else if (Config->StopBits == STOP_BITS_2)
+    {
+        USART_InitStruct.StopBits = LL_USART_STOPBITS_2;
+    }
+    //Parity
+    if (Config->Parity == PARITY_NONE)
+    {
+        USART_InitStruct.Parity = LL_USART_PARITY_NONE;
+    }
+    else if (Config->Parity == PARITY_ODD)
+    {
+        USART_InitStruct.Parity = LL_USART_PARITY_ODD;
+    }
+    else if (Config->Parity == PARITY_EVEN)
+    {
+        USART_InitStruct.Parity = LL_USART_PARITY_EVEN;
+    }
+    USART_InitStruct.TransferDirection   = LL_USART_DIRECTION_TX_RX;
+    USART_InitStruct.HardwareFlowControl = LL_USART_HWCONTROL_NONE;
+    LL_USART_Init           (USARTx, &USART_InitStruct);
+    LL_USART_ConfigAsyncMode(USARTx);
+    LL_USART_Enable         (USARTx);
+    LL_USART_DisableIT_CTS  (USARTx);
+    LL_USART_ClearFlag_RXNE (USARTx);
+    LL_USART_EnableIT_RXNE  (USARTx);
+}
 
 /**********************************************************************************************************
 *	函 数 名: fputc
@@ -146,17 +189,16 @@ void MX_USART3_UART_Init(void)
 *	形    参: 无
 *	返 回 值: 无
 **********************************************************************************************************/
-//int fputc(int ch, FILE *f)
-//{
-//	/* 采用阻塞方式发送每个字符,等待数据发送完毕 */
-//	/* 写一个字节到USART2 */
-//	LL_USART_TransmitData8(UARTPORT_DEBUG, (uint8_t) ch);
-//	while (LL_USART_IsActiveFlag_TC(UARTPORT_DEBUG) == RESET);
-//	LL_USART_ClearFlag_TC(UARTPORT_DEBUG);
-//
-//	return ch;
-//
-//}
+int fputc(int ch, FILE *f)
+{
+#if UART_DEBUG
+	/* 采用阻塞方式发送每个字符,等待数据发送完毕 */
+	LL_USART_TransmitData8(UARTPORT_DEBUG, (uint8_t) ch);
+	while (LL_USART_IsActiveFlag_TC(UARTPORT_DEBUG) == RESET);
+	LL_USART_ClearFlag_TC(UARTPORT_DEBUG);
+#endif
+	return ch;
+}
 
 /**********************************************************************************************************
 *	函 数 名: fgetc
@@ -164,27 +206,31 @@ void MX_USART3_UART_Init(void)
 *	形    参: 无
 *	返 回 值: 无
 **********************************************************************************************************/
-//int fgetc(FILE *f)
-//{
-//	/* 等待串口1输入数据 */
-//	while (LL_USART_IsActiveFlag_RXNE(UARTPORT_DEBUG) == RESET);
-//
-//	return (int)LL_USART_ReceiveData8(UARTPORT_DEBUG);
-//
-//}
+int fgetc(FILE *f)
+{
+#if UART_DEBUG
+	/* 等待串口1输入数据 */
+	while (LL_USART_IsActiveFlag_RXNE(UARTPORT_DEBUG) == RESET);
+	return (int)LL_USART_ReceiveData8(UARTPORT_DEBUG);
+#else
+    return 0;
+#endif
+}
 
 void Uart_Debug(char *s)
 {
+#if UART_DEBUG
 	while(*s != '\0')
 	{
 		LL_USART_TransmitData8(UARTPORT_DEBUG, (uint8_t) *s);
 		while (LL_USART_IsActiveFlag_TXE(UARTPORT_DEBUG) == RESET)
 		{
-//			LL_USART_ClearFlag_TXE(UARTPORT_DEBUG);
+			LL_USART_ClearFlag_TXE(UARTPORT_DEBUG);
 		}
 		
 		s++;
 	}	
+#endif
 }
 
 

@@ -49,16 +49,16 @@
                 <option>
                     <name>GRuntimeLibSelect</name>
                     <version>0</version>
-                    <state>1</state>
+                    <state>2</state>
                 </option>
                 <option>
                     <name>GRuntimeLibSelectSlave</name>
                     <version>0</version>
-                    <state>1</state>
+                    <state>2</state>
                 </option>
                 <option>
                     <name>RTDescription</name>
-                    <state>Use the normal configuration of the C/C++ runtime library. No locale interface, C locale, no file descriptor support, no multibytes in printf and scanf, and no hex floats in strtod.</state>
+                    <state>Use the full configuration of the C/C++ runtime library. Full locale interface, C locale, file descriptor support, multibytes in printf and scanf, and hex floats in strtod.</state>
                 </option>
                 <option>
                     <name>OGProductVersion</name>
@@ -112,7 +112,7 @@
                 </option>
                 <option>
                     <name>RTConfigPath2</name>
-                    <state>$TOOLKIT_DIR$\INC\c\DLib_Config_Normal.h</state>
+                    <state>$TOOLKIT_DIR$\INC\c\DLib_Config_Full.h</state>
                 </option>
                 <option>
                     <name>GBECoreSlave</name>
@@ -358,6 +358,7 @@
                     <state>$CMSIS_PACK_INCLUDES$</state>
                     <state>$PROJ_DIR$\..\os\CMSIS_RTOS</state>
                     <state>$PROJ_DIR$\..\hal\CMSIS\Device\ST\STM32F1xx\Include</state>
+                    <state>$PROJ_DIR$\..\modbus</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -2088,6 +2089,9 @@
             <name>$PROJ_DIR$\..\app\main.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\app\mb_cmd_proc.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\hal\stm32f1xx_it.c</name>
         </file>
         <file>
@@ -2132,9 +2136,6 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\driver\drv_uart.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\..\driver\modbus.c</name>
         </file>
     </group>
     <group>
@@ -2213,6 +2214,18 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\hal\CMSIS\Device\ST\STM32F1xx\Source\Templates\system_stm32f1xx.c</name>
+        </file>
+    </group>
+    <group>
+        <name>modbus</name>
+        <file>
+            <name>$PROJ_DIR$\..\modbus\modbus.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\modbus\modbus_master.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\modbus\modbus_slave.c</name>
         </file>
     </group>
     <group>
