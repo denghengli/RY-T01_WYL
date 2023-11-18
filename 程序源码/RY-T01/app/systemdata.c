@@ -60,10 +60,10 @@ void ParaData_Init(void)
         s_ParaData.Para.humitDispUnit = 1;
         s_ParaData.Para.sectionArea = 50;
         s_ParaData.Para.smoothTime = 5;
-        s_ParaData.Para.dynPressRange = 1000;
-        s_ParaData.Para.speedRange = 30;
-        s_ParaData.Para.sticPressMax = 5;
-        s_ParaData.Para.sticPressMin = 5;
+        s_ParaData.Para.dynPressRange = 2000;
+        s_ParaData.Para.speedRange = 40;
+        s_ParaData.Para.sticPressMax = 10;
+        s_ParaData.Para.sticPressMin = -10;
         s_ParaData.Para.flowRange = 3200;
         
 		FlashSave(STM32_FLASH_ADDR_PARA, (uint8_t*)&s_ParaData, sizeof(s_ParaData));
@@ -93,10 +93,10 @@ void ParaData_Init(void)
         s_FactoryParaData.Para.humitDispUnit = 1;
         s_FactoryParaData.Para.sectionArea = 50;
         s_FactoryParaData.Para.smoothTime = 5;
-        s_FactoryParaData.Para.dynPressRange = 1000;
-        s_FactoryParaData.Para.speedRange = 30;
-        s_FactoryParaData.Para.sticPressMax = 5;
-        s_FactoryParaData.Para.sticPressMin = 5;
+        s_FactoryParaData.Para.dynPressRange = 2000;
+        s_FactoryParaData.Para.speedRange = 40;
+        s_FactoryParaData.Para.sticPressMax = 10;
+        s_FactoryParaData.Para.sticPressMin = -10;
         s_FactoryParaData.Para.flowRange = 3200;
 		
         FlashSave(STM32_FLASH_ADDR_PARA_FACTORY, (uint8_t*)&s_FactoryParaData, sizeof(s_FactoryParaData));

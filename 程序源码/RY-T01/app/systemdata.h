@@ -51,7 +51,7 @@ __packed typedef struct
     float dynPress;     //动压(Pa)
     float sticPress;    //静压(Pa)
     float airPress;     //大气压(KPa)
-    float blowGasPress; //反吹气压力(MPa)
+    float blowGasPress; //反吹气压力(KPa)
     float speed;        //流速(m/s)
     float flow;         //流量(m³/s)
     float ptTem;        //温度
@@ -82,8 +82,8 @@ __packed typedef struct
     uint16_t smoothTime;    //平滑时间(s),越大响应时间越长,平滑度越好，越小则相反，最大50，默认20
     uint16_t dynPressRange; //动压量程(Pa)，300:0-300 1000:0-1000 2000:0-2000
     uint16_t speedRange;    //流速量程(m/s)，15:0-15 30:0-30 40:0-40
-    uint16_t sticPressMax;  //压力/静压量程上限(KPa)，2:±2 5:±5 10:±10 130:70-130
-    uint16_t sticPressMin;  //压力/静压量程下限(KPa)
+    short sticPressMax;     //压力/静压量程上限(KPa)，2:±2 5:±5 10:±10 130:70-130
+    short sticPressMin;     //压力/静压量程下限(KPa)
 	uint16_t flowRange;     //流量量程(m³/s)
     uint16_t reserve[20];   //预留
     

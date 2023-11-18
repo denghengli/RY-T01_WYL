@@ -165,10 +165,11 @@ int main()
     MX_TIM1_Init();
 	MX_TIM2_Init();
     ParaData_Init();
-      
+    LCD_Init();
+    
     xTaskCreate(App_Comm ,   "App_Comm",     configMINIMAL_STACK_SIZE*4,  NULL, 	tskIDLE_PRIORITY + 10, 	NULL);//n通讯
     xTaskCreate(App_AD,      "App_AD",       configMINIMAL_STACK_SIZE*4,  NULL, 	tskIDLE_PRIORITY + 9, 	NULL);//n
-    xTaskCreate(APP_FlueGasP,"APP_FlueGasP", configMINIMAL_STACK_SIZE*6,  NULL, 	tskIDLE_PRIORITY + 8, 	NULL);//y
+    xTaskCreate(APP_FlueGasP,"APP_FlueGasP", configMINIMAL_STACK_SIZE*4,  NULL, 	tskIDLE_PRIORITY + 8, 	NULL);//y
     xTaskCreate(APP_PT100,   "APP_PT100",    configMINIMAL_STACK_SIZE*4,  NULL, 	tskIDLE_PRIORITY + 7, 	NULL);
     xTaskCreate(APP_Humit,   "APP_Humit",    configMINIMAL_STACK_SIZE*4,  NULL, 	tskIDLE_PRIORITY + 7, 	NULL);
     xTaskCreate(APP_SpeedCal,"APP_SpeedCal", configMINIMAL_STACK_SIZE*4,  NULL, 	tskIDLE_PRIORITY + 6, 	NULL);

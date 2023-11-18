@@ -49,7 +49,7 @@
 #define configTICK_RATE_HZ                       ((TickType_t)1000) //系统时钟节拍频率，一个时钟节拍1/configTICK_RATE_HZ s
 #define configMAX_PRIORITIES                     ( 15 )            //可供用户使用的最大优先级数0--14
 #define configMINIMAL_STACK_SIZE                 ((uint16_t)128)  //空闲任务的堆栈空间
-#define configTOTAL_HEAP_SIZE                    ((size_t) (15 * 1024))//FreeRTOS内核中，用户申请内存，任务栈的需要使用这个空间
+#define configTOTAL_HEAP_SIZE                    ((size_t) (20 * 1024))//FreeRTOS内核中，用户申请内存，任务栈的需要使用这个空间
 #define configMAX_TASK_NAME_LEN                  ( 25 )           //任务名支持的最大字符长度
 #define configUSE_16_BIT_TICKS                   0  //系统时钟节拍数的数据类型,默认32位,使能为16位
 #define configUSE_MUTEXES                        1  //使能互斥信号量

@@ -20,12 +20,12 @@ static SM9541_DATA_T s_tFGSticPresDat;//静压传感器数据结构体
 void FlueGasPress_DataInit(void)
 {
 	/*U11 020*/
-    s_tFGDynPresI2C.SCL.ePinName   = epin_gas_scl1;
-    s_tFGDynPresI2C.SDA.ePinName   = epin_gas_sda1;
+    s_tFGDynPresI2C.SCL.ePinName = epin_gas_scl1;
+    s_tFGDynPresI2C.SDA.ePinName = epin_gas_sda1;
 	
 	/*U12 040*/
-    s_tFGSticPresI2C.SCL.ePinName   = epin_gas_scl2;
-    s_tFGSticPresI2C.SDA.ePinName   = epin_gas_sda2;
+    s_tFGSticPresI2C.SCL.ePinName = epin_gas_scl2;
+    s_tFGSticPresI2C.SDA.ePinName = epin_gas_sda2;
 	
 	/*SM9541_020C_D 动压传感器*/
 	s_tFGDynPresDat.MaxCount = 14745;
@@ -35,17 +35,14 @@ void FlueGasPress_DataInit(void)
 //	s_tFGDynPresDat.MaxPress = 9806; //单位Pa,1.961KPa;cmH2O单位换算得来https://www.si-micro.com/
 //	s_tFGDynPresDat.MinPress = -9806;//单位Pa,-1.961KPa;cmH2O单位换算得来https://www.si-micro.com/
 
-	/*SM9541_040C_D 静压传感器*/
+	/*SM9541_100C_D 静压传感器*/
 	s_tFGSticPresDat.MaxCount = 14745;
 	s_tFGSticPresDat.MinCount = 1638;
-	s_tFGSticPresDat.MaxPress = 3922; //单位Pa,9.806KPa;cmH2O单位换算得来https://www.si-micro.com/
-	s_tFGSticPresDat.MinPress = -3922;//单位Pa,-9.806KPa;cmH2O单位换算得来https://www.si-micro.com/	
-//    s_tFGSticPresDat.MaxPress = 1961; //单位Pa,9.806KPa;cmH2O单位换算得来https://www.si-micro.com/
-//	s_tFGSticPresDat.MinPress = -1961;//单位Pa,-9.806KPa;cmH2O单位换算得来https://www.si-micro.com/
-
+	s_tFGSticPresDat.MaxPress = 9806; //单位Pa,9.806KPa;cmH2O单位换算得来https://www.si-micro.com/
+	s_tFGSticPresDat.MinPress = -9806;//单位Pa,-9.806KPa;cmH2O单位换算得来https://www.si-micro.com/	
+//    s_tFGSticPresDat.MaxPress = 3922; //单位Pa,9.806KPa;cmH2O单位换算得来https://www.si-micro.com/
+//	s_tFGSticPresDat.MinPress = -3922;//单位Pa,-9.806KPa;cmH2O单位换算得来https://www.si-micro.com/
 }
-
-
 
 /********************************************************************************************************
 *	函 数 名: FlueGasDynPress_Measure

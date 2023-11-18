@@ -20,7 +20,7 @@ const  struct DRV_Pin   DRV_PINS[] =
     {epin_mes_do,     LL_APB2_GRP1_PERIPH_GPIOC, GPIOC, LL_GPIO_PIN_13},
     {epin_blow_do,    LL_APB2_GRP1_PERIPH_GPIOC, GPIOC, LL_GPIO_PIN_14},
     
-    {epin_run,		  LL_APB2_GRP1_PERIPH_GPIOB, GPIOB, LL_GPIO_PIN_15},
+    {epin_run,		  LL_APB2_GRP1_PERIPH_GPIOC, GPIOC, LL_GPIO_PIN_0},
     {epin_boot1,      LL_APB2_GRP1_PERIPH_GPIOB, GPIOB, LL_GPIO_PIN_2},
     
 };
@@ -181,26 +181,26 @@ unsigned char DRV_Pin_Read(DRV_PIN_NAME_E  _ePin)
 */
 void MX_GPIO_Init(void)
 {
-    DRV_Pin_Mode(epin_pt100,   PINMODE_IN_ANALOG);
-    DRV_Pin_Mode(epin_wdt,     PINMODE_OUT_PP);
-    
-    DRV_Pin_Mode(epin_dac_rdy, PINMODE_IN_UP);
-    DRV_Pin_Mode(epin_dac_ldac,PINMODE_OUT_OD_UP);
-    DRV_Pin_Mode(epin_dac_sda, PINMODE_OUT_OD_UP);
-    DRV_Pin_Mode(epin_dac_scl, PINMODE_OUT_OD_UP);
-    
-    DRV_Pin_Mode(epin_gas_sda1,PINMODE_OUT_OD_UP);
-    DRV_Pin_Mode(epin_gas_scl1,PINMODE_OUT_OD_UP);
-    DRV_Pin_Mode(epin_gas_sda2,PINMODE_OUT_OD_UP);
-    DRV_Pin_Mode(epin_gas_scl2,PINMODE_OUT_OD_UP);
-    
-    DRV_Pin_Mode(epin_mes_do,  PINMODE_OUT_PP);
-    DRV_Pin_Mode(epin_blow_do, PINMODE_OUT_PP);
+//    DRV_Pin_Mode(epin_pt100,   PINMODE_IN_ANALOG);
+//    DRV_Pin_Mode(epin_wdt,     PINMODE_OUT_PP);
+//    
+//    DRV_Pin_Mode(epin_dac_rdy, PINMODE_IN_UP);
+//    DRV_Pin_Mode(epin_dac_ldac,PINMODE_OUT_OD_UP);
+//    DRV_Pin_Mode(epin_dac_sda, PINMODE_OUT_OD_UP);
+//    DRV_Pin_Mode(epin_dac_scl, PINMODE_OUT_OD_UP);
+//    
+//    DRV_Pin_Mode(epin_gas_sda1,PINMODE_OUT_OD_UP);
+//    DRV_Pin_Mode(epin_gas_scl1,PINMODE_OUT_OD_UP);
+//    DRV_Pin_Mode(epin_gas_sda2,PINMODE_OUT_OD_UP);
+//    DRV_Pin_Mode(epin_gas_scl2,PINMODE_OUT_OD_UP);
+//    
+//    DRV_Pin_Mode(epin_mes_do,  PINMODE_OUT_PP);
+//    DRV_Pin_Mode(epin_blow_do, PINMODE_OUT_PP);
     DRV_Pin_Mode(epin_run,     PINMODE_OUT_PP);
-    DRV_Pin_Mode(epin_boot1,   PINMODE_IN_FLOATING);
-    
-    DRV_Pin_Write(epin_mes_do,0);
-    DRV_Pin_Write(epin_blow_do,0);
+//    DRV_Pin_Mode(epin_boot1,   PINMODE_IN_FLOATING);
+//    
+//    DRV_Pin_Write(epin_mes_do,0);
+//    DRV_Pin_Write(epin_blow_do,0);
 }
    
 

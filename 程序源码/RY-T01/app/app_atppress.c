@@ -61,7 +61,7 @@ void AtpPress_Measure(void)
 	
 	s_tAtpPressDat.AD  = AtpPress_GetAD();//采集到的电压AD值
 
-	temp = ((float)3 / 4096) * s_tAtpPressDat.AD;
+	temp = ((float)3.0 / 4096.0) * s_tAtpPressDat.AD;
 	s_tAtpPressDat.Vol = (1 + (float)100 / 180) * temp;//通过分压比计算出最终的传感器测量电压
 	 
 	s_tAtpPressDat.TempFactor = MPX_GetTempFactor();

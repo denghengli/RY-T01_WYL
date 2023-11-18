@@ -1,26 +1,12 @@
 #include "includes.h"
 #include "drv_soft_i2c.h"
 
+MCP4728_T s_tMCP4728; 
+
 //DAC芯片地址、指令、通道选择
 #define DAC_ADDR	0xC0
 #define DAC_READ	0x01
 #define DAC_WRITE	0x00
-
-typedef struct 
-{
-    DRV_I2C_T  I2C;
-    struct RegConfig
-    {
-        unsigned char  Vref; //电压基准选择 0 = VDD, 1 = 2.048
-        unsigned char  Gain; //增益选择 1 = 1， 2 = 2
-        unsigned char  ChSel;//通道选择 bit0:通道A，bit1:通道B，bit2:通道C，bit3:通道D
-    }Config; 
-    
-    unsigned short DACValue[4]; //4通道DAC输入代码
-
-}MCP4728_T;
-
-static MCP4728_T    s_tMCP4728;  //MCP4728
 
 //电压基准选择 0 = VDD, 1 = 2.048
 void Vref_Select(uint8_t vref) 
@@ -113,28 +99,23 @@ void MCP7428_Init(void)
 
 /**********************************************************************************************************
 *	函 数 名: MCP4728_Output
-*	功能说明: DAC模拟量输出 Vout = (VDD*DACValue)/4095, VDD=5
-*	形     参: A_V1:0-5V VAO01, B_V2:0-5V VAO02, C_I1:0-20mA IAO01, B_I2:0-20mA IAO01
+*	功能说明: DAC模拟量输出 Vout = (VDD*DACValue)/4096, VDD=5
+*	形     参: A_V1:0-5V VAO01, B_V2:0-5V VAO02, C_V3:0-5V VAO03, D_V4:0-5V VAO04
 *	返 回 值: NONE
 **********************************************************************************************************/
-void MCP4728_Output(float A_V1, float B_V2, float C_I1, float D_I2)
+void MCP4728_Output(float A_V1, float B_V2, float C_V3, float D_V4)
 {
-    float vol_temp = 0;
-    
     if(s_tMCP4728.Config.Vref == 0) s_tMCP4728.DACValue[0] = (uint16_t)(A_V1 * 4096.0 / 5.0); 
-    if(s_tMCP4728.Config.Vref == 1) s_tMCP4728.DACValue[0] = (uint16_t)(A_V1 * 4096.0 / 4.096); 
+    if(s_tMCP4728.Config.Vref == 1) s_tMCP4728.DACValue[0] = (uint16_t)(A_V1 * 4096.0 / (2.048 * s_tMCP4728.Config.Gain));
     
     if(s_tMCP4728.Config.Vref == 0) s_tMCP4728.DACValue[1] = (uint16_t)(B_V2 * 4096.0 / 5.0); 
-    if(s_tMCP4728.Config.Vref == 1) s_tMCP4728.DACValue[1] = (uint16_t)(B_V2 * 4096.0 / 4.096); 
+    if(s_tMCP4728.Config.Vref == 1) s_tMCP4728.DACValue[1] = (uint16_t)(B_V2 * 4096.0 / (2.048 * s_tMCP4728.Config.Gain)); 
 
-    //先将电流转换成对应电压
-    vol_temp = C_I1 * 0.2; 
-    if(s_tMCP4728.Config.Vref == 0) s_tMCP4728.DACValue[2] = (uint16_t)(vol_temp * 4096.0 / 5.0); 
-    if(s_tMCP4728.Config.Vref == 1) s_tMCP4728.DACValue[2] = (uint16_t)(vol_temp * 4096.0 / 4.096);
+    if(s_tMCP4728.Config.Vref == 0) s_tMCP4728.DACValue[2] = (uint16_t)(C_V3 * 4096.0 / 5.0); 
+    if(s_tMCP4728.Config.Vref == 1) s_tMCP4728.DACValue[2] = (uint16_t)(C_V3 * 4096.0 / (2.048 * s_tMCP4728.Config.Gain));
     
-    vol_temp = D_I2 * 0.2;
-    if(s_tMCP4728.Config.Vref == 0) s_tMCP4728.DACValue[3] = (uint16_t)(vol_temp * 4096.0 / 5.0); 
-    if(s_tMCP4728.Config.Vref == 1) s_tMCP4728.DACValue[3] = (uint16_t)(vol_temp * 4096.0 / 4.096);
+    if(s_tMCP4728.Config.Vref == 0) s_tMCP4728.DACValue[3] = (uint16_t)(D_V4 * 4096.0 / 5.0); 
+    if(s_tMCP4728.Config.Vref == 1) s_tMCP4728.DACValue[3] = (uint16_t)(D_V4 * 4096.0 / (2.048 * s_tMCP4728.Config.Gain));
     
     Sequential_Write(s_tMCP4728.DACValue[0], s_tMCP4728.DACValue[1], s_tMCP4728.DACValue[2], s_tMCP4728.DACValue[3]);
 }
