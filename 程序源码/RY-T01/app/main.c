@@ -21,6 +21,7 @@ extern void APP_SpeedCal(void *pvParameters);
 extern void APP_DA(void *pvParameters);
 extern void APP_Timing(void *pvParameters);
 extern void APP_Humit(void *pvParameters);
+extern void APP_GUI(void  * argument);
 
 xSemaphoreHandle CommSem;
 xSemaphoreHandle AdSem;
@@ -175,8 +176,9 @@ int main()
     xTaskCreate(APP_SpeedCal,"APP_SpeedCal", configMINIMAL_STACK_SIZE*4,  NULL, 	tskIDLE_PRIORITY + 6, 	NULL);
     xTaskCreate(APP_DA,      "APP_DA",       configMINIMAL_STACK_SIZE*2,  NULL, 	tskIDLE_PRIORITY + 5, 	NULL);
     xTaskCreate(APP_Timing,  "APP_Timing",   configMINIMAL_STACK_SIZE,    NULL, 	tskIDLE_PRIORITY + 4, 	NULL);
-    xTaskCreate(App_WDT,     "App_WDT",      configMINIMAL_STACK_SIZE,    NULL, 	tskIDLE_PRIORITY + 3, 	NULL);//y
-
+    xTaskCreate(App_WDT,     "App_WDT",      configMINIMAL_STACK_SIZE,    NULL, 	tskIDLE_PRIORITY + 4, 	NULL);//y
+    xTaskCreate(APP_GUI,     "APP_GUI",      configMINIMAL_STACK_SIZE*4,  NULL, 	tskIDLE_PRIORITY + 3, 	NULL);
+    
     vTaskStartScheduler();   
 
     while (1)

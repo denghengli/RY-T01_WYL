@@ -41,22 +41,22 @@ uint8_t* hal_lcd_driver_intface(void* para,uint8_t* str,uint16_t len)
   //=0006 + 4字节坐标 + 2保留 + 2字节背景色+2字节字体颜色+ 2字节显示字长度 + 2字节半径
   else if(cmd == FNC_LCD_DISP_DRAW_CIRC)
   {
-    Draw_Circle(p->x,p->y,(uint16_t)(str[1]*256+str[0]),p->fc);
+    LCD_DrawCircle(p->x,p->y,(uint16_t)(str[1]*256+str[0]),p->fc);
   }
   //=0007 + 4字节坐标 + 2字节字体规格 + 2字节背景色+2字节字体颜色+ 2字节显示字长度 + "显示数据GB2312码" 
   else if(cmd == FNC_LCD_DISP_DRAW_CHAR)
   {		
-    LCD_ShowStringX(p->x,p->y,str,len,p->mode,p->fc,p->bc);
+    //LCD_ShowStringX(p->x,p->y,str,len,p->mode,p->fc,p->bc);
   }
   //=0008 + 4字节坐标 + 图片序号
   else if(cmd == FNC_LCD_DISP_DRAW_PIC)
   {
-    lcd_darw_pic(p->x,p->y,p->mode);
+    //LCD_Darwpic(p->x,p->y,p->mode);
   }				
   //=0009 + 4字节坐标 + 字符串 + 2字节字体规格 + 2字节字体颜色
   else if(cmd == FNC_LCD_DISP_DRAW_STRING)
   {
-    lcd_putstring(p->x,p->y,(char *)str,len,p->mode,p->fc,p->bc);
+    LCD_Putstring(p->x,p->y,str,len,p->mode,p->fc,p->bc);
   }
   
   return 0;

@@ -25,8 +25,6 @@ void App_WDT(void *pvParameters)
             DRV_Pin_Write(epin_wdt,1);
         }       
         
-        Draw_Circle(50, 50, 20, RED);
-        
         LL_IWDG_ReloadCounter(IWDG);
         
         vTaskDelay(1000 / portTICK_PERIOD_MS);

@@ -2069,6 +2069,12 @@
             <name>$PROJ_DIR$\..\app\app_gaspress.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\app\app_gui.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\app\app_gui.h</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\app\app_humit.c</name>
         </file>
         <file>
@@ -2100,6 +2106,13 @@
         </file>
     </group>
     <group>
+        <name>CMSIS-Pack</name>
+        <tag>CMSISPack.ComponentGroup</tag>
+        <file>
+            <name>$PROJ_DIR$\RTE\RTE_Components.h</name>
+        </file>
+    </group>
+    <group>
         <name>driver</name>
         <group>
             <name>lcd</name>
@@ -2110,10 +2123,19 @@
                 <name>$PROJ_DIR$\..\driver\lcd\drv_lcd.h</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\driver\lcd\font_ascii.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\driver\lcd\font_gb.h</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\driver\lcd\hal_lcd.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\driver\lcd\hal_lcd.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\driver\lcd\pic.h</name>
             </file>
         </group>
         <file>
@@ -2138,6 +2160,9 @@
             <name>$PROJ_DIR$\..\driver\drv_soft_timer.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\driver\drv_spi.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\driver\drv_task.c</name>
         </file>
         <file>
@@ -2145,6 +2170,15 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\driver\drv_uart.c</name>
+        </file>
+    </group>
+    <group>
+        <name>gui</name>
+        <file>
+            <name>$PROJ_DIR$\..\gui\ui_fun_isclean.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\gui\ui_fun_isrefresh.c</name>
         </file>
     </group>
     <group>
@@ -2213,6 +2247,9 @@
             <name>$PROJ_DIR$\..\hal\STM32F1xx_HAL_Driver\Src\stm32f1xx_ll_rcc.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\hal\STM32F1xx_HAL_Driver\Src\stm32f1xx_ll_spi.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\hal\STM32F1xx_HAL_Driver\Src\stm32f1xx_ll_tim.c</name>
         </file>
         <file>
@@ -2268,13 +2305,6 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\os\timers.c</name>
-        </file>
-    </group>
-    <group>
-        <name>CMSIS-Pack</name>
-        <tag>CMSISPack.ComponentGroup</tag>
-        <file>
-            <name>$PROJ_DIR$\RTE\RTE_Components.h</name>
         </file>
     </group>
     <cmsisPackSettings>
