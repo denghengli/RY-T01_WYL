@@ -1,28 +1,34 @@
 #include "includes.h"
 
-
 /* 这里的IO不包括 USART引脚 */
 const  struct DRV_Pin   DRV_PINS[] =
 {
-	{epin_pt100,      LL_APB2_GRP1_PERIPH_GPIOA, GPIOA, LL_GPIO_PIN_0},
-    {epin_wdt,        LL_APB2_GRP1_PERIPH_GPIOA, GPIOA, LL_GPIO_PIN_8},
+	{epin_GAS_SDA1,     LL_APB2_GRP1_PERIPH_GPIOB, GPIOB, LL_GPIO_PIN_11},
+    {epin_GAS_SCL1,     LL_APB2_GRP1_PERIPH_GPIOB, GPIOB, LL_GPIO_PIN_10},
+    {epin_GAS_SDA2,     LL_APB2_GRP1_PERIPH_GPIOB, GPIOB, LL_GPIO_PIN_8},
+    {epin_GAS_SCL2,     LL_APB2_GRP1_PERIPH_GPIOB, GPIOB, LL_GPIO_PIN_9},
     
-    {epin_dac_rdy,    LL_APB2_GRP1_PERIPH_GPIOA, GPIOA, LL_GPIO_PIN_15},
-    {epin_dac_ldac,   LL_APB2_GRP1_PERIPH_GPIOB, GPIOB, LL_GPIO_PIN_3},
-    {epin_dac_sda,    LL_APB2_GRP1_PERIPH_GPIOB, GPIOB, LL_GPIO_PIN_4},
-    {epin_dac_scl,    LL_APB2_GRP1_PERIPH_GPIOB, GPIOB, LL_GPIO_PIN_5},
+    {epin_DAC_SDA,      LL_APB2_GRP1_PERIPH_GPIOB, GPIOB, LL_GPIO_PIN_7},
+    {epin_DAC_SCL,      LL_APB2_GRP1_PERIPH_GPIOB, GPIOB, LL_GPIO_PIN_6},
+    {epin_DAC_LDAC,     LL_APB2_GRP1_PERIPH_GPIOB, GPIOB, LL_GPIO_PIN_5},
+    {epin_DAC_RDY,      LL_APB2_GRP1_PERIPH_GPIOD, GPIOD, LL_GPIO_PIN_2},
     
-    {epin_gas_scl2,   LL_APB2_GRP1_PERIPH_GPIOB, GPIOB, LL_GPIO_PIN_6},
-    {epin_gas_sda2,   LL_APB2_GRP1_PERIPH_GPIOB, GPIOB, LL_GPIO_PIN_7},
-    {epin_gas_scl1,   LL_APB2_GRP1_PERIPH_GPIOB, GPIOB, LL_GPIO_PIN_8},
-    {epin_gas_sda1,   LL_APB2_GRP1_PERIPH_GPIOB, GPIOB, LL_GPIO_PIN_9},
+    {epin_AT24_SDA,     LL_APB2_GRP1_PERIPH_GPIOC, GPIOC, LL_GPIO_PIN_14},
+    {epin_AT24_SCL,     LL_APB2_GRP1_PERIPH_GPIOC, GPIOC, LL_GPIO_PIN_13},
     
-    {epin_mes_do,     LL_APB2_GRP1_PERIPH_GPIOC, GPIOC, LL_GPIO_PIN_13},
-    {epin_blow_do,    LL_APB2_GRP1_PERIPH_GPIOC, GPIOC, LL_GPIO_PIN_14},
+    {epin_KEY0,         LL_APB2_GRP1_PERIPH_GPIOB, GPIOB, LL_GPIO_PIN_12},
+    {epin_KEY1,         LL_APB2_GRP1_PERIPH_GPIOC, GPIOC, LL_GPIO_PIN_10},
+    {epin_KEY2,         LL_APB2_GRP1_PERIPH_GPIOC, GPIOC, LL_GPIO_PIN_11},
+    {epin_KEY3,         LL_APB2_GRP1_PERIPH_GPIOC, GPIOC, LL_GPIO_PIN_12},
+    {epin_KEY4,         LL_APB2_GRP1_PERIPH_GPIOC, GPIOC, LL_GPIO_PIN_3},
     
-    {epin_run,		  LL_APB2_GRP1_PERIPH_GPIOC, GPIOC, LL_GPIO_PIN_0},
-    {epin_boot1,      LL_APB2_GRP1_PERIPH_GPIOB, GPIOB, LL_GPIO_PIN_2},
-    
+    {epin_VALVE1,       LL_APB2_GRP1_PERIPH_GPIOC, GPIOC, LL_GPIO_PIN_1},
+    {epin_VALVE2,       LL_APB2_GRP1_PERIPH_GPIOC, GPIOC, LL_GPIO_PIN_2},
+    {epin_VALVE3,       LL_APB2_GRP1_PERIPH_GPIOC, GPIOC, LL_GPIO_PIN_4},
+    {epin_VALVE4,       LL_APB2_GRP1_PERIPH_GPIOC, GPIOC, LL_GPIO_PIN_5},
+
+    {epin_RUN,          LL_APB2_GRP1_PERIPH_GPIOC, GPIOC, LL_GPIO_PIN_0},
+    {epin_WDT,          LL_APB2_GRP1_PERIPH_GPIOA, GPIOA, LL_GPIO_PIN_8}
 };
 
 
@@ -181,26 +187,31 @@ unsigned char DRV_Pin_Read(DRV_PIN_NAME_E  _ePin)
 */
 void MX_GPIO_Init(void)
 {
-//    DRV_Pin_Mode(epin_pt100,   PINMODE_IN_ANALOG);
-//    DRV_Pin_Mode(epin_wdt,     PINMODE_OUT_PP);
-//    
-//    DRV_Pin_Mode(epin_dac_rdy, PINMODE_IN_UP);
-//    DRV_Pin_Mode(epin_dac_ldac,PINMODE_OUT_OD_UP);
-//    DRV_Pin_Mode(epin_dac_sda, PINMODE_OUT_OD_UP);
-//    DRV_Pin_Mode(epin_dac_scl, PINMODE_OUT_OD_UP);
-//    
-//    DRV_Pin_Mode(epin_gas_sda1,PINMODE_OUT_OD_UP);
-//    DRV_Pin_Mode(epin_gas_scl1,PINMODE_OUT_OD_UP);
-//    DRV_Pin_Mode(epin_gas_sda2,PINMODE_OUT_OD_UP);
-//    DRV_Pin_Mode(epin_gas_scl2,PINMODE_OUT_OD_UP);
-//    
-//    DRV_Pin_Mode(epin_mes_do,  PINMODE_OUT_PP);
-//    DRV_Pin_Mode(epin_blow_do, PINMODE_OUT_PP);
-    DRV_Pin_Mode(epin_run,     PINMODE_OUT_PP);
-//    DRV_Pin_Mode(epin_boot1,   PINMODE_IN_FLOATING);
-//    
-//    DRV_Pin_Write(epin_mes_do,0);
-//    DRV_Pin_Write(epin_blow_do,0);
+    DRV_Pin_Mode(epin_WDT,  PINMODE_OUT_PP);
+    DRV_Pin_Mode(epin_RUN,  PINMODE_OUT_PP);
+    
+    DRV_Pin_Mode(epin_DAC_RDY, PINMODE_IN_UP);
+    DRV_Pin_Mode(epin_DAC_LDAC,PINMODE_OUT_PP);
+    DRV_Pin_Mode(epin_DAC_SDA, PINMODE_OUT_OD_UP);
+    DRV_Pin_Mode(epin_DAC_SCL, PINMODE_OUT_OD_UP);
+    
+    DRV_Pin_Mode(epin_GAS_SDA1,PINMODE_OUT_OD_UP);
+    DRV_Pin_Mode(epin_GAS_SCL1,PINMODE_OUT_OD_UP);
+    DRV_Pin_Mode(epin_GAS_SDA2,PINMODE_OUT_OD_UP);
+    DRV_Pin_Mode(epin_GAS_SCL2,PINMODE_OUT_OD_UP);
+
+    DRV_Pin_Mode(epin_AT24_SDA,PINMODE_OUT_OD_UP);
+    DRV_Pin_Mode(epin_AT24_SCL,PINMODE_OUT_OD_UP);
+    
+    DRV_Pin_Mode(epin_VALVE1,   PINMODE_OUT_PP);
+    DRV_Pin_Mode(epin_VALVE2,   PINMODE_OUT_PP);
+    DRV_Pin_Mode(epin_VALVE3,   PINMODE_OUT_PP);
+    DRV_Pin_Mode(epin_VALVE4,   PINMODE_OUT_PP);
+
+    DRV_Pin_Mode(epin_KEY0,   PINMODE_IN_FLOATING);
+    DRV_Pin_Mode(epin_KEY1,   PINMODE_IN_FLOATING);
+    DRV_Pin_Mode(epin_KEY2,   PINMODE_IN_FLOATING);
+    DRV_Pin_Mode(epin_KEY3,   PINMODE_IN_FLOATING);
+    DRV_Pin_Mode(epin_KEY4,   PINMODE_IN_FLOATING);
 }
    
-

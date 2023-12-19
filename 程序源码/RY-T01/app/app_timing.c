@@ -54,7 +54,7 @@ static void Timing_Blow_Proc(void)
                 }
                 else
                 {
-                    DRV_Pin_Write(epin_mes_do,1);
+                    DRV_Pin_Write(epin_VALVE1,1);
                 }
             }
         }
@@ -87,12 +87,12 @@ static void Timing_Blow_Proc(void)
                     }
                     else
                     {
-                        DRV_Pin_Write(epin_blow_do,0);
+                        DRV_Pin_Write(epin_VALVE1,0);
                     }
                 }
                 else
                 {
-                    DRV_Pin_Write(epin_blow_do,1);
+                    DRV_Pin_Write(epin_VALVE1,1);
                 }
             }
         }
@@ -115,8 +115,8 @@ static void Timing_Blow_Proc(void)
                 }
                 else
                 {
-                    DRV_Pin_Write(epin_mes_do,0);
-                    DRV_Pin_Write(epin_blow_do,0);
+                    DRV_Pin_Write(epin_VALVE1,0);
+                    DRV_Pin_Write(epin_VALVE1,0);
                 }
             }
         }

@@ -35,7 +35,7 @@ static void LCD_GPIO_Init(void)
     LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 }
 
-static void lcd_delay_ms(uint32_t m)
+static void LCD_DelayMs(uint32_t m)
 {
     volatile uint32_t i, j;
     for (i=0; i<m; i++)
@@ -115,15 +115,15 @@ void LCD_Init(void)
 	LCD_GPIO_Init();//初始化GPIO
 	
     LCD_RES_Clr();
-    lcd_delay_ms(100);
+    LCD_DelayMs(100);
     LCD_RES_Set();
-    lcd_delay_ms(100);
+    LCD_DelayMs(100);
     LCD_BLK_Set(); //开背光
-    lcd_delay_ms(100);
+    LCD_DelayMs(100);
     
     //************* Start Initial Sequence **********//	
     LCD_WR_REG(0x11);
-    lcd_delay_ms(100); //Delay 120ms
+    LCD_DelayMs(100); //Delay 120ms
     LCD_WR_REG(0X36);// Memory Access Control
     if(USE_HORIZONTAL==0)LCD_WR_DATA8(0x00);
     else if(USE_HORIZONTAL==1)LCD_WR_DATA8(0xC0);

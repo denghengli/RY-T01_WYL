@@ -15,14 +15,14 @@ void App_WDT(void *pvParameters)
         if(flag)
         {
             flag = 0;
-            DRV_Pin_Write(epin_run,0);
-            DRV_Pin_Write(epin_wdt,0);
+            DRV_Pin_Write(epin_RUN,0);
+            DRV_Pin_Write(epin_WDT,0);
         }
         else
         {
             flag = 1;
-            DRV_Pin_Write(epin_run,1);
-            DRV_Pin_Write(epin_wdt,1);
+            DRV_Pin_Write(epin_RUN,1);
+            DRV_Pin_Write(epin_WDT,1);
         }       
         
         LL_IWDG_ReloadCounter(IWDG);

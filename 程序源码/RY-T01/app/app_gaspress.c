@@ -20,12 +20,12 @@ static SM9541_DATA_T s_tFGSticPresDat;//静压传感器数据结构体
 void FlueGasPress_DataInit(void)
 {
 	/*U11 020*/
-    s_tFGDynPresI2C.SCL.ePinName = epin_gas_scl1;
-    s_tFGDynPresI2C.SDA.ePinName = epin_gas_sda1;
+    s_tFGDynPresI2C.SCL.ePinName = epin_GAS_SCL1;
+    s_tFGDynPresI2C.SDA.ePinName = epin_GAS_SDA1;
 	
 	/*U12 040*/
-    s_tFGSticPresI2C.SCL.ePinName = epin_gas_scl2;
-    s_tFGSticPresI2C.SDA.ePinName = epin_gas_sda2;
+    s_tFGSticPresI2C.SCL.ePinName = epin_GAS_SCL2;
+    s_tFGSticPresI2C.SDA.ePinName = epin_GAS_SDA2;
 	
 	/*SM9541_020C_D 动压传感器*/
 	s_tFGDynPresDat.MaxCount = 14745;

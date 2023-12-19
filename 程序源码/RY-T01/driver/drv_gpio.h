@@ -45,7 +45,6 @@
 #define PGout(n)   BIT_ADDR(GPIOG_ODR_Addr,n)  //输出 
 #define PGin(n)    BIT_ADDR(GPIOG_IDR_Addr,n)  //输入
 
-
 #define PIN_LOW                 0x00
 #define PIN_HIGH                0x01
 
@@ -57,38 +56,41 @@
 #define PINMODE_IN_FLOATING     0x22
 #define PINMODE_IN_ANALOG       0x23
 
-/*这里的IO不包括 USART引脚*/
+/*这里的IO不包括 USART、Timer、ADC引脚*/
 typedef enum 
 {
-    epin_pt100 = 0,  
-    epin_gas_sda1,
-    epin_gas_scl1,
-    epin_gas_sda2,
-    epin_gas_scl2,
-    epin_dac_sda,
-    epin_dac_scl,
-    epin_dac_ldac,
-    epin_dac_rdy,
-    epin_mes_do,      //测量电磁阀
-    epin_blow_do,     //反吹电磁阀
-	epin_run,	      //系统运行状态指示灯
-    epin_wdt,         //看门狗
-    epin_boot1,       //BOOT1
-    
+    epin_GAS_SDA1,
+    epin_GAS_SCL1,
+    epin_GAS_SDA2,
+    epin_GAS_SCL2,
+    epin_DAC_SDA,
+    epin_DAC_SCL,
+    epin_DAC_LDAC,
+    epin_DAC_RDY,
+    epin_AT24_SDA,
+    epin_AT24_SCL,
+    epin_KEY0,
+    epin_KEY1,
+    epin_KEY2,
+    epin_KEY3,
+    epin_KEY4,
+    epin_VALVE1,
+    epin_VALVE2,
+    epin_VALVE3,
+    epin_VALVE4,    
+	epin_RUN,
+    epin_WDT
 }DRV_PIN_NAME_E;
-
 
 struct DRV_Pin
 {
-    DRV_PIN_NAME_E     ePinName;
-    unsigned int       IORCC;
-	GPIO_TypeDef       *GPIOx;
-	unsigned int      PinMask;
-	
+    DRV_PIN_NAME_E ePinName;
+    unsigned int IORCC;
+	GPIO_TypeDef *GPIOx;
+	unsigned int PinMask;
 };
 
 extern void MX_GPIO_Init(void);
-
 extern void DRV_Pin_Mode (DRV_PIN_NAME_E  _ePin, unsigned char _cMode);
 extern void DRV_Pin_Write(DRV_PIN_NAME_E  _ePin, unsigned char _cValue);
 extern unsigned char DRV_Pin_Read(DRV_PIN_NAME_E  _ePin);
