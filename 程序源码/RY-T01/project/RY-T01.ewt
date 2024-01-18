@@ -2368,12 +2368,6 @@
         </file>
     </group>
     <group>
-        <name>CMSIS-Pack</name>
-        <file>
-            <name>$PROJ_DIR$\RTE\RTE_Components.h</name>
-        </file>
-    </group>
-    <group>
         <name>driver</name>
         <group>
             <name>lcd</name>
@@ -2401,6 +2395,12 @@
         </group>
         <file>
             <name>$PROJ_DIR$\..\driver\bsp_mcp7428.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\driver\bsp_zxp8.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\driver\bsp_zxp8.h</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\driver\drv_adc.c</name>
@@ -2566,6 +2566,12 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\os\timers.c</name>
+        </file>
+    </group>
+    <group>
+        <name>CMSIS-Pack</name>
+        <file>
+            <name>$PROJ_DIR$\RTE\RTE_Components.h</name>
         </file>
     </group>
 </project>

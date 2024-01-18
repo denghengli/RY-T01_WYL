@@ -38,7 +38,7 @@ static void AD_Conver_Start(void)
             break;
             
         case 2://´óÆøÑ¹
-            LL_ADC_REG_SetSequencerRanks(ADC1, LL_ADC_REG_RANK_1, LL_ADC_CHANNEL_9);
+            LL_ADC_REG_SetSequencerRanks(ADC1, LL_ADC_REG_RANK_1, LL_ADC_CHANNEL_8);
             break;                     
     }
 

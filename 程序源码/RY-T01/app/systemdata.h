@@ -17,7 +17,7 @@
 #define UART_TXBUF_SIZE		200
 
 /*ADC采集通道数  采集平均次数*/
-#define ADC_CH_MAX  1
+#define ADC_CH_MAX  2
 #define ADC_AVG_MAX 10
 
 /*串口传输时使用的结构体*/
@@ -85,12 +85,14 @@ __packed typedef struct
     short sticPressMax;     //压力/静压量程上限(KPa)，2:±2 5:±5 10:±10 130:70-130
     short sticPressMin;     //压力/静压量程下限(KPa)
 	uint16_t flowRange;     //流量量程(m³/s)
-    uint16_t reserve[20];   //预留
+    uint16_t reserve[14];   //预留
     
 	uint16_t blowCtrlFlg;   //手动反吹控制标志，1开启反吹
     uint16_t speedCalibZeroFlg; //压力校零标志，1开启校准
     uint16_t humitCalibFlg; //湿度校准标志，1开启校准
     uint16_t factoryFlg;    //恢复出厂标志，1恢复出厂
+    
+    uint16_t DO[4]; //电磁阀控制
 }PARA_DATA_T;
 
 

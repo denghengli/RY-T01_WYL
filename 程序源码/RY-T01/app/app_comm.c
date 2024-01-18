@@ -76,7 +76,7 @@ void Com_DataInit(void)
 void dealMbWriteCmd(UART_TRANS_T *_pTrans)
 {
     uint16_t addr, reg_addr = (_pTrans->RxBuf[2] << 8) | _pTrans->RxBuf[3];
-    uint16_t reg_num = 0;
+    uint16_t num, reg_num = 0;
     
     if (_pTrans->RxBuf[1] == MODBUS_SIMCOIL_REG_WR)/*0x5 写单个线圈寄存器 */
     {
@@ -84,9 +84,9 @@ void dealMbWriteCmd(UART_TRANS_T *_pTrans)
     }
     else if (_pTrans->RxBuf[1] == MODBUS_MULCOIL_REG_WR)/*0x0F 写多个线圈寄存器 */
     {
+        addr = reg_addr / 8;
         reg_num = (_pTrans->RxBuf[4] << 8) | _pTrans->RxBuf[5];
-        reg_num = (reg_num + 7) / 8;
-        reg_addr = reg_addr / 8;
+        num = (reg_num + 7) / 8;
     }
     else if (_pTrans->RxBuf[1] == MODBUS_SIMHOLD_REG_WR)/*0x6写单个保持寄存器*/
     {
@@ -141,8 +141,8 @@ void App_Comm(void *pvParameters)
         if(xSemaphoreTake(CommSem,sMaxBlockTime) == pdTRUE)
         {
             Com_Recv_Analysis();//请求解析
-            Com_Resp_Send();//应答发送
             dealMbWriteCmd(&stComTrans); //处理modbus写指令
+            Com_Resp_Send();//应答发送
             Com_DataInit();//解析完后清空缓冲区
 
             LOG_PRINT(DEBUG_TASK,"App_Comm \r\n");

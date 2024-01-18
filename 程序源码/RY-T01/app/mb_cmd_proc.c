@@ -49,15 +49,48 @@ static uint8_t restoreFactory(unsigned char cmd, int beginAddr, int regNum)
     return 1;
 }
 
+static uint8_t do1Ctrl(unsigned char cmd, int beginAddr, int regNum)
+{
+    g_SysData.Data.Para.DO[0] == 1 ? DRV_Pin_Write(epin_VALVE1,PIN_HIGH) : 
+                                     DRV_Pin_Write(epin_VALVE1,PIN_LOW);
+    return 1;
+}
+
+static uint8_t do2Ctrl(unsigned char cmd, int beginAddr, int regNum)
+{
+    g_SysData.Data.Para.DO[1] == 1 ? DRV_Pin_Write(epin_VALVE2,PIN_HIGH) : 
+                                     DRV_Pin_Write(epin_VALVE2,PIN_LOW);
+    return 1;
+}
+
+static uint8_t do3Ctrl(unsigned char cmd, int beginAddr, int regNum)
+{
+    g_SysData.Data.Para.DO[2] == 1 ? DRV_Pin_Write(epin_VALVE3,PIN_HIGH) : 
+                                     DRV_Pin_Write(epin_VALVE3,PIN_LOW);
+    return 1;
+}
+
+static uint8_t do4Ctrl(unsigned char cmd, int beginAddr, int regNum)
+{
+    g_SysData.Data.Para.DO[3] == 1 ? DRV_Pin_Write(epin_VALVE4,PIN_HIGH) : 
+                                     DRV_Pin_Write(epin_VALVE4,PIN_LOW);
+    return 1;
+}
+
 //保持寄存器区信息列表
 static MB_REG_REGION_T MbRegRegionList[] = 
 {
     //线圈寄存器
 
     //保持寄存器--命令
-    {40001, 40001,  setBaudRateProc,        "tempTargetCalib"}, //设置波特率
-    {40020, 40020,  tempTargetCalibProc,    "tempTargetCalib"}, //温度目标值校准
+    {40001, 40002,  setBaudRateProc,        "tempTargetCalib"}, //设置波特率
+    {40020, 40021,  tempTargetCalibProc,    "tempTargetCalib"}, //温度目标值校准
     {40053, 40053,  restoreFactory,         "restoreFactory"},  //恢复出厂设置
+    
+    {40054, 40054,  do1Ctrl,                 "do1Ctrl"},  //电磁阀控制
+    {40055, 40055,  do2Ctrl,                 "do2Ctrl"},  //电磁阀控制
+    {40056, 40056,  do3Ctrl,                 "do3Ctrl"},  //电磁阀控制
+    {40057, 40057,  do4Ctrl,                 "do4Ctrl"},  //电磁阀控制
 };
 
 /**

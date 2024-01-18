@@ -17,7 +17,6 @@ extern void DRV_I2C_Stop (DRV_I2C_T  I2C_Interface);
 extern uint8_t DRV_I2C_WriteByteWaiteAck(DRV_I2C_T  I2C_Interface,uint8_t _cByte);
 extern uint8_t DRV_I2C_ReadByteWithAck  (DRV_I2C_T  I2C_Interface);
 extern uint8_t DRV_I2C_ReadByteWithNoAck(DRV_I2C_T  I2C_Interface);
-	
 
 #endif
 

@@ -182,10 +182,10 @@ void PT100_TempMeasure(void)
 	/*计算环形buf中数据均值*/
 	s_tPT100Data.Tempavg  = s_tPT100Data.Tempsum / (float)AvgCnt;
 	
-	if(s_tPT100Data.Tempavg > 0.0001 || s_tPT100Data.Tempavg < -0.0001)//置位测量完成标志,非0时说明有测量值
-	{
+//	if(s_tPT100Data.Tempavg > 0.0001 || s_tPT100Data.Tempavg < -0.0001)//置位测量完成标志,非0时说明有测量值
+//	{
 		SetFlg_Measover(FLG_MEASOVER_TEMP);
-	}
+//	}
     
     /* 把测量数据存入全局变量中 */
     FloatLimit(&s_tPT100Data.Tempavg, FLOAT_DECNUM);
@@ -218,17 +218,13 @@ void PT100_TempMeasure(void)
 **********************************************************************************************************/
 void APP_PT100(void  * argument)
 {
-    TickType_t sMaxBlockTime =	pdMS_TO_TICKS(1000);
+    TickType_t sMaxBlockTime =	pdMS_TO_TICKS(200);
     
 	while(1)
 	{
-	  	if (g_SysData.Data.Sample.sysSta == SYS_STA_MEASU)
-		{
-			PT100_TempMeasure();
-			
-			LOG_PRINT(DEBUG_TASK,"APP_PT100 \r\n");
-		}
-		
+        PT100_TempMeasure();
+        
+        LOG_PRINT(DEBUG_TASK,"APP_PT100 \r\n");
         vTaskDelay(sMaxBlockTime);
 	}
 }

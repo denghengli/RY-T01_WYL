@@ -52,6 +52,7 @@ void MX_USART2_UART_Init(void)
     LL_GPIO_InitTypeDef GPIO_InitStruct;
 
     /* Peripheral clock enable */
+    LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOA);
     LL_APB1_GRP1_EnableClock(LL_APB1_GRP1_PERIPH_USART2);
 
     /**USART2 GPIO Configuration  

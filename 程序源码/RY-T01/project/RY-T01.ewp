@@ -651,11 +651,11 @@
                 </option>
                 <option>
                     <name>OCOutputOverride</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>OOCOutputFile</name>
-                    <state>EM4020GCP.SEM4020.J4.BZ.100.20190710.hex</state>
+                    <state>RY-T01.hex</state>
                 </option>
                 <option>
                     <name>OOCCommandLineProducer</name>
@@ -2106,13 +2106,6 @@
         </file>
     </group>
     <group>
-        <name>CMSIS-Pack</name>
-        <tag>CMSISPack.ComponentGroup</tag>
-        <file>
-            <name>$PROJ_DIR$\RTE\RTE_Components.h</name>
-        </file>
-    </group>
-    <group>
         <name>driver</name>
         <group>
             <name>lcd</name>
@@ -2140,6 +2133,12 @@
         </group>
         <file>
             <name>$PROJ_DIR$\..\driver\bsp_mcp7428.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\driver\bsp_zxp8.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\driver\bsp_zxp8.h</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\driver\drv_adc.c</name>
@@ -2305,6 +2304,13 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\os\timers.c</name>
+        </file>
+    </group>
+    <group>
+        <name>CMSIS-Pack</name>
+        <tag>CMSISPack.ComponentGroup</tag>
+        <file>
+            <name>$PROJ_DIR$\RTE\RTE_Components.h</name>
         </file>
     </group>
     <cmsisPackSettings>

@@ -52,13 +52,13 @@ void DRV_I2C_Start(DRV_I2C_T  I2C_Interface)
 	DRV_I2C_SCL_SETOUT(I2C_Interface);
 	DRV_I2C_SDA_SETOUT(I2C_Interface);
 	
-	DRV_I2C_SCL_SETH  (I2C_Interface);
-	DRV_I2C_SDA_SETH  (I2C_Interface);
-	DRV_I2C_Delay_us(1);
-	DRV_I2C_SDA_SETL  (I2C_Interface);
-	DRV_I2C_Delay_us(1);
-	DRV_I2C_SCL_SETL  (I2C_Interface);//钳住I2C总线，准备发送或接收数据 
-	DRV_I2C_Delay_us(1);
+	DRV_I2C_SCL_SETH(I2C_Interface);
+	DRV_I2C_SDA_SETH(I2C_Interface);
+	DRV_I2C_Delay_us(2);
+	DRV_I2C_SDA_SETL(I2C_Interface);
+	DRV_I2C_Delay_us(2);
+	DRV_I2C_SCL_SETL(I2C_Interface);//钳住I2C总线，准备发送或接收数据 
+	DRV_I2C_Delay_us(2);
 }
 
 /**********************************************************************************************************
@@ -71,13 +71,13 @@ void DRV_I2C_Stop(DRV_I2C_T  I2C_Interface)
 {
 	DRV_I2C_SDA_SETOUT(I2C_Interface);
 	
-	DRV_I2C_SCL_SETL  (I2C_Interface);
-	DRV_I2C_SDA_SETL  (I2C_Interface);
-	DRV_I2C_Delay_us(1);
-	DRV_I2C_SCL_SETH  (I2C_Interface);
-	DRV_I2C_Delay_us(1);
-	DRV_I2C_SDA_SETH  (I2C_Interface);
-	DRV_I2C_Delay_us(1);
+	DRV_I2C_SCL_SETL(I2C_Interface);
+	DRV_I2C_SDA_SETL(I2C_Interface);
+	DRV_I2C_Delay_us(2);
+	DRV_I2C_SCL_SETH(I2C_Interface);
+	DRV_I2C_Delay_us(2);
+	DRV_I2C_SDA_SETH(I2C_Interface);
+	DRV_I2C_Delay_us(2);
 }
 
 /*
@@ -92,7 +92,7 @@ static uint8_t DRV_I2C_Wait_Ack(DRV_I2C_T  I2C_Interface)
 {
 	unsigned int ucErrTime = 0;
 	
-	DRV_I2C_Delay_us(1);
+	DRV_I2C_Delay_us(2);
 	DRV_I2C_SDA_SETH(I2C_Interface);
 
 	DRV_I2C_SDA_SETIN(I2C_Interface);
@@ -108,7 +108,7 @@ static uint8_t DRV_I2C_Wait_Ack(DRV_I2C_T  I2C_Interface)
 	}
 	
 	DRV_I2C_SCL_SETH(I2C_Interface);
-	DRV_I2C_Delay_us(1);
+	DRV_I2C_Delay_us(2);
 	DRV_I2C_SCL_SETL(I2C_Interface);
 	
 	return 1;
@@ -122,15 +122,15 @@ static uint8_t DRV_I2C_Wait_Ack(DRV_I2C_T  I2C_Interface)
 **********************************************************************************************************/
 static void DRV_I2C_Send_Ack(DRV_I2C_T  I2C_Interface)
 {
-	DRV_I2C_SCL_SETL  (I2C_Interface);
+	DRV_I2C_SCL_SETL(I2C_Interface);
 	
 	DRV_I2C_SDA_SETOUT(I2C_Interface);
 	
-	DRV_I2C_SDA_SETL  (I2C_Interface);
-	DRV_I2C_Delay_us(1);
-	DRV_I2C_SCL_SETH  (I2C_Interface);
-	DRV_I2C_Delay_us(1);
-	DRV_I2C_SCL_SETL  (I2C_Interface);
+	DRV_I2C_SDA_SETL(I2C_Interface);
+	DRV_I2C_Delay_us(2);
+	DRV_I2C_SCL_SETH(I2C_Interface);
+	DRV_I2C_Delay_us(2);
+	DRV_I2C_SCL_SETL(I2C_Interface);
 }
 
 /**********************************************************************************************************
@@ -145,11 +145,11 @@ static void DRV_I2C_Send_NoAck(DRV_I2C_T  I2C_Interface)
 	
 	DRV_I2C_SDA_SETOUT(I2C_Interface);
 	
-	DRV_I2C_SDA_SETH  (I2C_Interface);
-	DRV_I2C_Delay_us(1);
-	DRV_I2C_SCL_SETH  (I2C_Interface);
-	DRV_I2C_Delay_us(1);
-	DRV_I2C_SCL_SETL  (I2C_Interface);
+	DRV_I2C_SDA_SETH(I2C_Interface);
+	DRV_I2C_Delay_us(2);
+	DRV_I2C_SCL_SETH(I2C_Interface);
+	DRV_I2C_Delay_us(2);
+	DRV_I2C_SCL_SETL(I2C_Interface);
 }
 	
 /**********************************************************************************************************
@@ -175,9 +175,9 @@ uint8_t DRV_I2C_WriteByteWaiteAck(DRV_I2C_T  I2C_Interface,uint8_t _cByte)
 			DRV_I2C_SDA_SETL(I2C_Interface);
 		}
 		
-		DRV_I2C_Delay_us(1);
+		DRV_I2C_Delay_us(2);
 		DRV_I2C_SCL_SETH(I2C_Interface);
-		DRV_I2C_Delay_us(1);
+		DRV_I2C_Delay_us(2);
 		DRV_I2C_SCL_SETL(I2C_Interface);
 		_cByte <<= 1;
 	}
@@ -196,20 +196,20 @@ uint8_t DRV_I2C_ReadByteWithAck(DRV_I2C_T  I2C_Interface)
 	uint8_t i,receive=0;
 	
 	DRV_I2C_SDA_SETIN(I2C_Interface);
-	DRV_I2C_Delay_us(1);
+	DRV_I2C_Delay_us(2);
 	for(i=0;i<8;i++)
 	{
 		DRV_I2C_SCL_SETL(I2C_Interface);
-		DRV_I2C_Delay_us(1);
+		DRV_I2C_Delay_us(2);
 		DRV_I2C_SCL_SETH(I2C_Interface);
-		DRV_I2C_Delay_us(1);
+		DRV_I2C_Delay_us(2);
 		receive <<= 1;
 		if(DRV_I2C_SDA_READ(I2C_Interface)) receive++;
 		//DRV_I2C_SCL_SETL(I2C_Interface);
 	}
 	
 	DRV_I2C_Send_Ack(I2C_Interface);
-	DRV_I2C_Delay_us(1);
+	DRV_I2C_Delay_us(2);
 	return receive;
 }
 
@@ -228,16 +228,17 @@ uint8_t DRV_I2C_ReadByteWithNoAck(DRV_I2C_T  I2C_Interface)
 	for(i=0;i<8;i++)
 	{
 		DRV_I2C_SCL_SETL(I2C_Interface);
-		DRV_I2C_Delay_us(1);
+		DRV_I2C_Delay_us(2);
 		DRV_I2C_SCL_SETH(I2C_Interface);
-		DRV_I2C_Delay_us(1);
+		DRV_I2C_Delay_us(2);
 		receive <<= 1;
 		if(DRV_I2C_SDA_READ(I2C_Interface)) receive++;
 	//	DRV_I2C_SCL_SETL(I2C_Interface);
 	}
 	
 	DRV_I2C_Send_NoAck(I2C_Interface);
-	DRV_I2C_Delay_us(1);
+	DRV_I2C_Delay_us(2);
 	return receive;
 }
+
 

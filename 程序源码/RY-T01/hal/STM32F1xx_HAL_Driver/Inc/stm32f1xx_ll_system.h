@@ -176,6 +176,7 @@ extern "C" {
 #define LL_FLASH_LATENCY_0                 0x00000000U             /*!< FLASH Zero Latency cycle */
 #define LL_FLASH_LATENCY_1                 FLASH_ACR_LATENCY_0     /*!< FLASH One Latency cycle */
 #define LL_FLASH_LATENCY_2                 FLASH_ACR_LATENCY_1     /*!< FLASH Two wait states */
+#define LL_FLASH_LATENCY_3                 FLASH_ACR_LATENCY_2     /*!< FLASH Three wait states */
 #else
 #endif /* FLASH_ACR_LATENCY */
 /**

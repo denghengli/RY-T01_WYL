@@ -4,18 +4,27 @@
 /* ADC1 init function */
 void MX_ADC1_Init(void)
 {
-
 	LL_ADC_InitTypeDef ADC_InitStruct = {0};
 	LL_ADC_CommonInitTypeDef ADC_CommonInitStruct = {0};
 	LL_ADC_REG_InitTypeDef ADC_REG_InitStruct = {0};
-
+    LL_GPIO_InitTypeDef GPIO_InitStruct = {0};
+    
 	/* Peripheral clock enable */
 	LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_ADC1);
 	LL_RCC_SetADCClockSource(LL_RCC_ADC_CLKSRC_PCLK2_DIV_6);//ADC1µÄÊ±ÖÓÆµÂÊ
-	
-	/**ADC1 GPIO Configuration  
-	PA0   ------> PT100
-	*/
+    LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOA);
+    LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOB);
+    
+    /**ADC1 GPIO Configuration
+    PA0-WKUP   ------> ADC1_IN0
+    PB0   ------> ADC1_IN8
+    */
+    GPIO_InitStruct.Pin = LL_GPIO_PIN_0;
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+    LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+    GPIO_InitStruct.Pin = LL_GPIO_PIN_0;
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
+    LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
     
 	/* ADC1 interrupt Init */
 //	NVIC_SetPriority(ADC1_2_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),5, 0));
@@ -36,7 +45,8 @@ void MX_ADC1_Init(void)
 
     /**Configure Regular Channel   PT100*/
 	LL_ADC_SetChannelSamplingTime(ADC1, LL_ADC_CHANNEL_0, LL_ADC_SAMPLINGTIME_239CYCLES_5);//LL_ADC_SAMPLINGTIME_13CYCLES_5
-
+    LL_ADC_SetChannelSamplingTime(ADC1, LL_ADC_CHANNEL_8, LL_ADC_SAMPLINGTIME_239CYCLES_5);//LL_ADC_SAMPLINGTIME_13CYCLES_5
+    
     LL_ADC_Enable(ADC1);
     
     LL_ADC_StartCalibration(ADC1);

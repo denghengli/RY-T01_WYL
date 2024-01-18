@@ -68,24 +68,23 @@ void CoarseDelay(unsigned int _dly)
 */
 void Delay_us(unsigned int _us)
 {     
-        
-        unsigned int delta;
-        
-        _us = _us * (SysTick->LOAD / (1000000 / configTICK_RATE_HZ));
-        
-        delta = SysTick->VAL;
-        
-        if (delta < _us)
-        {
-          /* wait current OSTick left time gone */
-          while (SysTick->VAL < _us);
-          
-          _us -= delta;
-          
-          delta = SysTick->LOAD;
-        }
-        
-        while (delta - SysTick->VAL < _us);
+    unsigned int delta;
+    
+    _us = _us * (SysTick->LOAD / (1000000 / configTICK_RATE_HZ));
+    
+    delta = SysTick->VAL;
+    
+    if (delta < _us)
+    {
+        /* wait current OSTick left time gone */
+        while (SysTick->VAL < _us);
+
+        _us -= delta;
+
+        delta = SysTick->LOAD;
+    }
+    
+    while (delta - SysTick->VAL < _us);
         
 }	
 

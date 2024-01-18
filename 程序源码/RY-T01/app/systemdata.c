@@ -116,6 +116,7 @@ void ParaData_Init(void)
     g_SysData.Data.Para.speedCalibZeroFlg = 0;
     g_SysData.Data.Para.humitCalibFlg = 0;
     g_SysData.Data.Para.factoryFlg = 0;
+    memset((void*)&g_SysData.Data.Para.DO[0], 0, sizeof(g_SysData.Data.Para.DO));
     
     /*写入MODBUS寄存器*/
     Slave_Write_Reg(EMB_HOLE, 0, PARA_DATA_LEN, (unsigned char *)&g_SysData.regBuf[SAMPLE_DATA_LEN]);

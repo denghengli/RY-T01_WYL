@@ -41,6 +41,7 @@ static void DAC_Output(void)
         
         // 0  1  2  3分别对应 流速 静压 温度 湿度
         MCP4728_Output(Vs, Vps, Vt, Vh);
+        //MCP4728_Output(1, 1, 1, 1);
     }
     else if (g_SysData.Data.Sample.sysSta == SYS_STA_BLOW)
     {

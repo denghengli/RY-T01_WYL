@@ -316,39 +316,39 @@ void USART3_IRQHandler(void)
 }
 
 /*
-  * @brief This function handles TIM1-CH1 update interrupt.
-  * 湿度传感器脉冲计数溢出中断
+  * @brief This function handles TIM1 update interrupt.
+  * TIM1用作时钟基准定时1S
   * 中断优先级大于configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY，所以在中断中不可调用FreeRTOS函数
-  * 湿度传感器频率大概为6K-7K，而TIM1溢出计数为65536，溢出视为错误
 */
 void TIM1_UP_IRQHandler(void)
 {
+    unsigned int iFreq = 0;
+    
     if(LL_TIM_IsActiveFlag_UPDATE(TIM1))
 	{
-        Humit_FreqOver_Set();
-		LL_TIM_ClearFlag_UPDATE(TIM1);	       
+        Timing_Clock_Cnt();
+        
+        iFreq = LL_TIM_GetCounter(TIM2); //获取TIM2湿度传感器脉冲计数
+        Humit_Freq_Set(iFreq);
+        LL_TIM_SetCounter(TIM2,0);
+        
+		LL_TIM_SetCounter(TIM1,0);   //清空计数
+        LL_TIM_ClearFlag_UPDATE(TIM1);	
 	}
 }
 
 
 /*
-  * @brief This function handles TIM2 update interrupt.
-  * TIM2用作时钟基准定时1S
+  * @brief This function handles TIM2-CH2 update interrupt.
+  * 湿度传感器脉冲计数溢出中断
   * 中断优先级大于configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY，所以在中断中不可调用FreeRTOS函数
+  * 湿度传感器频率大概为6K-7K，而TIM1溢出计数为65536，溢出视为错误
 */
 void TIM2_IRQHandler(void)
 {
-    unsigned int iFreq = 0;
-    
     if(LL_TIM_IsActiveFlag_UPDATE(TIM2))
 	{
-        Timing_Clock_Cnt();
-        
-        iFreq = LL_TIM_GetCounter(TIM1); //获取TIM1湿度传感器脉冲计数
-        Humit_Freq_Set(iFreq);
-        LL_TIM_SetCounter(TIM1,0);
-        
-		LL_TIM_SetCounter(TIM2,0);   //清空计数
-        LL_TIM_ClearFlag_UPDATE(TIM2);	
+        Humit_FreqOver_Set();
+		LL_TIM_ClearFlag_UPDATE(TIM2);	       
 	}
 }

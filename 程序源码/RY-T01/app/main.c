@@ -31,9 +31,9 @@ EventGroupHandle_t  EventGSpeedCal = NULL;
 
 void SystemClock_Config(void)
 {
-    LL_FLASH_SetLatency(LL_FLASH_LATENCY_2);
+    LL_FLASH_SetLatency(LL_FLASH_LATENCY_3);
 
-    if(LL_FLASH_GetLatency() != LL_FLASH_LATENCY_2)
+    if(LL_FLASH_GetLatency() != LL_FLASH_LATENCY_3)
     {
         Error_Handler();  
     }
@@ -124,9 +124,9 @@ static void LL_Init(void)
     NVIC_SetPriority(USART2_IRQn,  NVIC_EncodePriority(NVIC_GetPriorityGrouping(),7, 0));
     NVIC_SetPriority(USART3_IRQn,  NVIC_EncodePriority(NVIC_GetPriorityGrouping(),5, 0));
 	NVIC_SetPriority(ADC1_2_IRQn,  NVIC_EncodePriority(NVIC_GetPriorityGrouping(),6, 0));
-	NVIC_SetPriority(TIM1_UP_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),3, 0));//TIM1用作湿度传感器外部脉冲计数
-    NVIC_SetPriority(TIM1_CC_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),6, 0));
-    NVIC_SetPriority(TIM2_IRQn,    NVIC_EncodePriority(NVIC_GetPriorityGrouping(),2, 0));//TIM2用作湿度传感器定时1S
+    
+	NVIC_SetPriority(TIM1_UP_IRQn, NVIC_EncodePriority(NVIC_GetPriorityGrouping(),2, 0));//TIM1用作湿度传感器定时1S
+    NVIC_SetPriority(TIM2_IRQn,    NVIC_EncodePriority(NVIC_GetPriorityGrouping(),3, 0));//TIM2用作湿度传感器外部脉冲计数
     /**NOJTAG: JTAG-DP Disabled and SW-DP Enabled 
     */
     LL_GPIO_AF_Remap_SWJ_NOJTAG();
@@ -148,30 +148,31 @@ static void MX_DMA_Init(void)
 
 int main()
 {
-  	__set_PRIMASK(1);  
-		
+    __set_PRIMASK(1);  
+
     CommSem    = xSemaphoreCreateBinary();
     AdSem      = xSemaphoreCreateBinary();
     FlashMutex = xSemaphoreCreateMutex();   
     MutexPrint = xSemaphoreCreateMutex();    
-	EventGSpeedCal = xEventGroupCreate();/* 创建事件标志组 */
-    
+    EventGSpeedCal = xEventGroupCreate();/* 创建事件标志组 */
+
     LL_Init();
     SystemClock_Config();
     MX_GPIO_Init();     
     MX_ADC1_Init();
     MX_USART2_UART_Init();//485通讯
-	MX_USART1_UART_Init();
+    MX_USART1_UART_Init();
     MX_IWDG_Init();
     MX_TIM1_Init();
-	MX_TIM2_Init();
+    MX_TIM2_Init();
     ParaData_Init();
     LCD_Init();
     
-    xTaskCreate(App_Comm ,   "App_Comm",     configMINIMAL_STACK_SIZE*4,  NULL, 	tskIDLE_PRIORITY + 10, 	NULL);//n通讯
-    xTaskCreate(App_AD,      "App_AD",       configMINIMAL_STACK_SIZE*4,  NULL, 	tskIDLE_PRIORITY + 9, 	NULL);//n
+    xTaskCreate(App_Comm ,   "App_Comm",     configMINIMAL_STACK_SIZE*2,  NULL, 	tskIDLE_PRIORITY + 10, 	NULL);//n通讯
+    xTaskCreate(App_AD,      "App_AD",       configMINIMAL_STACK_SIZE*2,  NULL, 	tskIDLE_PRIORITY + 9, 	NULL);//n
     xTaskCreate(APP_FlueGasP,"APP_FlueGasP", configMINIMAL_STACK_SIZE*4,  NULL, 	tskIDLE_PRIORITY + 8, 	NULL);//y
-    xTaskCreate(APP_PT100,   "APP_PT100",    configMINIMAL_STACK_SIZE*4,  NULL, 	tskIDLE_PRIORITY + 7, 	NULL);
+    xTaskCreate(APP_PT100,   "APP_PT100",    configMINIMAL_STACK_SIZE*2,  NULL, 	tskIDLE_PRIORITY + 7, 	NULL);
+    xTaskCreate(APP_AtspP,   "APP_AtspP",    configMINIMAL_STACK_SIZE*2,  NULL, 	tskIDLE_PRIORITY + 7, 	NULL);
     xTaskCreate(APP_Humit,   "APP_Humit",    configMINIMAL_STACK_SIZE*4,  NULL, 	tskIDLE_PRIORITY + 7, 	NULL);
     xTaskCreate(APP_SpeedCal,"APP_SpeedCal", configMINIMAL_STACK_SIZE*4,  NULL, 	tskIDLE_PRIORITY + 6, 	NULL);
     xTaskCreate(APP_DA,      "APP_DA",       configMINIMAL_STACK_SIZE*2,  NULL, 	tskIDLE_PRIORITY + 5, 	NULL);

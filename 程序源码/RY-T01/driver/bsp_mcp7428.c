@@ -85,8 +85,8 @@ void Sequential_Write(uint16_t A_input,uint16_t B_input,uint16_t C_input,uint16_
 
 void MCP7428_Init(void)
 {
-//    s_tMCP4728.I2C.SCL.ePinName = epin_I2C_SCL;
-//    s_tMCP4728.I2C.SDA.ePinName = epin_I2C_SDA;
+    s_tMCP4728.I2C.SCL.ePinName = epin_DAC_SCL;
+    s_tMCP4728.I2C.SDA.ePinName = epin_DAC_SDA;
     DRV_SoftI2C_Init(s_tMCP4728.I2C);
     
     s_tMCP4728.Config.Vref = 1; //电压基准选择 0 = VDD, 1 = 2.048

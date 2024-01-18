@@ -56,6 +56,7 @@
 #include "drv_lcd.h"
 #include "hal_lcd.h"
 #include "bsp_mcp7428.h"
+#include "bsp_zxp8.h"
 
 #include "FreeRTOS.h"
 #include "task.h"

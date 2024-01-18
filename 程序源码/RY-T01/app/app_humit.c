@@ -93,7 +93,7 @@ void HumitMeasure(void)
 **********************************************************************************************************/
 void APP_Humit(void *pvParameters)
 {
-    TickType_t sMaxBlockTime =	pdMS_TO_TICKS(2000);
+    TickType_t sMaxBlockTime =	pdMS_TO_TICKS(1000);
 	
 	while(1)
 	{

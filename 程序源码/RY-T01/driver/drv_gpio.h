@@ -88,6 +88,7 @@ struct DRV_Pin
     unsigned int IORCC;
 	GPIO_TypeDef *GPIOx;
 	unsigned int PinMask;
+    unsigned int DefSta;
 };
 
 extern void MX_GPIO_Init(void);
