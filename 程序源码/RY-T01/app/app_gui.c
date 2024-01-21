@@ -142,7 +142,7 @@ void main_wind(void *para)
         lcd_para.bc = DARKBLUE;
         lcd_para.fc = WHITE;
         lcd_para.mode = 24;
-        snprintf(tmp_str, sizeof(tmp_str), "静压：%7.2f kPa", g_SysData.Data.Sample.sticPress / 1000.0);
+        snprintf(tmp_str, sizeof(tmp_str), "静压：%7.2f Pa", g_SysData.Data.Sample.sticPress / 1000.0);
         hal_lcd_driver_intface((void *)&lcd_para, (uint8_t *)tmp_str, strlen(tmp_str));
 
         /*动压*/
@@ -175,15 +175,55 @@ void main_wind(void *para)
 void main_wind_right(void *para)
 {
 	if (cur_main_pagenum == 1) cur_main_pagenum = 2;
-    if (cur_main_pagenum == 2) cur_main_pagenum = 1;
+    else if (cur_main_pagenum == 2) cur_main_pagenum = 1;
     
 	ui_cur_state = MAIN_WIND;
 }
 
 int read_key_value(void)
 {
-//    vTaskDelay(200 / portTICK_PERIOD_MS);//消除抖动
-    return KEY_NULL;
+    int key = KEY_NULL;
+    int iostate = 0;
+    
+    //按下后是低电平有效
+    iostate = !DRV_Pin_Read(epin_KEY4) << 4 |
+              !DRV_Pin_Read(epin_KEY3) << 3 |
+              !DRV_Pin_Read(epin_KEY2) << 2 |
+              !DRV_Pin_Read(epin_KEY1) << 1 |
+              !DRV_Pin_Read(epin_KEY0);
+    //消除抖动
+    if (iostate)
+    {
+        vTaskDelay(50 / portTICK_PERIOD_MS);//消除抖动
+        iostate = !DRV_Pin_Read(epin_KEY4) << 4 |
+              !DRV_Pin_Read(epin_KEY3) << 3 |
+              !DRV_Pin_Read(epin_KEY2) << 2 |
+              !DRV_Pin_Read(epin_KEY1) << 1 |
+              !DRV_Pin_Read(epin_KEY0);
+        
+        if (iostate & 0x01)
+        {
+            key = KEY_UP;
+        }
+        else if (iostate & 0x02)
+        {
+            key = KEY_DOWN;
+        }
+        else if (iostate & 0x04)
+        {
+            key = KEY_RIGHT;
+        }
+        else if (iostate & 0x08)
+        {
+            key = KEY_OK;
+        }
+        else if (iostate & 0x10)
+        {
+            key = KEY_RETURN;
+        }
+    }
+
+    return key;
 }
 
 void GUI_handle(void)
@@ -263,13 +303,13 @@ void GUI_handle(void)
 void APP_GUI(void  * argument)
 {
     TickType_t sMaxBlockTime =	pdMS_TO_TICKS(1000);
-
+    
     clean_sercen_white();
     
 	while(1)
 	{        
 	    GUI_handle();
-	    
+        
         LOG_PRINT(DEBUG_TASK,"APP_Display \r\n");
         //vTaskDelay(sMaxBlockTime);
 	}

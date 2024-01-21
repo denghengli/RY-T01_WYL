@@ -38,6 +38,7 @@ static void LCD_GPIO_Init(void)
     GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
     GPIO_InitStruct.Pin = LL_GPIO_PIN_12;
     LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+    LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_12);
 }
 
 static void LCD_DelayMs(uint32_t m)
@@ -76,7 +77,7 @@ void LCD_WR_DATA8(uint8_t dat)
 入口数据：dat 写入的数据
 返回值：  无
 ******************************************************************************/
-void LCD_WR_DATA(uint16_t dat)
+void LCD_WR_DATA16(uint16_t dat)
 {
 	LCD_Writ_Bus(dat>>8);
 	LCD_Writ_Bus(dat);
@@ -105,11 +106,11 @@ void LCD_WR_REG(uint8_t dat)
 void LCD_SetWindows(uint16_t x1,uint16_t y1,uint16_t x2,uint16_t y2)
 {
     LCD_WR_REG(0x2a);//列地址设置
-    LCD_WR_DATA(x1);
-    LCD_WR_DATA(x2);
+    LCD_WR_DATA16(x1);
+    LCD_WR_DATA16(x2);
     LCD_WR_REG(0x2b);//行地址设置
-    LCD_WR_DATA(y1);
-    LCD_WR_DATA(y2);
+    LCD_WR_DATA16(y1);
+    LCD_WR_DATA16(y2);
     LCD_WR_REG(0x2c);//储存器写
 }
 
@@ -216,7 +217,7 @@ void LCD_Clear(uint16_t Color)
     {
         for (j=0; j<LCD_H; j++)
         {
-            LCD_WR_DATA(Color);
+            LCD_WR_DATA16(Color);
         }
     }
 }  
@@ -237,7 +238,7 @@ void LCD_Fill(uint16_t xsta,uint16_t ysta,uint16_t xend,uint16_t yend,uint16_t c
 	{													   	 	
 		for(j=xsta;j<xend;j++)
 		{
-			LCD_WR_DATA(color);
+			LCD_WR_DATA16(color);
 		}
 	}
     
@@ -253,7 +254,7 @@ void LCD_Fill(uint16_t xsta,uint16_t ysta,uint16_t xend,uint16_t yend,uint16_t c
 void LCD_DrawPoint(uint16_t x,uint16_t y,uint16_t color)
 {
 	LCD_SetWindows(x,y,x,y);//设置光标位置 
-	LCD_WR_DATA(color);
+	LCD_WR_DATA16(color);
 } 
 
 
@@ -392,7 +393,7 @@ void LCD_ShowChar(uint16_t x,uint16_t y,uint16_t fc, uint16_t bc, uint8_t num, u
     if (size == 12) charByteNum = 12;
     else if (size == 16) charByteNum = 16;
     else if (size == 24) charByteNum = 48;
-    else if (size == 48) charByteNum = 64;
+    else if (size == 32) charByteNum = 64;
     else return;
     
 	num = num - ' ';//得到偏移后的值
@@ -402,13 +403,13 @@ void LCD_ShowChar(uint16_t x,uint16_t y,uint16_t fc, uint16_t bc, uint8_t num, u
     {
         if (size == 12) data = ascii_1206[num][i];//调用6x12字体
         else if (size == 16) data = ascii_1608[num][i];//调用8x16字体
-        else if (size == 24) data = ascii_1608[num][i];//调用12x24字体
-        else if (size == 32) data = ascii_1608[num][i];//调用16x32字体
+        else if (size == 24) data = ascii_2412[num][i];//调用12x24字体
+        else if (size == 32) data = ascii_3216[num][i];//调用16x32字体
         
         for(j=0; j<8; j++)
         {
-            if(data&(0x01<<j))LCD_WR_DATA(fc);
-            else LCD_WR_DATA(bc);
+            if(data&(0x01<<j))LCD_WR_DATA16(fc);
+            else LCD_WR_DATA16(bc);
             m++;
             if(m%sizex == 0)
             {
@@ -450,8 +451,8 @@ void LCD_ShowChinese12x12(uint16_t x,uint16_t y,uint8_t *s,uint16_t fc,uint16_t 
 				{	
 					if(!mode)//非叠加方式
 					{
-						if(FONT_GB12[k].Msk[i]&(0x01<<j))LCD_WR_DATA(fc);
-						else LCD_WR_DATA(bc);
+						if(FONT_GB12[k].Msk[i]&(0x01<<j))LCD_WR_DATA16(fc);
+						else LCD_WR_DATA16(bc);
 						m++;
 						if(m%sizey==0)
 						{
@@ -507,8 +508,8 @@ void LCD_ShowChinese16x16(uint16_t x,uint16_t y,uint8_t *s,uint16_t fc,uint16_t 
 				{	
 					if(!mode)//非叠加方式
 					{
-						if(FONT_GB16[k].Msk[i]&(0x01<<j))LCD_WR_DATA(fc);
-						else LCD_WR_DATA(bc);
+						if(FONT_GB16[k].Msk[i]&(0x01<<j))LCD_WR_DATA16(fc);
+						else LCD_WR_DATA16(bc);
 						m++;
 						if(m%sizey==0)
 						{
@@ -565,8 +566,8 @@ void LCD_ShowChinese24x24(uint16_t x,uint16_t y,uint8_t *s,uint16_t fc,uint16_t 
 				{	
 					if(!mode)//非叠加方式
 					{
-						if(FONT_GB24[k].Msk[i]&(0x01<<j))LCD_WR_DATA(fc);
-						else LCD_WR_DATA(bc);
+						if(FONT_GB24[k].Msk[i]&(0x01<<j))LCD_WR_DATA16(fc);
+						else LCD_WR_DATA16(bc);
 						m++;
 						if(m%sizey==0)
 						{
@@ -622,8 +623,8 @@ void LCD_ShowChinese32x32(uint16_t x,uint16_t y,uint8_t *s,uint16_t fc,uint16_t 
 				{	
 					if(!mode)//非叠加方式
 					{
-						if(FONT_GB32[k].Msk[i]&(0x01<<j))LCD_WR_DATA(fc);
-						else LCD_WR_DATA(bc);
+						if(FONT_GB32[k].Msk[i]&(0x01<<j))LCD_WR_DATA16(fc);
+						else LCD_WR_DATA16(bc);
 						m++;
 						if(m%sizey==0)
 						{
