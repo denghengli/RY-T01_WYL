@@ -3,13 +3,13 @@
  * This is an auto generated Run-Time-Environment Component Configuration File
  * DO NOT MODIFY!
  *
- * Project: 'electmonit'
- * Device: 'ARMCM3' Pack: 'ARM::CMSIS.5.4.0'
+ * Project: 'RY-T01'
+ * Device: '' Pack: '::.'
  */
 
 #ifndef RTE_COMPONENTS_H
 #define RTE_COMPONENTS_H
 
-#define CMSIS_device_header "ARMCM3.h"
+/* No device-header definitions found. Hence CMSIS_device_header must be defined elsewhere.*/
 
 #endif  /* RTE_COMPONENTS_H */

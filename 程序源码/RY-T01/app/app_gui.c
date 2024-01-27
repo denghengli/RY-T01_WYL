@@ -9,15 +9,40 @@
 #define KEY_OK      0x04
 #define KEY_RETURN  0x05
 
+volatile uint8_t ex_sec_signal = 0;
 volatile uint8_t ui_pre_state = STATE_NULL;
-volatile uint8_t ui_cur_state = START_LOGO;
+volatile uint8_t ui_cur_state = MAIN_WIND;
 uint8_t cur_main_pagenum = 1; //主界面页号
+
+const char *set_menu[] = 
+{
+	"设备状态    ",
+	"手动反吹    ",
+	"流速零点校准",		
+	"平滑时间    ",		
+	"烟道截面积  ",		
+    "反吹频次    ",	
+    "参数设置    ",	
+    "            ",
+    "            ",
+    "            ",
+};
 
 const UI_STATE_TRANS UIStateArray[UI_STATE_ARR_MAX] =
 {
     /*当前      上键      下键       右键       OK键   返回键*/
     {START_LOGO, START_LOGO, START_LOGO, START_LOGO, START_LOGO, START_LOGO}, 
-    {MAIN_WIND,  MAIN_WIND, MAIN_WIND,  MAIN_WIND_RIGHT,  MAIN_WIND,  MAIN_WIND},
+    {MAIN_WIND,  MAIN_WIND, MAIN_WIND,  MAIN_WIND_RIGHT,  CONFIG_MENU_ONE_SELECT_1,  MAIN_WIND},
+
+    //配置导航（菜单）
+    {CONFIG_MENU_ONE_SELECT_1,  CONFIG_MENU_ONE_SELECT_1, CONFIG_MENU_ONE_SELECT_2,  CONFIG_MENU_ONE_SELECT_1,  CONFIG_MENU_ONE_SELECT_1,  MAIN_WIND},
+    {CONFIG_MENU_ONE_SELECT_2,  CONFIG_MENU_ONE_SELECT_1, CONFIG_MENU_ONE_SELECT_3,  CONFIG_MENU_ONE_SELECT_2,  CONFIG_MENU_ONE_SELECT_2,  MAIN_WIND},
+    {CONFIG_MENU_ONE_SELECT_3,  CONFIG_MENU_ONE_SELECT_2, CONFIG_MENU_ONE_SELECT_4,  CONFIG_MENU_ONE_SELECT_3,  CONFIG_MENU_ONE_SELECT_3,  MAIN_WIND},
+    {CONFIG_MENU_ONE_SELECT_4,  CONFIG_MENU_ONE_SELECT_3, CONFIG_MENU_ONE_SELECT_5,  CONFIG_MENU_ONE_SELECT_4,  CONFIG_MENU_ONE_SELECT_4,  MAIN_WIND},
+    {CONFIG_MENU_ONE_SELECT_5,  CONFIG_MENU_ONE_SELECT_4, CONFIG_MENU_TWO_SELECT_1,  CONFIG_MENU_ONE_SELECT_5,  CONFIG_MENU_ONE_SELECT_5,  MAIN_WIND},
+
+    {CONFIG_MENU_TWO_SELECT_1,  CONFIG_MENU_ONE_SELECT_5, CONFIG_MENU_TWO_SELECT_2,  CONFIG_MENU_ONE_SELECT_1,  CONFIG_MENU_TWO_SELECT_1,  MAIN_WIND},
+    {CONFIG_MENU_TWO_SELECT_2,  CONFIG_MENU_TWO_SELECT_1, CONFIG_MENU_TWO_SELECT_2,  CONFIG_MENU_TWO_SELECT_2,  CONFIG_MENU_TWO_SELECT_2,  MAIN_WIND},
 };
 
 const state_fun MenuFun[] = 
@@ -27,6 +52,14 @@ const state_fun MenuFun[] =
     start_logo,
     main_wind,
     main_wind_right,
+    
+    config_menu_one_select_1,
+    config_menu_one_select_2,
+    config_menu_one_select_3,
+    config_menu_one_select_4,
+    config_menu_one_select_5,
+    config_menu_two_select_1,
+    config_menu_two_select_2,
 };
 
 /*清屏 */
@@ -105,71 +138,77 @@ void main_wind(void *para)
 {
     char tmp_str[64] = {0};
     FNC_LCD_DISP_DRAW_PARA lcd_para;
+    static int sec_display_flag = 1;
 
-    if (cur_main_pagenum == 1)
+    if (ex_sec_signal != sec_display_flag)    
     {
-        /*温度*/
-        lcd_para.cmd = FNC_LCD_DISP_DRAW_STRING;
-        lcd_para.x = 20;
-        lcd_para.y = 20;
-        lcd_para.bc = DARKBLUE;
-        lcd_para.fc = WHITE;
+        sec_display_flag = ex_sec_signal;
+        
+        if (cur_main_pagenum == 1)
+        {
+            /*温度*/
+            lcd_para.cmd = FNC_LCD_DISP_DRAW_STRING;
+            lcd_para.x = 20;
+            lcd_para.y = 20;
+            lcd_para.bc = DARKBLUE;
+            lcd_para.fc = WHITE;
+            lcd_para.mode = 24;
+            snprintf(tmp_str, sizeof(tmp_str), "  温度： %7.2f  ℃", g_SysData.Data.Sample.ptTem);
+            hal_lcd_driver_intface((void *)&lcd_para, (uint8_t *)tmp_str, strlen(tmp_str));
+
+            /*湿度*/
+            lcd_para.y = 60;
+            snprintf(tmp_str, sizeof(tmp_str), "  湿度： %7.2f  %%V", g_SysData.Data.Sample.humit);
+            hal_lcd_driver_intface((void *)&lcd_para, (uint8_t *)tmp_str, strlen(tmp_str));
+
+            /*流速*/
+            lcd_para.y = 100;
+            snprintf(tmp_str, sizeof(tmp_str), "  流速： %7.2f  m/s", g_SysData.Data.Sample.speed);
+            hal_lcd_driver_intface((void *)&lcd_para, (uint8_t *)tmp_str, strlen(tmp_str));
+
+            /*流量*/
+            lcd_para.y = 140;
+            snprintf(tmp_str, sizeof(tmp_str), "  流量： %7.2f  m3/s", g_SysData.Data.Sample.flow);
+            hal_lcd_driver_intface((void *)&lcd_para, (uint8_t *)tmp_str, strlen(tmp_str));
+        }
+        else if (cur_main_pagenum == 2)
+        {
+            /*静压*/
+            lcd_para.cmd = FNC_LCD_DISP_DRAW_STRING;
+            lcd_para.x = 20;
+            lcd_para.y = 20;
+            lcd_para.bc = DARKBLUE;
+            lcd_para.fc = WHITE;
+            lcd_para.mode = 24;
+            snprintf(tmp_str, sizeof(tmp_str), "  静压： %7.2f  Pa", g_SysData.Data.Sample.sticPress / 1000.0);
+            hal_lcd_driver_intface((void *)&lcd_para, (uint8_t *)tmp_str, strlen(tmp_str));
+
+            /*动压*/
+            lcd_para.y = 60;
+            snprintf(tmp_str, sizeof(tmp_str), "  动压： %7.2f  Pa", g_SysData.Data.Sample.dynPress);
+            hal_lcd_driver_intface((void *)&lcd_para, (uint8_t *)tmp_str, strlen(tmp_str));
+
+            /*反吹*/
+            lcd_para.y = 100;
+            snprintf(tmp_str, sizeof(tmp_str), "  反吹： %7.2f  KPa", g_SysData.Data.Sample.blowGasPress / 1000.0);
+            hal_lcd_driver_intface((void *)&lcd_para, (uint8_t *)tmp_str, strlen(tmp_str));
+        }
+        
+        /*翻页*/
+        lcd_para.x = 200;    
+        lcd_para.y = 200;
+        lcd_para.fc = YELLOW;
         lcd_para.mode = 24;
-        snprintf(tmp_str, sizeof(tmp_str), "温度：%7.2f ℃", g_SysData.Data.Sample.ptTem);
-        hal_lcd_driver_intface((void *)&lcd_para, (uint8_t *)tmp_str, strlen(tmp_str));
-
-        /*湿度*/
-        lcd_para.y = 60;
-        snprintf(tmp_str, sizeof(tmp_str), "湿度：%7.2f %%V", g_SysData.Data.Sample.humit);
-        hal_lcd_driver_intface((void *)&lcd_para, (uint8_t *)tmp_str, strlen(tmp_str));
-
-        /*流速*/
-        lcd_para.y = 100;
-        snprintf(tmp_str, sizeof(tmp_str), "流速：%7.2f m/s", g_SysData.Data.Sample.speed);
-        hal_lcd_driver_intface((void *)&lcd_para, (uint8_t *)tmp_str, strlen(tmp_str));
-
-        /*流量*/
-        lcd_para.y = 140;
-        snprintf(tmp_str, sizeof(tmp_str), "流量：%7.2f m3/s", g_SysData.Data.Sample.flow);
+        if (cur_main_pagenum == 1)
+        {
+            sprintf(tmp_str, "%s", "→下一页");
+        }
+        else if (cur_main_pagenum == 2)
+        {
+            sprintf(tmp_str, "%s", "→上一页");
+        }
         hal_lcd_driver_intface((void *)&lcd_para, (uint8_t *)tmp_str, strlen(tmp_str));
     }
-    else if (cur_main_pagenum == 2)
-    {
-        /*静压*/
-        lcd_para.cmd = FNC_LCD_DISP_DRAW_STRING;
-        lcd_para.x = 20;
-        lcd_para.y = 20;
-        lcd_para.bc = DARKBLUE;
-        lcd_para.fc = WHITE;
-        lcd_para.mode = 24;
-        snprintf(tmp_str, sizeof(tmp_str), "静压：%7.2f Pa", g_SysData.Data.Sample.sticPress / 1000.0);
-        hal_lcd_driver_intface((void *)&lcd_para, (uint8_t *)tmp_str, strlen(tmp_str));
-
-        /*动压*/
-        lcd_para.y = 60;
-        snprintf(tmp_str, sizeof(tmp_str), "动压：%7.2f Pa", g_SysData.Data.Sample.dynPress);
-        hal_lcd_driver_intface((void *)&lcd_para, (uint8_t *)tmp_str, strlen(tmp_str));
-
-        /*反吹*/
-        lcd_para.y = 100;
-        snprintf(tmp_str, sizeof(tmp_str), "反吹：%7.2f MPa", g_SysData.Data.Sample.blowGasPress / 1000.0);
-        hal_lcd_driver_intface((void *)&lcd_para, (uint8_t *)tmp_str, strlen(tmp_str));
-    }
-    
-    /*翻页*/
-    lcd_para.x = 200;    
-    lcd_para.y = 200;
-    lcd_para.fc = YELLOW;
-    lcd_para.mode = 24;
-    if (cur_main_pagenum == 1)
-    {
-        sprintf(tmp_str, "%s", "→下一页");
-    }
-    else if (cur_main_pagenum == 2)
-    {
-        sprintf(tmp_str, "%s", "→上一页");
-    }
-    hal_lcd_driver_intface((void *)&lcd_para, (uint8_t *)tmp_str, strlen(tmp_str));
 }
 
 void main_wind_right(void *para)
@@ -194,18 +233,18 @@ int read_key_value(void)
     //消除抖动
     if (iostate)
     {
-        vTaskDelay(50 / portTICK_PERIOD_MS);//消除抖动
+        vTaskDelay(10 / portTICK_PERIOD_MS);//消除抖动
         iostate = !DRV_Pin_Read(epin_KEY4) << 4 |
               !DRV_Pin_Read(epin_KEY3) << 3 |
               !DRV_Pin_Read(epin_KEY2) << 2 |
               !DRV_Pin_Read(epin_KEY1) << 1 |
               !DRV_Pin_Read(epin_KEY0);
         
-        if (iostate & 0x01)
+        if (iostate & 0x10)
         {
             key = KEY_UP;
         }
-        else if (iostate & 0x02)
+        else if (iostate & 0x08)
         {
             key = KEY_DOWN;
         }
@@ -213,17 +252,149 @@ int read_key_value(void)
         {
             key = KEY_RIGHT;
         }
-        else if (iostate & 0x08)
+        else if (iostate & 0x02)
         {
             key = KEY_OK;
         }
-        else if (iostate & 0x10)
+        else if (iostate & 0x01)
         {
             key = KEY_RETURN;
         }
     }
 
     return key;
+}
+
+
+void config_menu(void *para)
+{
+	unsigned int set_pos = 0;
+	unsigned int page = 0;
+	unsigned int i = 0;
+	unsigned char buf[8] = {0};
+	char tmp_str[64] = {0};
+	FNC_LCD_DISP_DRAW_PARA lcd_para;	
+	set_pos = *(unsigned int *)para  % 5;
+	page = *(unsigned int *)para / 5;
+	
+	/*title*/
+	lcd_para.cmd = FNC_LCD_DISP_DRAW_LINE;
+	lcd_para.bc = DARKBLUE;
+	lcd_para.fc = RED;
+	lcd_para.mode = 24;
+	lcd_para.x = LCD_W / 2 - 40 - 40;
+	lcd_para.y = 17;
+	buf[0] = LCD_W / 2 - 40;
+	buf[1] = 0;
+	buf[2] = 17;
+	buf[3] = 0;
+	hal_lcd_driver_intface((void *)&lcd_para, (uint8_t *)buf, 4);
+	lcd_para.x = LCD_W / 2 - 40 - 40;
+	lcd_para.y = 18;
+	buf[0] = LCD_W / 2 - 40;
+	buf[1] = 0;
+	buf[2] = 18;
+	buf[3] = 0;
+	hal_lcd_driver_intface((void *)&lcd_para, (uint8_t *)buf, 4);
+	lcd_para.x = (LCD_W / 2) + 40;
+	lcd_para.y = 17;
+	buf[0] = (unsigned char)((LCD_W / 2) + 40 + 40);
+	buf[1] = 0;
+	buf[2] = 17;
+	buf[3] = 0;
+	hal_lcd_driver_intface((void *)&lcd_para, (uint8_t *)buf, 4);
+	lcd_para.x = LCD_W / 2 + 40;
+	lcd_para.y = 18;
+	buf[0] = (unsigned char)(LCD_W / 2 + 40 + 40);
+	buf[1] = 0;
+	buf[2] = 18;
+	buf[3] = 0;
+	hal_lcd_driver_intface((void *)&lcd_para, (uint8_t *)buf, 4);
+	lcd_para.cmd = FNC_LCD_DISP_DRAW_STRING;
+	lcd_para.bc = DARKBLUE;
+	lcd_para.fc = YELLOW;
+	lcd_para.mode = 24;
+	lcd_para.x = 16;
+	lcd_para.y = 0;
+	lcd_para.x = LCD_W / 2 - 24; 
+	lcd_para.y = 5;
+	sprintf(tmp_str, "设置");
+	hal_lcd_driver_intface((void *)&lcd_para, (uint8_t *)tmp_str, strlen(tmp_str));
+
+	/*导航项目*/	
+	for (i = 0; i < 5; i++)
+	{				
+		lcd_para.y = (i + 1) * (LCD_H / 6);			
+		/*选中*/
+		if (i == set_pos)
+		{
+		    lcd_para.x = 48;
+		    lcd_para.bc = DARKBLUE;			
+			lcd_para.fc = WHITE;			
+		    sprintf(tmp_str, "→ ");
+		    hal_lcd_driver_intface((void *)&lcd_para, (uint8_t *)tmp_str, strlen(tmp_str));
+
+		    lcd_para.x = 84;
+			lcd_para.fc = DARKBLUE;			
+			lcd_para.bc = WHITE;
+			sprintf(tmp_str, "%s", set_menu[page * 5 + i]);
+		}	
+		else
+		{
+		    lcd_para.x = 48;
+		    lcd_para.bc = DARKBLUE;			
+			lcd_para.fc = WHITE;			
+		    sprintf(tmp_str, "  ");
+		    hal_lcd_driver_intface((void *)&lcd_para, (uint8_t *)tmp_str, strlen(tmp_str));
+		    
+		    lcd_para.x = 84;			
+		    sprintf(tmp_str, "%s", set_menu[page * 5 + i]);
+		}
+		hal_lcd_driver_intface((void *)&lcd_para, (uint8_t *)tmp_str, strlen(tmp_str));
+	}
+}
+
+
+void config_menu_one_select_1(void *para)
+{
+	unsigned int i = 0;
+	config_menu(&i);    
+}
+
+void config_menu_one_select_2(void *para)  
+{
+    unsigned int i = 1;
+	config_menu(&i);
+}
+
+void config_menu_one_select_3(void *para)
+{
+    unsigned int i = 2;
+	config_menu(&i);    
+}
+
+void config_menu_one_select_4(void *para)
+{
+    unsigned int i = 3;
+	config_menu(&i);    
+}
+
+void config_menu_one_select_5(void *para)
+{
+    unsigned int i = 4;
+	config_menu(&i);    
+}
+
+void config_menu_two_select_1(void *para)
+{
+    unsigned int i = 5;
+	config_menu(&i);    
+}
+
+void config_menu_two_select_2(void *para)
+{
+    unsigned int i = 6;
+	config_menu(&i);    
 }
 
 void GUI_handle(void)
@@ -304,7 +475,7 @@ void APP_GUI(void  * argument)
 {
     TickType_t sMaxBlockTime =	pdMS_TO_TICKS(1000);
     
-    clean_sercen_white();
+    clean_sercen();
     
 	while(1)
 	{        
