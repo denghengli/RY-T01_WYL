@@ -2106,20 +2106,6 @@
         </file>
     </group>
     <group>
-        <name>CMSIS-Pack</name>
-        <tag>CMSISPack.ComponentGroup</tag>
-        <group>
-            <name>CMSIS CORE</name>
-            <tag>CMSISPack.Component</tag>
-            <file>
-                <name>${CMSIS_PACK_PATH_ARM#CMSIS#5.4.0}$\CMSIS\Documentation\Core\html\index.html</name>
-            </file>
-        </group>
-        <file>
-            <name>$PROJ_DIR$\RTE\RTE_Components.h</name>
-        </file>
-    </group>
-    <group>
         <name>driver</name>
         <group>
             <name>lcd</name>
@@ -2188,10 +2174,22 @@
     <group>
         <name>gui</name>
         <file>
+            <name>$PROJ_DIR$\..\gui\ui_blowfreq_set.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\gui\ui_fun_isclean.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\gui\ui_fun_isrefresh.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\gui\ui_password_login.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\gui\ui_sectionarea_set.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\gui\ui_smoothtime_set.c</name>
         </file>
     </group>
     <group>
@@ -2318,6 +2316,13 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\os\timers.c</name>
+        </file>
+    </group>
+    <group>
+        <name>CMSIS-Pack</name>
+        <tag>CMSISPack.ComponentGroup</tag>
+        <file>
+            <name>$PROJ_DIR$\RTE\RTE_Components.h</name>
         </file>
     </group>
     <cmsisPackSettings>

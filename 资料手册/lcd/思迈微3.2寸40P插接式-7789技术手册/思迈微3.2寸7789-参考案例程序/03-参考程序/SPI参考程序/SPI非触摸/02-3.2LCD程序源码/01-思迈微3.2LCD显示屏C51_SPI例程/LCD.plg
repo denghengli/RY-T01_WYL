@@ -1,0 +1,19 @@
+<html>
+<body>
+<pre>
+<h1>礦ision Build Log</h1>
+<h2>Project:</h2>
+C:\Users\80685\Desktop\新建文件夹 (2)\demo\中景园2.4寸\SPI非触摸\中景园2.4寸新款\02-2.4LCD程序源码\01-2.4LCD显示屏C51_SPI例程\LCD.uvproj
+Project File Date:  08/10/2021
+
+<h2>Output:</h2>
+Build target 'Target 1'
+compiling main.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_LCD_DRAWRECTANGLE?LCD
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DRAW_CIRCLE?LCD
+Program Size: data=9.0 xdata=111 code=26223
+creating hex file from "LCD"...
+"LCD" - 0 Error(s), 2 Warning(s).

@@ -38,11 +38,26 @@ const UI_STATE_TRANS UIStateArray[UI_STATE_ARR_MAX] =
     {CONFIG_MENU_ONE_SELECT_1,  CONFIG_MENU_ONE_SELECT_1, CONFIG_MENU_ONE_SELECT_2,  CONFIG_MENU_ONE_SELECT_1,  CONFIG_MENU_ONE_SELECT_1,  MAIN_WIND},
     {CONFIG_MENU_ONE_SELECT_2,  CONFIG_MENU_ONE_SELECT_1, CONFIG_MENU_ONE_SELECT_3,  CONFIG_MENU_ONE_SELECT_2,  CONFIG_MENU_ONE_SELECT_2,  MAIN_WIND},
     {CONFIG_MENU_ONE_SELECT_3,  CONFIG_MENU_ONE_SELECT_2, CONFIG_MENU_ONE_SELECT_4,  CONFIG_MENU_ONE_SELECT_3,  CONFIG_MENU_ONE_SELECT_3,  MAIN_WIND},
-    {CONFIG_MENU_ONE_SELECT_4,  CONFIG_MENU_ONE_SELECT_3, CONFIG_MENU_ONE_SELECT_5,  CONFIG_MENU_ONE_SELECT_4,  CONFIG_MENU_ONE_SELECT_4,  MAIN_WIND},
-    {CONFIG_MENU_ONE_SELECT_5,  CONFIG_MENU_ONE_SELECT_4, CONFIG_MENU_TWO_SELECT_1,  CONFIG_MENU_ONE_SELECT_5,  CONFIG_MENU_ONE_SELECT_5,  MAIN_WIND},
+    {CONFIG_MENU_ONE_SELECT_4,  CONFIG_MENU_ONE_SELECT_3, CONFIG_MENU_ONE_SELECT_5,  CONFIG_MENU_ONE_SELECT_4,  SMOOTH_TIME_SET_ENTER,  MAIN_WIND},
+    {CONFIG_MENU_ONE_SELECT_5,  CONFIG_MENU_ONE_SELECT_4, CONFIG_MENU_TWO_SELECT_1,  CONFIG_MENU_ONE_SELECT_5,  SECTION_AREA_SET_ENTER,  MAIN_WIND},
+    {CONFIG_MENU_TWO_SELECT_1,  CONFIG_MENU_ONE_SELECT_5, CONFIG_MENU_TWO_SELECT_2,  CONFIG_MENU_ONE_SELECT_1,  BLOW_FREQ_SET_ENTER,  MAIN_WIND},
+    {CONFIG_MENU_TWO_SELECT_2,  CONFIG_MENU_TWO_SELECT_1, CONFIG_MENU_TWO_SELECT_2,  CONFIG_MENU_TWO_SELECT_2,  PASSWORD_LOGIN_ENTER,  MAIN_WIND},
 
-    {CONFIG_MENU_TWO_SELECT_1,  CONFIG_MENU_ONE_SELECT_5, CONFIG_MENU_TWO_SELECT_2,  CONFIG_MENU_ONE_SELECT_1,  CONFIG_MENU_TWO_SELECT_1,  MAIN_WIND},
-    {CONFIG_MENU_TWO_SELECT_2,  CONFIG_MENU_TWO_SELECT_1, CONFIG_MENU_TWO_SELECT_2,  CONFIG_MENU_TWO_SELECT_2,  CONFIG_MENU_TWO_SELECT_2,  MAIN_WIND},
+    //平滑时间设置界面
+    {SMOOTH_TIME_SET,  SMOOTH_TIME_SET_UP, SMOOTH_TIME_SET_DOWN,  SMOOTH_TIME_SET_RIGHT,  SMOOTH_TIME_SET_OK,  SMOOTH_TIME_SET_RETURN},
+    {SMOOTH_TIME_SET_OK,  SMOOTH_TIME_SET_OK, SMOOTH_TIME_SET_OK,  SMOOTH_TIME_SET_OK,  SMOOTH_TIME_SET_OK_RETURN,  SMOOTH_TIME_SET_OK_RETURN},
+
+    //烟道截面积设置界面
+    {SECTION_AREA_SET,  SECTION_AREA_SET_UP, SECTION_AREA_SET_DOWN,  SECTION_AREA_SET_RIGHT,  SECTION_AREA_SET_OK,  SECTION_AREA_SET_RETURN},
+    {SECTION_AREA_SET_OK,  SECTION_AREA_SET_OK, SECTION_AREA_SET_OK,  SECTION_AREA_SET_OK,  SECTION_AREA_SET_OK_RETURN,  SECTION_AREA_SET_OK_RETURN},
+
+    //反吹频次设置界面
+    {BLOW_FREQ_SET,  BLOW_FREQ_SET_UP, BLOW_FREQ_SET_DOWN,  BLOW_FREQ_SET_RIGHT,  BLOW_FREQ_SET_OK,  BLOW_FREQ_SET_RETURN},
+    {BLOW_FREQ_SET_OK,  BLOW_FREQ_SET_OK, BLOW_FREQ_SET_OK,  BLOW_FREQ_SET_OK,  BLOW_FREQ_SET_OK_RETURN,  BLOW_FREQ_SET_OK_RETURN},
+
+    //参数设置密码登录界面
+    {PASSWORD_LOGIN,  PASSWORD_LOGIN_UP, PASSWORD_LOGIN_DOWN,  PASSWORD_LOGIN_RIGHT,  PASSWORD_LOGIN_OK,  PASSWORD_LOGIN_RETURN},
+    {PASSWORD_LOGIN_OK,  PASSWORD_LOGIN_OK, PASSWORD_LOGIN_OK,  PASSWORD_LOGIN_OK,  PASSWORD_LOGIN_OK,  PASSWORD_LOGIN_ERROR_RETURN},
 };
 
 const state_fun MenuFun[] = 
@@ -52,7 +67,8 @@ const state_fun MenuFun[] =
     start_logo,
     main_wind,
     main_wind_right,
-    
+
+    //配置导航（菜单）
     config_menu_one_select_1,
     config_menu_one_select_2,
     config_menu_one_select_3,
@@ -60,6 +76,46 @@ const state_fun MenuFun[] =
     config_menu_one_select_5,
     config_menu_two_select_1,
     config_menu_two_select_2,
+
+    //平滑时间设置界面
+    smooth_time_set_enter,
+    smooth_time_set,
+    smooth_time_set_up,
+    smooth_time_set_down,
+    smooth_time_set_right,
+    smooth_time_set_return,
+    smooth_time_set_ok,    
+    smooth_time_set_ok_return,
+
+    //烟道截面积设置界面
+    section_area_set_enter,
+    section_area_set,
+    section_area_set_up,
+    section_area_set_down,
+    section_area_set_right,
+    section_area_set_return,
+    section_area_set_ok,    
+    section_area_set_ok_return,
+	
+	//反吹频次设置界面
+	blow_freq_set_enter,
+	blow_freq_set,
+	blow_freq_set_up,
+	blow_freq_set_down,
+	blow_freq_set_right,
+	blow_freq_set_return,
+	blow_freq_set_ok,    
+	blow_freq_set_ok_return,
+
+    //参数设置密码登录界面
+	password_login_enter,
+	password_login,
+	password_login_up,
+	password_login_down,
+	password_login_right,
+	password_login_return,
+	password_login_ok,    
+	password_login_error_return,
 };
 
 /*清屏 */
@@ -233,7 +289,7 @@ int read_key_value(void)
     //消除抖动
     if (iostate)
     {
-        vTaskDelay(10 / portTICK_PERIOD_MS);//消除抖动
+        vTaskDelay(100 / portTICK_PERIOD_MS);//消除抖动
         iostate = !DRV_Pin_Read(epin_KEY4) << 4 |
               !DRV_Pin_Read(epin_KEY3) << 3 |
               !DRV_Pin_Read(epin_KEY2) << 2 |
@@ -318,7 +374,7 @@ void config_menu(void *para)
 	lcd_para.y = 0;
 	lcd_para.x = LCD_W / 2 - 24; 
 	lcd_para.y = 5;
-	sprintf(tmp_str, "设置");
+	sprintf(tmp_str, "菜单");
 	hal_lcd_driver_intface((void *)&lcd_para, (uint8_t *)tmp_str, strlen(tmp_str));
 
 	/*导航项目*/	

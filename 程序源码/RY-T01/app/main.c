@@ -170,11 +170,11 @@ int main()
     
     xTaskCreate(App_Comm ,   "App_Comm",     configMINIMAL_STACK_SIZE*2,  NULL, 	tskIDLE_PRIORITY + 10, 	NULL);//n通讯
     xTaskCreate(App_AD,      "App_AD",       configMINIMAL_STACK_SIZE*2,  NULL, 	tskIDLE_PRIORITY + 9, 	NULL);//n
-    xTaskCreate(APP_FlueGasP,"APP_FlueGasP", configMINIMAL_STACK_SIZE*4,  NULL, 	tskIDLE_PRIORITY + 8, 	NULL);//y
+    xTaskCreate(APP_FlueGasP,"APP_FlueGasP", configMINIMAL_STACK_SIZE*2,  NULL, 	tskIDLE_PRIORITY + 8, 	NULL);//y
     xTaskCreate(APP_PT100,   "APP_PT100",    configMINIMAL_STACK_SIZE*2,  NULL, 	tskIDLE_PRIORITY + 7, 	NULL);
     xTaskCreate(APP_AtspP,   "APP_AtspP",    configMINIMAL_STACK_SIZE*2,  NULL, 	tskIDLE_PRIORITY + 7, 	NULL);
     xTaskCreate(APP_Humit,   "APP_Humit",    configMINIMAL_STACK_SIZE*4,  NULL, 	tskIDLE_PRIORITY + 7, 	NULL);
-    xTaskCreate(APP_SpeedCal,"APP_SpeedCal", configMINIMAL_STACK_SIZE*4,  NULL, 	tskIDLE_PRIORITY + 6, 	NULL);
+    xTaskCreate(APP_SpeedCal,"APP_SpeedCal", configMINIMAL_STACK_SIZE*2,  NULL, 	tskIDLE_PRIORITY + 6, 	NULL);
     xTaskCreate(APP_DA,      "APP_DA",       configMINIMAL_STACK_SIZE*2,  NULL, 	tskIDLE_PRIORITY + 5, 	NULL);
     xTaskCreate(APP_Timing,  "APP_Timing",   configMINIMAL_STACK_SIZE,    NULL, 	tskIDLE_PRIORITY + 4, 	NULL);
     xTaskCreate(App_WDT,     "App_WDT",      configMINIMAL_STACK_SIZE,    NULL, 	tskIDLE_PRIORITY + 4, 	NULL);//y

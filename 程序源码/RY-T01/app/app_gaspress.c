@@ -1,7 +1,7 @@
 #include "includes.h"
 
 #define SM9541_ADDR 0X6D
-#define SAMP_FREQ_MAX  120 //采样次数 
+#define SAMP_FREQ_MAX  600 //采样次数 
 #define AUTOADJ_FREQ   5//自动校准采样次数
 #define PF 0
 #define GROW_DIR_NUM  5

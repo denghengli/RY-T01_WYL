@@ -1,0 +1,1 @@
+"USER\test.c" LARGE BROWSE INCDIR(.\font;.\LCD;.\sys;.\touch;.\GUI;.\USER) DEBUG OBJECTEXTEND PRINT(.\test.lst) TABS (2) OBJECT(.\obj\test.obj)

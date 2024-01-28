@@ -39,7 +39,7 @@ void FlueGasSpeedCal_Proc(void)
     float fAssistFactor = g_SysData.Data.Para.speedRatioK;
     float fDynPress = g_SysData.Data.Sample.dynPress;
     float fAirDensity = g_SysData.Data.Para.density;//空气密度
-	float fSpend,fSpeedavg,sum=0.0;
+	float fSpend,fSpeedavg,fFlow,sum=0.0;
 	static float fSpeedBuf[SPEEDCAL_AVG_NUM] = {0.0};
 	static uint8_t AvgCnt = 0;
 	static uint8_t BufCnt = 0;
@@ -55,7 +55,7 @@ void FlueGasSpeedCal_Proc(void)
     }
     else
     {
-	  fSpend = 0;
+        fSpend = 0;
     }
 
     /*将数据存入环形buf中*/
@@ -74,12 +74,15 @@ void FlueGasSpeedCal_Proc(void)
     fSpeedavg = sum / (float)AvgCnt;/*计算环形buf中数据均值*/
     
     fSpeedavg = fSpeedavg * fAssistFactor;//乘以辅助系数
+    fFlow = fSpeedavg * g_SysData.Data.Para.sectionArea;
     
     /* 把测量数据存入全局变量中 */
-    FloatLimit(&fDynPress,FLOAT_DECNUM);
-    FloatLimit(&fSpeedavg,FLOAT_DECNUM);
+    FloatLimit(&fDynPress, FLOAT_DECNUM);
+    FloatLimit(&fSpeedavg, FLOAT_DECNUM);
+    FloatLimit(&fFlow, FLOAT_DECNUM);
     g_SysData.Data.Sample.dynPress = fDynPress;
     g_SysData.Data.Sample.speed = fSpeedavg;
+    g_SysData.Data.Sample.flow = fFlow;
     
     SampleData_ToModbus();
 }

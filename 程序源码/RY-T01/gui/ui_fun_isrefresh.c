@@ -15,6 +15,23 @@ uint8_t is_flash_menu(void)
 	{
 		res = 1;
 	}
+
+	if (ui_cur_state == SMOOTH_TIME_SET)
+	{
+		res = 1;
+	}
+	if (ui_cur_state == SECTION_AREA_SET)
+	{
+		res = 1;
+	}
+	if (ui_cur_state == BLOW_FREQ_SET)
+	{
+		res = 1;
+	}
+	if (ui_cur_state == PASSWORD_LOGIN)
+	{
+		res = 1;
+	}
 	
 	return res;
 }

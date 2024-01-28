@@ -58,6 +58,7 @@ void HumitMeasure(void)
 {
     unsigned char i = 0;
     float fTemp1 = 0.0,fTemp2 = 0.0; 
+    float humit = 0;
     
     uint32_t iFreqHumit =  Humit_Freq_Get();  //s_iFreqHumit可能在任务执行过程中被中断改写，所以先赋值给一变量
     
@@ -65,7 +66,7 @@ void HumitMeasure(void)
     
     if(iFreqHumit > HUMIT_FREQ_TAB[0] || iFreqHumit < HUMIT_FREQ_TAB[10])
     {
-        g_SysData.Data.Sample.humit = 0;
+        humit = 0;
     }
     else
     {
@@ -76,12 +77,19 @@ void HumitMeasure(void)
                 fTemp1 = (float)(HUMIT_FREQ_TAB[i] - HUMIT_FREQ_TAB[i+1]) / FREQ_TAB_SCALE; //f/RH
                 fTemp2 = (float)(HUMIT_FREQ_TAB[i] - iFreqHumit) / fTemp1;
                     
-                g_SysData.Data.Sample.humit = (float)FREQ_TAB_SCALE * i + fTemp2;
+                humit = (float)FREQ_TAB_SCALE * i + fTemp2;
                 break;
             }
         }       
     }
-    
+
+    //是否采用校准值
+    if (g_SysData.Data.Para.humitZreoValib) {
+        g_SysData.Data.Sample.humit = humit + g_SysData.Data.Para.humitZero;
+    } else {
+        g_SysData.Data.Sample.humit = humit;
+    }
+
     SampleData_ToModbus();
 }
 
