@@ -2183,6 +2183,24 @@
             <name>$PROJ_DIR$\..\gui\ui_fun_isrefresh.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\gui\ui_main_wind.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\gui\ui_meu_wind.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\gui\ui_paraset.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\gui\ui_paraset_blowinter.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\gui\ui_paraset_pitgk.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\gui\ui_paraset_speedk.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\gui\ui_password_login.c</name>
         </file>
         <file>

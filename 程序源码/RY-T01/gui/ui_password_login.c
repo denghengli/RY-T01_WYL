@@ -134,18 +134,26 @@ void password_login_ok(void *para)
 {
     char tmp_str[64] = {0};
     FNC_LCD_DISP_DRAW_PARA lcd_para;
-
+    int password = password_char[0] * 1000 + password_char[1] * 100 +
+                   password_char[2] * 10 + password_char[3];
+    
     //√‹¬Î∆•≈‰
-
-    //Ã·…˝≥…π¶
-    lcd_para.cmd = FNC_LCD_DISP_DRAW_STRING;
-    lcd_para.x = 100;
-    lcd_para.y = 100;
-    lcd_para.bc = DARKBLUE;
-    lcd_para.fc = RED;
-    lcd_para.mode = 24;
-    snprintf(tmp_str, sizeof(tmp_str), "√‹¬Î¥ÌŒÛ");
-    hal_lcd_driver_intface((void *)&lcd_para, (uint8_t *)tmp_str, strlen(tmp_str));
+    if (password == 1234)
+    {
+        ui_cur_state = PARA_SET_ONE_SELECT_1;
+        para_set_one_select_1(NULL);
+    }
+    else
+    {
+        lcd_para.cmd = FNC_LCD_DISP_DRAW_STRING;
+        lcd_para.x = 100;
+        lcd_para.y = 100;
+        lcd_para.bc = DARKBLUE;
+        lcd_para.fc = RED;
+        lcd_para.mode = 24;
+        snprintf(tmp_str, sizeof(tmp_str), "√‹¬Î¥ÌŒÛ");
+        hal_lcd_driver_intface((void *)&lcd_para, (uint8_t *)tmp_str, strlen(tmp_str));
+    }
 }
 
 void password_login_error_return(void *para)

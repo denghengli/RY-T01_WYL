@@ -76,10 +76,10 @@ void blow_freq_set_up(void *para)
         if (blow_freq_char[1]) blow_freq_char[0] = 0; //0
         else blow_freq_char[0] = (blow_freq_char[0] + 1) % 2; //0 - 1
     }
-    else if (right_pos == 1)
+    else
     {
-        if (blow_freq_char[0] == 1) blow_freq_char[1] = 0;
-        else blow_freq_char[1] = (blow_freq_char[1] + 1) % 10; //0 - 9
+        if (blow_freq_char[0] == 1) blow_freq_char[right_pos] = 0;
+        else blow_freq_char[right_pos] = (blow_freq_char[right_pos] + 1) % 10; //0 - 9
     }
 
     blow_freq_set(&para_value);
@@ -102,16 +102,16 @@ void blow_freq_set_down(void *para)
             else blow_freq_char[0] -= 1;
         }
     }
-    else if (right_pos == 1)
+    else
     {
         if (blow_freq_char[0])
         {
-            blow_freq_char[1] = 0;
+            blow_freq_char[right_pos] = 0;
         }
         else
         {
-            if (blow_freq_char[1] - 1 == -1) blow_freq_char[1] = 9;
-            else blow_freq_char[1] -= 1;
+            if (blow_freq_char[right_pos] - 1 == -1) blow_freq_char[right_pos] = 9;
+            else blow_freq_char[right_pos] -= 1;
         }
     }
     
@@ -143,7 +143,7 @@ void blow_freq_set_ok(void *para)
     g_SysData.Data.Para.blowFreq = blow_freq_char[0] * 10 + blow_freq_char[1];
     ParaData_Save(0); 
 
-    //提升成功
+    //提示成功
     lcd_para.cmd = FNC_LCD_DISP_DRAW_STRING;
     lcd_para.x = 100;
     lcd_para.y = 100;

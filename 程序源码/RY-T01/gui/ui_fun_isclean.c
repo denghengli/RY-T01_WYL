@@ -60,7 +60,56 @@ uint8_t is_clean(void)
     {
         res = 0;
     }
-	
+
+    /*参数设置菜单上下*/
+    if (ui_cur_state == PARA_SET_ONE_SELECT_1 && ui_pre_state == PARA_SET_ONE_SELECT_2)
+	{
+		res = 0;
+	}
+	if (ui_cur_state == PARA_SET_ONE_SELECT_2 && (ui_pre_state == PARA_SET_ONE_SELECT_1 || ui_pre_state == PARA_SET_ONE_SELECT_3))
+	{
+		res = 0;
+	}
+	if (ui_cur_state == PARA_SET_ONE_SELECT_3 && (ui_pre_state == PARA_SET_ONE_SELECT_2 || ui_pre_state == PARA_SET_ONE_SELECT_4))
+	{
+		res = 0;
+	}
+	if (ui_cur_state == PARA_SET_ONE_SELECT_4 && (ui_pre_state == PARA_SET_ONE_SELECT_3 || ui_pre_state == PARA_SET_ONE_SELECT_5))
+	{
+		res = 0;
+	}
+	if (ui_cur_state == PARA_SET_ONE_SELECT_5 && (ui_pre_state == PARA_SET_ONE_SELECT_4 || ui_pre_state == PARA_SET_TWO_SELECT_1))
+	{
+		res = 0;
+	}
+	if (ui_cur_state == PARA_SET_TWO_SELECT_1 && (ui_pre_state == PARA_SET_ONE_SELECT_5 || ui_pre_state == PARA_SET_TWO_SELECT_2))
+	{
+		res = 0;
+	}
+	if (ui_cur_state == PARA_SET_TWO_SELECT_2 && (ui_pre_state == PARA_SET_TWO_SELECT_1 || ui_pre_state == PARA_SET_TWO_SELECT_3))
+	{
+		res = 0;
+	}
+    if (ui_cur_state == PARA_SET_TWO_SELECT_3 && ui_pre_state == PARA_SET_TWO_SELECT_2)
+	{
+		res = 0;
+	}
+
+    //反吹间隔
+    if ((ui_cur_state == BLOW_INTER_SET_UP || ui_cur_state == BLOW_INTER_SET_DOWN || ui_cur_state == BLOW_INTER_SET_RIGHT) && ui_pre_state == BLOW_INTER_SET)
+    {
+        res = 0;
+    }
+    //速度场系数（风速校准系数）设置界面
+    if ((ui_cur_state == SPEED_K_SET_UP || ui_cur_state == SPEED_K_SET_DOWN || ui_cur_state == SPEED_K_SET_RIGHT) && ui_pre_state == SPEED_K_SET)
+    {
+        res = 0;
+    }
+    //皮托管系数设置界面
+    if ((ui_cur_state == PITG_K_SET_UP || ui_cur_state == PITG_K_SET_DOWN || ui_cur_state == PITG_K_SET_RIGHT) && ui_pre_state == PITG_K_SET)
+    {
+        res = 0;
+    }
 	return res;
 }
 

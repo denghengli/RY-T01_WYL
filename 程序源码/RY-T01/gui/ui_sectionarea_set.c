@@ -80,11 +80,8 @@ void section_area_set(void *para)
 void section_area_set_up(void *para)
 {
     uint16_t para_value = 1; //立即显示
-    
-    if (right_pos == 0) section_area_char[0] = (section_area_char[0] + 1) % 10; //0 - 9
-    else if (right_pos == 1) section_area_char[1] = (section_area_char[1] + 1) % 10; //0 - 9
-    else if (right_pos == 2) section_area_char[2] = (section_area_char[2] + 1) % 10; //0 - 9
-    else if (right_pos == 3) section_area_char[3] = (section_area_char[3] + 1) % 10; //0 - 9
+
+    section_area_char[right_pos] = (section_area_char[right_pos] + 1) % 10; //0 - 9
 
     section_area_set(&para_value);
     ui_cur_state = SECTION_AREA_SET;
@@ -93,27 +90,9 @@ void section_area_set_up(void *para)
 void section_area_set_down(void *para)
 {
     uint16_t para_value = 1; //立即显示
-    
-    if (right_pos == 0)
-    {
-        if (section_area_char[0] - 1 == -1) section_area_char[0] = 9;
-        else section_area_char[0] -= 1;
-    }
-    else if (right_pos == 1)
-    {
-        if (section_area_char[1] - 1 == -1) section_area_char[1] = 9;
-        else section_area_char[1] -= 1;
-    }
-    else if (right_pos == 2)
-    {
-        if (section_area_char[2] - 1 == -1) section_area_char[2] = 9;
-        else section_area_char[2] -= 1;
-    }
-    else if (right_pos == 3)
-    {
-        if (section_area_char[3] - 1 == -1) section_area_char[3] = 9;
-        else section_area_char[3] -= 1;
-    }
+
+    if (section_area_char[right_pos] - 1 == -1) section_area_char[right_pos] = 9;
+    else section_area_char[right_pos] -= 1;
     
     section_area_set(&para_value);
     ui_cur_state = SECTION_AREA_SET;
@@ -146,7 +125,7 @@ void section_area_set_ok(void *para)
     g_SysData.Data.Para.sectionArea = integer + (float)(dec / 100.0 + 0.001);
     ParaData_Save(0); 
 
-    //提升成功
+    //提示成功
     lcd_para.cmd = FNC_LCD_DISP_DRAW_STRING;
     lcd_para.x = 100;
     lcd_para.y = 100;

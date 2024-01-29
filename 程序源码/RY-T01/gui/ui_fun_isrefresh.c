@@ -32,6 +32,18 @@ uint8_t is_flash_menu(void)
 	{
 		res = 1;
 	}
+	if (ui_cur_state == BLOW_INTER_SET)
+	{
+		res = 1;
+	}
+	if (ui_cur_state == SPEED_K_SET)
+	{
+		res = 1;
+	}
+	if (ui_cur_state == PITG_K_SET)
+	{
+		res = 1;
+	}
 	
 	return res;
 }

@@ -79,15 +79,10 @@ void smooth_time_set_up(void *para)
         if (smooth_time_char[1] || smooth_time_char[2]) smooth_time_char[0] = (smooth_time_char[0] + 1) % 6; //0 - 5
         else smooth_time_char[0] = (smooth_time_char[0] + 1) % 7; //0 - 6
     }
-    else if (right_pos == 1)
+    else
     {
-        if (smooth_time_char[0] == 6) smooth_time_char[1] = 0;
-        else smooth_time_char[1] = (smooth_time_char[1] + 1) % 10; //0 - 9
-    }
-    else if (right_pos == 2)
-    {
-        if (smooth_time_char[0] == 6) smooth_time_char[2] = 0;
-        else smooth_time_char[2] = (smooth_time_char[2] + 1) % 10; //0 - 9
+        if (smooth_time_char[0] == 6) smooth_time_char[right_pos] = 0;
+        else smooth_time_char[right_pos] = (smooth_time_char[right_pos] + 1) % 10; //0 - 9
     }
 
     smooth_time_set(&para_value);
@@ -111,28 +106,16 @@ void smooth_time_set_down(void *para)
             else smooth_time_char[0] -= 1;
         }
     }
-    else if (right_pos == 1)
+    else
     {
         if (smooth_time_char[0] == 6)
         {
-            smooth_time_char[1] = 0;
+            smooth_time_char[right_pos] = 0;
         }
         else
         {
-            if (smooth_time_char[1] - 1 == -1) smooth_time_char[1] = 9;
-            else smooth_time_char[1] -= 1;
-        }
-    }
-    else if (right_pos == 2)
-    {
-        if (smooth_time_char[0] == 6)
-        {
-            smooth_time_char[2] = 0;
-        }
-        else
-        {
-            if (smooth_time_char[2] - 1 == -1) smooth_time_char[2] = 9;
-            else smooth_time_char[2] -= 1;
+            if (smooth_time_char[right_pos] - 1 == -1) smooth_time_char[right_pos] = 9;
+            else smooth_time_char[right_pos] -= 1;
         }
     }
     
@@ -166,7 +149,7 @@ void smooth_time_set_ok(void *para)
                                     smooth_time_char[2];
     ParaData_Save(0); 
 
-    //提升成功
+    //提示成功
     lcd_para.cmd = FNC_LCD_DISP_DRAW_STRING;
     lcd_para.x = 100;
     lcd_para.y = 100;
