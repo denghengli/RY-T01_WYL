@@ -2106,6 +2106,13 @@
         </file>
     </group>
     <group>
+        <name>CMSIS-Pack</name>
+        <tag>CMSISPack.ComponentGroup</tag>
+        <file>
+            <name>$PROJ_DIR$\RTE\RTE_Components.h</name>
+        </file>
+    </group>
+    <group>
         <name>driver</name>
         <group>
             <name>lcd</name>
@@ -2192,7 +2199,19 @@
             <name>$PROJ_DIR$\..\gui\ui_paraset.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\gui\ui_paraset_auto_calibzero.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\gui\ui_paraset_blowinter.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\gui\ui_paraset_humit_cancelzero.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\gui\ui_paraset_humit_unitselect.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\gui\ui_paraset_humit_zerocalib.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\gui\ui_paraset_pitgk.c</name>
@@ -2202,6 +2221,9 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\gui\ui_password_login.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\gui\ui_restore_factory.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\gui\ui_sectionarea_set.c</name>
@@ -2334,13 +2356,6 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\os\timers.c</name>
-        </file>
-    </group>
-    <group>
-        <name>CMSIS-Pack</name>
-        <tag>CMSISPack.ComponentGroup</tag>
-        <file>
-            <name>$PROJ_DIR$\RTE\RTE_Components.h</name>
         </file>
     </group>
     <cmsisPackSettings>

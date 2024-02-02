@@ -36,6 +36,10 @@ uint8_t is_flash_menu(void)
 	{
 		res = 1;
 	}
+	if (ui_cur_state == AUTO_CALIB_ZERO)
+	{
+		res = 1;
+	}
 	if (ui_cur_state == SPEED_K_SET)
 	{
 		res = 1;
@@ -44,6 +48,22 @@ uint8_t is_flash_menu(void)
 	{
 		res = 1;
 	}
-	
+	if (ui_cur_state == HUMIT_ZERO_CALIB)
+	{
+		res = 1;
+	}
+	if (ui_cur_state == CANCEL_HUMIT_ZERO)
+	{
+		res = 1;
+	}
+	if (ui_cur_state == HUMIT_UNIT_SELECT)
+	{
+		res = 1;
+	}
+	if (ui_cur_state == RESTORE_FACTORY)
+	{
+		res = 1;
+	}
+    
 	return res;
 }

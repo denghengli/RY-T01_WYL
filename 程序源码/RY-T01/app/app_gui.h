@@ -77,6 +77,14 @@ typedef enum
     BLOW_INTER_SET_OK,    
     BLOW_INTER_SET_OK_RETURN,
 
+    //自动校零控制
+    AUTO_CALIB_ZERO_ENTER,
+    AUTO_CALIB_ZERO,
+    AUTO_CALIB_ZERO_RIGHT,
+    AUTO_CALIB_ZERO_RETURN,
+    AUTO_CALIB_ZERO_OK,    
+    AUTO_CALIB_ZERO_OK_RETURN,
+
     //速度场系数（风速校准系数）设置界面
     SPEED_K_SET_ENTER,
     SPEED_K_SET,
@@ -96,7 +104,40 @@ typedef enum
     PITG_K_SET_RETURN,
     PITG_K_SET_OK,    
     PITG_K_SET_OK_RETURN,
-    
+	
+	//湿度零点校准
+	HUMIT_ZERO_CALIB_ENTER,
+	HUMIT_ZERO_CALIB,
+	HUMIT_ZERO_CALIB_RETURN,
+    HUMIT_ZERO_CALIB_OK, 
+    HUMIT_ZERO_CALIB_FINISH,
+    HUMIT_ZERO_CALIB_FINISH_RETURN,
+	
+	//取消湿度校零值
+	CANCEL_HUMIT_ZERO_ENTER,
+	CANCEL_HUMIT_ZERO,
+	CANCEL_HUMIT_ZERO_RIGHT,
+	CANCEL_HUMIT_ZERO_RETURN,
+	CANCEL_HUMIT_ZERO_OK,    
+	CANCEL_HUMIT_ZERO_OK_RETURN,
+	
+	//湿度控制
+	HUMIT_UNIT_SELECT_ENTER,
+	HUMIT_UNIT_SELECT,
+	HUMIT_UNIT_SELECT_UP,
+	HUMIT_UNIT_SELECT_DOWN,
+	HUMIT_UNIT_SELECT_RETURN,
+	HUMIT_UNIT_SELECT_OK,    
+	HUMIT_UNIT_SELECT_OK_RETURN,
+	
+	//恢复出厂设置
+	RESTORE_FACTORY_ENTER,
+	RESTORE_FACTORY,
+	RESTORE_FACTORY_RIGHT,
+	RESTORE_FACTORY_RETURN,
+	RESTORE_FACTORY_OK,    
+	RESTORE_FACTORY_OK_RETURN
+	
 }UISTATE;
 
 typedef struct
@@ -194,6 +235,14 @@ void blow_inter_set_return(void *para);
 void blow_inter_set_ok(void *para);
 void blow_inter_set_ok_return(void *para);
 
+//自动校零控制
+void auto_calib_zero_enter(void *para);
+void auto_calib_zero(void *para);
+void auto_calib_zero_right(void *para);
+void auto_calib_zero_return(void *para);
+void auto_calib_zero_ok(void *para);
+void auto_calib_zero_ok_return(void *para);
+
 //速度场系数（风速校准系数）设置界面
 void speed_k_set_enter(void *para);
 void speed_k_set(void *para);
@@ -213,5 +262,38 @@ void pitg_k_set_right(void *para);
 void pitg_k_set_return(void *para);
 void pitg_k_set_ok(void *para);
 void pitg_k_set_ok_return(void *para);
+
+//湿度零点校准
+void humit_zero_calib_enter(void *para);
+void humit_zero_calib(void *para);
+void humit_zero_calib_return(void *para);
+void humit_zero_calib_ok(void *para);
+void humit_zero_calib_finish(void *para);
+void humit_zero_calib_finish_return(void *para);
+
+//取消湿度校零值
+void cancel_humit_zero_enter(void *para);
+void cancel_humit_zero(void *para);
+void cancel_humit_zero_right(void *para);
+void cancel_humit_zero_return(void *para);
+void cancel_humit_zero_ok(void *para);
+void cancel_humit_zero_ok_return(void *para);
+
+//湿度控制
+void humit_unit_select_enter(void *para);
+void humit_unit_select(void *para);
+void humit_unit_select_up(void *para);
+void humit_unit_select_down(void *para);
+void humit_unit_select_return(void *para);
+void humit_unit_select_ok(void *para);
+void humit_unit_select_ok_return(void *para);
+
+//恢复出厂设置
+void restore_factory_enter(void *para);
+void restore_factory(void *para);
+void restore_factory_right(void *para);
+void restore_factory_return(void *para);
+void restore_factory_ok(void *para);
+void restore_factory_ok_return(void *para);
 
 #endif

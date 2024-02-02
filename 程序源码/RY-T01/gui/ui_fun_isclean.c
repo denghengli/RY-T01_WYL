@@ -100,6 +100,11 @@ uint8_t is_clean(void)
     {
         res = 0;
     }
+    //自动校零控制
+    if ((ui_cur_state == AUTO_CALIB_ZERO_RIGHT) && ui_pre_state == AUTO_CALIB_ZERO)
+    {
+        res = 0;
+    }
     //速度场系数（风速校准系数）设置界面
     if ((ui_cur_state == SPEED_K_SET_UP || ui_cur_state == SPEED_K_SET_DOWN || ui_cur_state == SPEED_K_SET_RIGHT) && ui_pre_state == SPEED_K_SET)
     {
@@ -110,6 +115,27 @@ uint8_t is_clean(void)
     {
         res = 0;
     }
+    //湿度零点校准
+    if ((ui_cur_state == HUMIT_ZERO_CALIB_OK) && ui_pre_state == HUMIT_ZERO_CALIB)
+    {
+        res = 0;
+    }
+    //取消湿度校零值
+    if ((ui_cur_state == CANCEL_HUMIT_ZERO_RIGHT) && ui_pre_state == CANCEL_HUMIT_ZERO)
+    {
+        res = 0;
+    }
+    //湿度控制（单位选择）
+    if ((ui_cur_state == HUMIT_UNIT_SELECT_UP || ui_cur_state == HUMIT_UNIT_SELECT_DOWN) && ui_pre_state == HUMIT_UNIT_SELECT)
+    {
+        res = 0;
+    }
+    //恢复出厂设置
+    if ((ui_cur_state == RESTORE_FACTORY_RIGHT) && ui_pre_state == RESTORE_FACTORY)
+    {
+        res = 0;
+    }
+    
 	return res;
 }
 
