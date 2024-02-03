@@ -121,11 +121,11 @@ void LCD_Init(void)
 	LCD_GPIO_Init();//初始化GPIO
 	
     LCD_RES_Clr();
-    LCD_DelayMs(100);
+    LCD_DelayMs(5);
     LCD_RES_Set();
-    LCD_DelayMs(100);
-    LCD_BLK_Set(); //开背光
-    LCD_DelayMs(100);
+    LCD_DelayMs(5);
+//    LCD_BLK_Set(); //开背光
+//    LCD_DelayMs(100);
     
     //************* Start Initial Sequence **********//	
     LCD_WR_REG(0x11);

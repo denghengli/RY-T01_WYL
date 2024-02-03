@@ -95,6 +95,16 @@ uint8_t is_clean(void)
 		res = 0;
 	}
 
+    //手动反吹
+    if ((ui_cur_state == HANDLE_BLOW_UP || ui_cur_state == HANDLE_BLOW_DOWN) && ui_pre_state == HANDLE_BLOW)
+    {
+        res = 0;
+    }
+    //流速校准
+    if ((ui_cur_state == FLOW_ADJUST_UP || ui_cur_state == FLOW_ADJUST_DOWN) && ui_pre_state == FLOW_ADJUST)
+    {
+        res = 0;
+    }
     //反吹间隔
     if ((ui_cur_state == BLOW_INTER_SET_UP || ui_cur_state == BLOW_INTER_SET_DOWN || ui_cur_state == BLOW_INTER_SET_RIGHT) && ui_pre_state == BLOW_INTER_SET)
     {

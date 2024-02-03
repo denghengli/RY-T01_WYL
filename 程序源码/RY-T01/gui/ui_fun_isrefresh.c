@@ -16,6 +16,14 @@ uint8_t is_flash_menu(void)
 		res = 1;
 	}
 
+    if (ui_cur_state == HANDLE_BLOW || ui_cur_state == HANDLE_BLOW_ING)
+	{
+		res = 1;
+	}
+    if (ui_cur_state == FLOW_ADJUST || ui_cur_state == FLOW_ADJUST_ING)
+	{
+		res = 1;
+	}
 	if (ui_cur_state == SMOOTH_TIME_SET)
 	{
 		res = 1;

@@ -28,7 +28,8 @@ const  struct DRV_Pin   DRV_PINS[] =
     {epin_VALVE4,       LL_APB2_GRP1_PERIPH_GPIOC, GPIOC, LL_GPIO_PIN_5,  PIN_LOW},
 
     {epin_RUN,          LL_APB2_GRP1_PERIPH_GPIOC, GPIOC, LL_GPIO_PIN_0,  PIN_LOW},
-    {epin_WDT,          LL_APB2_GRP1_PERIPH_GPIOA, GPIOA, LL_GPIO_PIN_8,  PIN_LOW}
+    {epin_WDT,          LL_APB2_GRP1_PERIPH_GPIOA, GPIOA, LL_GPIO_PIN_8,  PIN_LOW},
+    {epin_LCD_BLK,      LL_APB2_GRP1_PERIPH_GPIOA, GPIOA, LL_GPIO_PIN_12,  PIN_LOW}
 };
 
 
@@ -202,6 +203,7 @@ void MX_GPIO_Init(void)
 {
     DRV_Pin_Mode(epin_WDT,  PINMODE_OUT_PP);
     DRV_Pin_Mode(epin_RUN,  PINMODE_OUT_PP);
+    DRV_Pin_Mode(epin_LCD_BLK,  PINMODE_OUT_PP);
     
     DRV_Pin_Mode(epin_DAC_RDY, PINMODE_IN_UP);
     DRV_Pin_Mode(epin_DAC_LDAC,PINMODE_OUT_OD_UP);

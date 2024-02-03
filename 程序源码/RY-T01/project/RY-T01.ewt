@@ -2445,10 +2445,16 @@
             <name>$PROJ_DIR$\..\gui\ui_blowfreq_set.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\..\gui\ui_flow_adjust.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\..\gui\ui_fun_isclean.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\gui\ui_fun_isrefresh.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\..\gui\ui_handle_blow.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\..\gui\ui_main_wind.c</name>

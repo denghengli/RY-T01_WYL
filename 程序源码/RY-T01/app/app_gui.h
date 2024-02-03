@@ -17,6 +17,30 @@ typedef enum
     CONFIG_MENU_TWO_SELECT_1,
     CONFIG_MENU_TWO_SELECT_2,
 
+    //手动反吹界面
+    HANDLE_BLOW_ENTER,
+    HANDLE_BLOW,
+    HANDLE_BLOW_UP,
+    HANDLE_BLOW_DOWN,
+    HANDLE_BLOW_RETURN,
+    HANDLE_BLOW_OK,    
+	HANDLE_BLOW_ING,
+	HANDLE_BLOW_ING_RETURN,
+	HANDLE_BLOW_FINISH,
+    HANDLE_BLOW_FINISH_RETURN,
+
+    //流速零点校准界面
+    FLOW_ADJUST_ENTER,
+    FLOW_ADJUST,
+    FLOW_ADJUST_UP,
+    FLOW_ADJUST_DOWN,
+    FLOW_ADJUST_RETURN,
+    FLOW_ADJUST_OK,    
+	FLOW_ADJUST_ING,
+	FLOW_ADJUST_ING_RETURN,
+	FLOW_ADJUST_FINISH,
+    FLOW_ADJUST_FINISH_RETURN,
+	
     //平滑时间设置界面
     SMOOTH_TIME_SET_ENTER,
     SMOOTH_TIME_SET,
@@ -174,6 +198,30 @@ void config_menu_one_select_4(void *para);
 void config_menu_one_select_5(void *para);
 void config_menu_two_select_1(void *para);
 void config_menu_two_select_2(void *para);
+
+//手动反吹界面
+void handle_blow_enter(void *para);
+void handle_blow(void *para);
+void handle_blow_up(void *para);
+void handle_blow_down(void *para);
+void handle_blow_return(void *para);
+void handle_blow_ok(void *para);
+void handle_blow_ing(void *para);
+void handle_blow_ing_return(void *para);
+void handle_blow_finish(void *para);
+void handle_blow_finish_return(void *para);
+
+//流速零点校准界面
+void flow_adjust_enter(void *para);
+void flow_adjust(void *para);
+void flow_adjust_up(void *para);
+void flow_adjust_down(void *para);
+void flow_adjust_return(void *para);
+void flow_adjust_ok(void *para);
+void flow_adjust_ing(void *para);
+void flow_adjust_ing_return(void *para);
+void flow_adjust_finish(void *para);
+void flow_adjust_finish_return(void *para);
 
 //平滑时间设置界面
 void smooth_time_set_enter(void *para);
