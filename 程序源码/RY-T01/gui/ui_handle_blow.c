@@ -75,6 +75,13 @@ void handle_blow_ok(void *para)
 
     handle_blow_ing(NULL); //反吹开始 立马刷新
     ui_cur_state = HANDLE_BLOW_ING;
+
+    //开启管路
+    if (handleBlowType == 0) {
+        valve_ctrl(eSYSSTA_PITG_BLOW, 1);
+    } else if (handleBlowType == 1) {
+        valve_ctrl(eSYSSTA_HUMIT_BLOW, 1);
+    }
 }
 
 void handle_blow_ing(void *para)
@@ -105,10 +112,10 @@ void handle_blow_ing(void *para)
     snprintf(tmp_str, sizeof(tmp_str), "计时：%02d/30s", blow_time_s);
     hal_lcd_driver_intface((void *)&lcd_para, (uint8_t *)tmp_str, strlen(tmp_str));
     
-    //校准完成
+    //反吹完成
     if (blow_time_s == 30)
     {
-        blow_success_flag = 1; //校准成功
+        blow_success_flag = 1; //反吹成功
         
         clean_sercen();
         handle_blow_finish(NULL);
@@ -146,6 +153,12 @@ void handle_blow_finish(void *para)
     }
     hal_lcd_driver_intface((void *)&lcd_para, (uint8_t *)tmp_str, strlen(tmp_str));
 
+    //关闭管路
+    if (handleBlowType == 0) {
+        valve_ctrl(eSYSSTA_PITG_BLOW, 0);
+    } else if (handleBlowType == 1) {
+        valve_ctrl(eSYSSTA_HUMIT_BLOW, 0);
+    }
 }
 
 void handle_blow_finish_return(void *para)

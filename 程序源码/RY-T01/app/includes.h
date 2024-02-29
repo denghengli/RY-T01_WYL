@@ -53,6 +53,7 @@
 #include "drv_spi.h"
 #include "drv_soft_i2c.h"
 #include "drv_timer.h"
+#include "drv_soft_timer.h"
 #include "drv_lcd.h"
 #include "hal_lcd.h"
 #include "bsp_mcp7428.h"

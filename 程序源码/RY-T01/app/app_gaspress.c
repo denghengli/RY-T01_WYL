@@ -11,6 +11,9 @@ static _I2C_T s_tFGSticPresI2C; //静压传感器I2C IO口
 static SM9541_DATA_T s_tFGDynPresDat; //动压传感器数据结构体
 static SM9541_DATA_T s_tFGSticPresDat;//静压传感器数据结构体
 
+struct soft_timer *timg_adj_timer; //定时自动校零定时器
+uint8_t timing_adj_start_flag = 0; //定时自动校零开始标志，与手动校零区别开
+
 /********************************************************************************************************
 *	函 数 名: FlueGasPress_DataInit
 *	功能说明: 动压静压数据初始化
@@ -148,36 +151,50 @@ static void FlueGasSticPress_Measure(void)
 static void FlueGasPress_AutoAdj(void)
 {
 	uint8_t   i = 0;
-	static float fAutoAdjDynPBuf [AUTOADJ_FREQ] = {0.0};//全压
+	static float fAutoAdjDynPBuf [AUTOADJ_FREQ] = {0.0};//动压
 	static float fAutoAdjSticPBuf[AUTOADJ_FREQ] = {0.0};//静压
-	static uint8_t AdjBufCnt = 0;
+	static uint8_t AdjBufCnt = 0, AdjAvgCnt = 0;
 	float DynPsum=0.0, SticPsum = 0.0;
-	
-	if(g_SysData.Data.Para.speedCalibZeroFlg == 1)//是否开启了自动校准 1启动，0关闭；默认关闭
+
+    //是否开启了自动校准 2完成，1启动，0关闭；默认关闭
+	if(g_SysData.Data.Para.speedCalibZeroFlg == 0)
+	{
+	    AdjBufCnt = 0;
+	    AdjAvgCnt = 0;
+	}
+	else if(g_SysData.Data.Para.speedCalibZeroFlg == 1)
 	{
 		fAutoAdjDynPBuf [AdjBufCnt] = s_tFGDynPresDat.Pressavg;/*将数据存入buf中*/
 		fAutoAdjSticPBuf[AdjBufCnt] = s_tFGSticPresDat.Pressavg;
-		
-		if(++AdjBufCnt >= AUTOADJ_FREQ)//校准数据采集完成
-		{
-			for(i=0;i<AUTOADJ_FREQ;i++)
-			{
-				DynPsum += fAutoAdjDynPBuf[i];
-				SticPsum += fAutoAdjSticPBuf[i];
-			}
-            /* 把测量数据存入全局变量中 */
-            g_SysData.Data.Para.dynPRatioB = -(DynPsum / (float)AUTOADJ_FREQ);
-            g_SysData.Data.Para.sticPRatioB = -(SticPsum  / (float)AUTOADJ_FREQ);
 
-            g_SysData.Data.Para.dynPRatioB = (float)((int)(g_SysData.Data.Para.dynPRatioB * pow(10,FLOAT_DECNUM))) /pow(10,FLOAT_DECNUM);
-            g_SysData.Data.Para.sticPRatioB  = (float)((int)(g_SysData.Data.Para.sticPRatioB * pow(10,FLOAT_DECNUM))) /pow(10,FLOAT_DECNUM);
-    
-            g_SysData.Data.Para.speedCalibZeroFlg = 0;
-                
-			ParaData_Save(0);//将校准参数存入FLASH
-			
-			AdjBufCnt = 0;
+		AdjBufCnt = (AdjBufCnt + 1) % AUTOADJ_FREQ;
+		AdjAvgCnt = (AdjAvgCnt < AUTOADJ_FREQ) ? AdjAvgCnt++ : AUTOADJ_FREQ;
+
+        //自动定时校零，采集满后自动退出
+		if (AdjAvgCnt == AUTOADJ_FREQ && timing_adj_start_flag)
+		{
+		    timing_adj_start_flag = 0;
+		    g_SysData.Data.Para.speedCalibZeroFlg = 2;
 		}
+	}
+	else if (g_SysData.Data.Para.speedCalibZeroFlg == 2)
+	{
+	    for(i=0; i<AdjAvgCnt; i++)
+		{
+			DynPsum += fAutoAdjDynPBuf[i];
+			SticPsum += fAutoAdjSticPBuf[i];
+		}
+        /* 把测量数据存入全局变量中 */
+        g_SysData.Data.Para.dynPRatioB = -(DynPsum / (float)AUTOADJ_FREQ);
+        g_SysData.Data.Para.sticPRatioB = -(SticPsum  / (float)AUTOADJ_FREQ);
+        g_SysData.Data.Para.dynPRatioB = (float)((int)(g_SysData.Data.Para.dynPRatioB * pow(10,FLOAT_DECNUM))) /pow(10,FLOAT_DECNUM);
+        g_SysData.Data.Para.sticPRatioB  = (float)((int)(g_SysData.Data.Para.sticPRatioB * pow(10,FLOAT_DECNUM))) /pow(10,FLOAT_DECNUM);
+
+        g_SysData.Data.Para.speedCalibZeroFlg = 0;
+        AdjBufCnt = 0;
+	    AdjAvgCnt = 0;
+	    
+		ParaData_Save(0);//将校准参数存入FLASH
 	}
 }
 
@@ -229,6 +246,40 @@ void FlueGasPress_Measure(void)
     SampleData_ToModbus();
 }
 
+void timg_adj_timer_cb(void *param)
+{
+    timing_adj_start_flag = 1;
+    g_SysData.Data.Para.speedCalibZeroFlg = 1;
+}
+
+/**********************************************************************************************************
+*	函 数 名: timing_adj_proc
+*	功能说明: 识别定时自动校零 是否变化，需要启动或关闭定时
+*	形    参: NONE
+*	返 回 值: NONE
+**********************************************************************************************************/
+static void timing_adj_proc(void)
+{
+    static uint8_t last_autoCalibZero = 0;
+    uint8_t cur_autoCalibZero = g_SysData.Data.Para.autoCalibZero;
+
+    if (last_autoCalibZero != cur_autoCalibZero)
+    {
+        //1 --> 0关闭自动校零定时
+        if (cur_autoCalibZero == 0)
+        {
+            soft_timer_stop(timg_adj_timer);
+        }
+        //0 --> 1开启自动校零定时
+        else if (cur_autoCalibZero == 1)
+        {
+            soft_timer_config(timg_adj_timer, 24*60, 
+                              SOFT_TIMER_MODE_RERIOD, SOFT_TIMER_UNIT_MIN,
+                              NULL, timg_adj_timer_cb);
+            soft_timer_start(timg_adj_timer);
+        }
+    }
+}
 
 
 /**********************************************************************************************************
@@ -240,6 +291,9 @@ void FlueGasPress_Measure(void)
 void APP_FlueGasP(void  * argument)
 {
     TickType_t sMaxBlockTime = pdMS_TO_TICKS(1000);
+
+    //定时自动校零定时器
+    timg_adj_timer = creat_soft_timer();
     
 	FlueGasPress_DataInit();
 	
@@ -248,7 +302,8 @@ void APP_FlueGasP(void  * argument)
 //	    if (g_SysData.Data.Sample.sysSta == SYS_STA_MEASU)
 //		{
 			FlueGasPress_Measure();       
-
+            timing_adj_proc();
+            
 			LOG_PRINT(DEBUG_TASK,"APP_FlueGasP \r\n");
 //		}
         vTaskDelay(sMaxBlockTime);

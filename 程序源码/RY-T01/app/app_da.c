@@ -13,7 +13,7 @@ static void DAC_Output(void)
     static float Vt_Old=0.4, Vs_Old=0.4, Vps_Old=0.4, Vh_Old=0.4;//温度、流速、静压、湿度 DAC输出电压
 
     /* 根据电路DAC输出1V对应10mA输出可知，要输出4-20mA，DAC输出范围为0.4-2V */
-    if (g_SysData.Data.Sample.sysSta == SYS_STA_MEASU)
+    if (g_SysData.Data.Sample.sysSta == eSYSSTA_MEASU)
     {
         /* 流速 0-40m/s*/
         temp = (g_SysData.Data.Sample.speed / 40.0 * 16 + 4) / 10.0;
@@ -43,7 +43,7 @@ static void DAC_Output(void)
         MCP4728_Output(Vs, Vps, Vt, Vh);
         //MCP4728_Output(1, 1, 1, 1);
     }
-    else if (g_SysData.Data.Sample.sysSta == SYS_STA_BLOW)
+    else
     {
         // 0  1  2  3分别对应 流速 静压 温度 湿度
         MCP4728_Output(Vs_Old, Vps_Old, Vt_Old, Vh_Old);

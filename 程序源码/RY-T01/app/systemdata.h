@@ -5,10 +5,6 @@
 
 #define SOFTVER 100
 
-/*系统状态*/
-#define SYS_STA_MEASU  1
-#define SYS_STA_BLOW   2
-
 /*浮点数据小数位数*/
 #define FLOAT_DECNUM 3
 
@@ -19,6 +15,17 @@
 /*ADC采集通道数  采集平均次数*/
 #define ADC_CH_MAX  2
 #define ADC_AVG_MAX 10
+
+/*系统状态*/
+typedef enum
+{
+    eSYSSTA_MEASU = 1,  //正常测量状态
+    eSYSSTA_PITG_BLOW,  //皮托管反吹   
+    eSYSSTA_HUMIT_BLOW, //湿度管反吹
+    eSYSSTA_HAVE_BLOW_CALIB_ZERO,   //有反吹气校零
+    eSYSSTA_NO_BLOW_CALIB_ZERO,     //无反吹气校零
+    eSYSSTA_HUMIT_CALIB //湿度零点校准
+}SYSTEM_STATE_E;
 
 /*串口传输时使用的结构体*/
 typedef struct
@@ -88,7 +95,7 @@ __packed typedef struct
     uint16_t reserve[14];   //预留
     
 	uint16_t blowCtrlFlg;   //手动反吹控制标志，1开启反吹
-    uint16_t speedCalibZeroFlg; //压力校零标志，1开启校准
+    uint16_t speedCalibZeroFlg; //压力校零标志，0关闭 1开启校准 2完成校准
     uint16_t humitCalibFlg; //湿度校准标志，1开启校准
     uint16_t factoryFlg;    //恢复出厂标志，1恢复出厂
     

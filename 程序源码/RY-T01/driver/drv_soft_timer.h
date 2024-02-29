@@ -8,11 +8,12 @@
 #ifndef _DRIVER_SOFTIMER_
 #define _DRIVER_SOFTIMER_
 #include  <stdlib.h>
+#include "FreeRTOS.h"
 
 /* It needs to be modified according to the user's own environment before use ！！！！！！！*/
-#define SOFT_TIMER_TICK_MS      1
-#define SOFT_TIMER_MALLOC(size) malloc(size)
-#define SOFT_TIMER_FREE(p)      free(p)
+#define SOFT_TIMER_TICK_MS      1000
+#define SOFT_TIMER_MALLOC(size) pvPortMalloc(size)
+#define SOFT_TIMER_FREE(p)      vPortFree(p)
 
 /* soft timer unit */
 #define SOFT_TIMER_UNIT_MIN           10

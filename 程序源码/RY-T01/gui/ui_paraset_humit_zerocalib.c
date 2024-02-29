@@ -73,6 +73,9 @@ void humit_zero_calib_ok(void *para)
     
     humit_zero_calib(NULL); //立马刷新
     ui_cur_state = HUMIT_ZERO_CALIB;
+
+    //开启管路
+    valve_ctrl(eSYSSTA_HUMIT_CALIB, 1);
 }
 
 void humit_zero_calib_finish(void *para)
@@ -101,6 +104,9 @@ void humit_zero_calib_finish(void *para)
         snprintf(tmp_str, sizeof(tmp_str), "校零失败");
     }
     hal_lcd_driver_intface((void *)&lcd_para, (uint8_t *)tmp_str, strlen(tmp_str));
+
+    //关闭管路
+    valve_ctrl(eSYSSTA_HUMIT_CALIB, 0);
 }
 
 void humit_zero_calib_finish_return(void *para)

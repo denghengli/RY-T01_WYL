@@ -81,6 +81,15 @@ void flow_adjust_ok(void *para)
 
     flow_adjust_ing(NULL); //校准开始 立马刷新
     ui_cur_state = FLOW_ADJUST_ING;
+
+    //开启管路
+    if (flowAdjustType == 0) {
+        valve_ctrl(eSYSSTA_HAVE_BLOW_CALIB_ZERO, 1);
+    } else if (flowAdjustType == 1) {
+        valve_ctrl(eSYSSTA_NO_BLOW_CALIB_ZERO, 1);
+    }
+    
+    g_SysData.Data.Para.speedCalibZeroFlg = 1; //启动校准
 }
 
 void flow_adjust_ing(void *para)
@@ -115,6 +124,7 @@ void flow_adjust_ing(void *para)
     if (adjust_time_s == 20)
     {
         adjust_success_flag = 1; //校准成功
+        g_SysData.Data.Para.speedCalibZeroFlg = 2; //校准完成
         
         clean_sercen();
         flow_adjust_finish(NULL);
@@ -126,7 +136,8 @@ void flow_adjust_ing(void *para)
 void flow_adjust_ing_return(void *para)
 {
     adjust_success_flag = 0; //校准失败
-            
+    g_SysData.Data.Para.speedCalibZeroFlg = 0; //关闭校准
+    
     //clean_sercen();
     flow_adjust_finish(NULL);
     ui_cur_state = FLOW_ADJUST_FINISH;
@@ -151,6 +162,13 @@ void flow_adjust_finish(void *para)
         snprintf(tmp_str, sizeof(tmp_str), "校准失败");
     }
     hal_lcd_driver_intface((void *)&lcd_para, (uint8_t *)tmp_str, strlen(tmp_str));
+
+    //关闭管路
+    if (flowAdjustType == 0) {
+        valve_ctrl(eSYSSTA_HAVE_BLOW_CALIB_ZERO, 0);
+    } else if (flowAdjustType == 1) {
+        valve_ctrl(eSYSSTA_NO_BLOW_CALIB_ZERO, 0);
+    }
 }
 
 void flow_adjust_finish_return(void *para)
