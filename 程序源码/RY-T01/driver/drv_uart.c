@@ -1,8 +1,5 @@
 #include "includes.h"
 
-extern UART_TRANS_T     stUart1Trans;
-extern UART_TRANS_T     stUart3Trans;
-
 /* USART1 init function */
 void MX_USART1_UART_Init(void)
 {
@@ -29,7 +26,7 @@ void MX_USART1_UART_Init(void)
     /* USART1 interrupt Init */
     NVIC_EnableIRQ(USART1_IRQn);
 
-    USART_InitStruct.BaudRate            = 115200;
+    USART_InitStruct.BaudRate            = 9600;
     USART_InitStruct.DataWidth           = LL_USART_DATAWIDTH_8B;
     USART_InitStruct.StopBits            = LL_USART_STOPBITS_1;
     USART_InitStruct.Parity              = LL_USART_PARITY_NONE;

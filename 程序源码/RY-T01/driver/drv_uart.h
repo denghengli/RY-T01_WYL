@@ -1,8 +1,8 @@
 #ifndef _DRIVER_UART_
 #define _DRIVER_UART_
 
-#define UARTPORT_COM    USART2  //数据通讯使用串口
-#define UARTPORT_DEBUG  USART1  //调试打印使用串口
+#define UARTPORT_COM    USART1  //数据通讯使用串口
+#define UARTPORT_DEBUG  USART2  //调试打印使用串口
 
 /*串口波特率*/
 #define BAUD_RATE_2400   2400               

@@ -188,7 +188,7 @@ void APP_Timing(void  * argument)
     timg_blow_timer = creat_soft_timer();
     blow_seq_timer = creat_soft_timer();
     soft_timer_config(blow_seq_timer, 1, SOFT_TIMER_MODE_SIGLE, SOFT_TIMER_UNIT_S,
-                              NULL, timg_blow_timer_cb);
+                              NULL, blow_seq_timer_cb);
 	while(1)
 	{
         timing_blow_proc();

@@ -3,12 +3,12 @@
 #include "font_gb.h"
 
 //-----------------LCD端口定义---------------- 
-#define LCD_BLK_Clr()  LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_12)//BLK
-#define LCD_BLK_Set()  LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_12)
-#define LCD_RES_Clr()  LL_GPIO_ResetOutputPin(GPIOB, LL_GPIO_PIN_14)//RES
-#define LCD_RES_Set()  LL_GPIO_SetOutputPin(GPIOB, LL_GPIO_PIN_14)
-#define LCD_DC_Clr()   LL_GPIO_ResetOutputPin(GPIOB, LL_GPIO_PIN_1)//DC
-#define LCD_DC_Set()   LL_GPIO_SetOutputPin(GPIOB, LL_GPIO_PIN_1)
+#define LCD_BLK_Clr()  LL_GPIO_ResetOutputPin(GPIOB, LL_GPIO_PIN_12)//BLK
+#define LCD_BLK_Set()  LL_GPIO_SetOutputPin(GPIOB, LL_GPIO_PIN_12)
+#define LCD_RES_Clr()  LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_4)//RES
+#define LCD_RES_Set()  LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_4)
+#define LCD_DC_Clr()   LL_GPIO_ResetOutputPin(GPIOC, LL_GPIO_PIN_5)//DC
+#define LCD_DC_Set()   LL_GPIO_SetOutputPin(GPIOC, LL_GPIO_PIN_5)
 #define LCD_CS_Clr()   LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_4)//CS
 #define LCD_CS_Set()   LL_GPIO_SetOutputPin(GPIOA, LL_GPIO_PIN_4)
 
@@ -18,27 +18,28 @@ static void LCD_GPIO_Init(void)
     
     LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOA);
     LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOB);
+    LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_GPIOC);
     
     /**SPI1 GPIO Configuration
-    PB1   ------> DC
-    PB14  ------> RESET
-    PA12  ------> 背光
+    PC5   ------> DC
+    PC4  ------> RESET
+    PB12  ------> 背光
     PA4   ------> CS
     */
-    GPIO_InitStruct.Pin = LL_GPIO_PIN_1 | LL_GPIO_PIN_14;
+    GPIO_InitStruct.Pin = LL_GPIO_PIN_4 | LL_GPIO_PIN_5;
     GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
     GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_HIGH;
     GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_OPENDRAIN;
     GPIO_InitStruct.Pull = LL_GPIO_PULL_UP;
-    LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+    LL_GPIO_Init(GPIOC, &GPIO_InitStruct);
     
     GPIO_InitStruct.Pin = LL_GPIO_PIN_4;
     LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
     
     GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
     GPIO_InitStruct.Pin = LL_GPIO_PIN_12;
-    LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
-    LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_12);
+    LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+    LL_GPIO_ResetOutputPin(GPIOB, LL_GPIO_PIN_12);
 }
 
 static void LCD_DelayMs(uint32_t m)

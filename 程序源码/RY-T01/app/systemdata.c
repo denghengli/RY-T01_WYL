@@ -1,5 +1,7 @@
 #include "includes.h"
 
+#define SOFTWARE_VERSION 100
+
 //初次上点判断标识,不要变!!!!
 #define FLASH_INITFLG 0x22223344 
 //每次修改或新增参数后新增如下格式宏
@@ -118,6 +120,7 @@ void ParaData_Init(void)
     g_SysData.Data.Para.factoryFlg = 0;
     memset((void*)&g_SysData.Data.Para.DO[0], 0, sizeof(g_SysData.Data.Para.DO));
     
+    g_SysData.Data.Sample.softVer = SOFTWARE_VERSION;
     /*写入MODBUS寄存器*/
     Slave_Write_Reg(EMB_HOLE, 0, PARA_DATA_LEN, (unsigned char *)&g_SysData.regBuf[SAMPLE_DATA_LEN]);
 }

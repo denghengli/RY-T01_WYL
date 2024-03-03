@@ -51,7 +51,7 @@ typedef struct
 /*实时采样数据，当有不是4字节时一定要强制单字节对齐*/
 __packed typedef struct 
 {
-    uint32_t softVer;   //软件版本，例如：V00.90记0x30303930
+    uint32_t softVer;   //软件版本
     uint32_t MSN;       //MSN地址
     uint32_t sysSta;    //系统状态，1:测量状态 2:反吹状态
     float totalPress;   //全压(Pa)
