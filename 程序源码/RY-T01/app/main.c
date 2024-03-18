@@ -160,8 +160,7 @@ int main()
     SystemClock_Config();
     MX_GPIO_Init();     
     MX_ADC1_Init();
-    MX_USART2_UART_Init();//485通讯
-    MX_USART1_UART_Init();
+    MX_USART1_UART_Init();//485通讯
     MX_IWDG_Init();
     MX_TIM1_Init();
     MX_TIM2_Init();

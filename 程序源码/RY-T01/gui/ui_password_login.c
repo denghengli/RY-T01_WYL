@@ -142,6 +142,13 @@ void password_login_ok(void *para)
     {
         ui_cur_state = PARA_SET_ONE_SELECT_1;
         para_set_one_select_1(NULL);
+        ui_user = 1;
+    }
+    else if (password == 5678)
+    {
+        ui_cur_state = PARA_SET_ONE_SELECT_1;
+        para_set_one_select_1(NULL);
+        ui_user = 2;
     }
     else
     {

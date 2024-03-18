@@ -17,9 +17,10 @@ void MX_ADC1_Init(void)
     
     /**ADC1 GPIO Configuration
     PA2   ------> ADC1_IN2
+    PA3   ------> ADC1_IN3
     PB1   ------> ADC1_IN9
     */
-    GPIO_InitStruct.Pin = LL_GPIO_PIN_2;
+    GPIO_InitStruct.Pin = LL_GPIO_PIN_2 | LL_GPIO_PIN_3;
     GPIO_InitStruct.Mode = LL_GPIO_MODE_ANALOG;
     LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
     GPIO_InitStruct.Pin = LL_GPIO_PIN_1;
@@ -45,6 +46,7 @@ void MX_ADC1_Init(void)
 
     /**Configure Regular Channel   PT100*/
 	LL_ADC_SetChannelSamplingTime(ADC1, LL_ADC_CHANNEL_2, LL_ADC_SAMPLINGTIME_239CYCLES_5);//LL_ADC_SAMPLINGTIME_13CYCLES_5
+    LL_ADC_SetChannelSamplingTime(ADC1, LL_ADC_CHANNEL_3, LL_ADC_SAMPLINGTIME_239CYCLES_5);//LL_ADC_SAMPLINGTIME_13CYCLES_5
     LL_ADC_SetChannelSamplingTime(ADC1, LL_ADC_CHANNEL_9, LL_ADC_SAMPLINGTIME_239CYCLES_5);//LL_ADC_SAMPLINGTIME_13CYCLES_5
     
     LL_ADC_Enable(ADC1);

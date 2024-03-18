@@ -80,7 +80,8 @@ typedef enum
     epin_VALVE4,    
 	epin_RUN,
     epin_WDT,
-    epin_LCD_BLK
+    epin_LCD_BLK,
+    epin_DO_OUT
 }DRV_PIN_NAME_E;
 
 struct DRV_Pin

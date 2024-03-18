@@ -1,6 +1,6 @@
 #include "includes.h"
 
-#define SOFTWARE_VERSION 100
+#define SOFTWARE_VERSION 101
 
 //初次上点判断标识,不要变!!!!
 #define FLASH_INITFLG 0x22223344 
@@ -62,12 +62,15 @@ void ParaData_Init(void)
         s_ParaData.Para.humitDispUnit = 1;
         s_ParaData.Para.sectionArea = 50;
         s_ParaData.Para.smoothTime = 5;
-        s_ParaData.Para.dynPressRange = 2000;
-        s_ParaData.Para.speedRange = 40;
-        s_ParaData.Para.sticPressMax = 10;
-        s_ParaData.Para.sticPressMin = -10;
-        s_ParaData.Para.flowRange = 3200;
-        
+        s_ParaData.Para.humitType = 0;
+        s_ParaData.Para.temAOOffset = 0;
+        s_ParaData.Para.temAOK = 1;
+        s_ParaData.Para.speedAOOffset = 0;
+        s_ParaData.Para.speedAOK = 1;
+        s_ParaData.Para.speedAOOffset = 0;
+        s_ParaData.Para.speedAOK = 1;
+        s_ParaData.Para.humitAOOffset = 0;
+        s_ParaData.Para.humitAOK = 1;
 		FlashSave(STM32_FLASH_ADDR_PARA, (uint8_t*)&s_ParaData, sizeof(s_ParaData));
 	}
 	  
@@ -95,12 +98,15 @@ void ParaData_Init(void)
         s_FactoryParaData.Para.humitDispUnit = 1;
         s_FactoryParaData.Para.sectionArea = 50;
         s_FactoryParaData.Para.smoothTime = 5;
-        s_FactoryParaData.Para.dynPressRange = 2000;
-        s_FactoryParaData.Para.speedRange = 40;
-        s_FactoryParaData.Para.sticPressMax = 10;
-        s_FactoryParaData.Para.sticPressMin = -10;
-        s_FactoryParaData.Para.flowRange = 3200;
-		
+        s_FactoryParaData.Para.humitType = 0;
+        s_FactoryParaData.Para.temAOOffset = 0;
+        s_FactoryParaData.Para.temAOK = 1;
+        s_FactoryParaData.Para.speedAOOffset = 0;
+        s_FactoryParaData.Para.speedAOK = 1;
+        s_FactoryParaData.Para.speedAOOffset = 0;
+        s_FactoryParaData.Para.speedAOK = 1;
+        s_FactoryParaData.Para.humitAOOffset = 0;
+        s_FactoryParaData.Para.humitAOK = 1;
         FlashSave(STM32_FLASH_ADDR_PARA_FACTORY, (uint8_t*)&s_FactoryParaData, sizeof(s_FactoryParaData));
     }
     
@@ -114,9 +120,6 @@ void ParaData_Init(void)
     
 	/*不管是不是第一次赋值，的需要写到g_SysData中*/
     g_SysData.Data.Para = s_ParaData.Para;
-    g_SysData.Data.Para.blowCtrlFlg = 0;
-    g_SysData.Data.Para.speedCalibZeroFlg = 0;
-    g_SysData.Data.Para.humitCalibFlg = 0;
     g_SysData.Data.Para.factoryFlg = 0;
     memset((void*)&g_SysData.Data.Para.DO[0], 0, sizeof(g_SysData.Data.Para.DO));
     

@@ -4,7 +4,8 @@ static uint16_t calib_time_s = 0;
 static uint8_t calib_start_flag = 0;
 static uint8_t adjust_success_flag = 0;
 static uint8_t sec_signal = 0;
- 
+extern  float real_humit;
+
 void humit_zero_calib_enter(void *para)
 {
     calib_start_flag = 0;
@@ -86,7 +87,7 @@ void humit_zero_calib_finish(void *para)
     //±£´æ²ÎÊý
     if (adjust_success_flag)
     {
-        g_SysData.Data.Para.humitZero = g_SysData.Data.Sample.humit;
+        g_SysData.Data.Para.humitZero = real_humit;
         ParaData_Save(0);
     }
 

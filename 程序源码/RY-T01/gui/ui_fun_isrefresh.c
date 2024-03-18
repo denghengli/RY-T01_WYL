@@ -72,6 +72,26 @@ uint8_t is_flash_menu(void)
 	{
 		res = 1;
 	}
-    
+	if (ui_cur_state == HUMIT_SENSOR_TYPE)
+	{
+		res = 1;
+	}
+    if (ui_cur_state == TEM_AO_COMP)
+	{
+		res = 1;
+	}
+	if (ui_cur_state == PRESS_AO_COMP)
+	{
+		res = 1;
+	}
+	if (ui_cur_state == SPEED_AO_COMP)
+	{
+		res = 1;
+	}
+	if (ui_cur_state == HUMIT_AO_COMP)
+	{
+		res = 1;
+	}
+	
 	return res;
 }

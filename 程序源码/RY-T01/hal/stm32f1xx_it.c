@@ -243,20 +243,8 @@ void DMA1_Channel5_IRQHandler(void)
 */
 void USART1_IRQHandler(void)
 {   
-    static BaseType_t xHigherPriorityTaskWoken;
-    
     if(LL_USART_IsActiveFlag_RXNE(USART1)) //检测是否接收中断
 	{
-        if(IsComRcvNew())
-		{
-			/*接收处理*/
-			if(IsComRcvDone(LL_USART_ReceiveData8(USART1)))     
-			{
-				SetComRcvNewFlg(0);//解析时，不能接收新的帧，直至解析完成
-				xSemaphoreGiveFromISR(CommSem, &xHigherPriorityTaskWoken);//发送信号量
-			}
-		}
-       
         LL_USART_ClearFlag_RXNE(USART1);
 	}	
     
@@ -277,14 +265,26 @@ void USART1_IRQHandler(void)
 */
 void USART2_IRQHandler(void)
 {   
+    static BaseType_t xHigherPriorityTaskWoken;
+    
     if(LL_USART_IsActiveFlag_RXNE(USART2)) //检测是否接收中断
     {
-        LL_USART_ReceiveData8(USART2);
+        if(IsComRcvNew())
+		{
+			/*接收处理*/
+			if(IsComRcvDone(LL_USART_ReceiveData8(USART2)))     
+			{
+				SetComRcvNewFlg(0);//解析时，不能接收新的帧，直至解析完成
+				xSemaphoreGiveFromISR(CommSem, &xHigherPriorityTaskWoken);//发送信号量
+			}
+		}
+        
         LL_USART_ClearFlag_RXNE(USART2);
     }
     
     if(LL_USART_IsActiveFlag_ORE(USART2))
     {
+        LL_USART_ReceiveData8(USART2);
       	LL_USART_ClearFlag_ORE(USART2);
     }    
     

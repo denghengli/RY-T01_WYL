@@ -168,7 +168,7 @@ static void FlueGasPress_AutoAdj(void)
 		fAutoAdjSticPBuf[AdjBufCnt] = s_tFGSticPresDat.Pressavg;
 
 		AdjBufCnt = (AdjBufCnt + 1) % AUTOADJ_FREQ;
-		AdjAvgCnt = (AdjAvgCnt < AUTOADJ_FREQ) ? AdjAvgCnt++ : AUTOADJ_FREQ;
+		AdjAvgCnt = (AdjAvgCnt < AUTOADJ_FREQ) ? ++AdjAvgCnt : AUTOADJ_FREQ;
 
         //自动定时校零，采集满后自动退出
 		if (AdjAvgCnt == AUTOADJ_FREQ && timing_adj_start_flag)

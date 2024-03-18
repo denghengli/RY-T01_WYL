@@ -13,7 +13,7 @@
 #define UART_TXBUF_SIZE		200
 
 /*ADC采集通道数  采集平均次数*/
-#define ADC_CH_MAX  2
+#define ADC_CH_MAX  3
 #define ADC_AVG_MAX 10
 
 /*系统状态*/
@@ -62,7 +62,9 @@ __packed typedef struct
     float speed;        //流速(m/s)
     float flow;         //流量(m³/s)
     float ptTem;        //温度
-    float humit;        //湿度
+    float ptHeatTem;    //伴热温度
+    float abshumit;     //绝对湿度(%RH)
+    float relhumit;     //相对湿度(%V)
 }SAMPLE_DATA_T;
 
 /*掉电存储的参数，当有不是4字节时一定要强制单字节对齐*/
@@ -87,19 +89,21 @@ __packed typedef struct
     uint16_t humitDispUnit; //湿度显示单位，1=相对 0=绝对
     float sectionArea;      //烟道截面积(㎡)
     uint16_t smoothTime;    //平滑时间(s),越大响应时间越长,平滑度越好，越小则相反，最大50，默认20
-    uint16_t dynPressRange; //动压量程(Pa)，300:0-300 1000:0-1000 2000:0-2000
-    uint16_t speedRange;    //流速量程(m/s)，15:0-15 30:0-30 40:0-40
-    short sticPressMax;     //压力/静压量程上限(KPa)，2:±2 5:±5 10:±10 130:70-130
-    short sticPressMin;     //压力/静压量程下限(KPa)
-	uint16_t flowRange;     //流量量程(m³/s)
-    uint16_t reserve[14];   //预留
-    
-	uint16_t blowCtrlFlg;   //手动反吹控制标志，1开启反吹
-    uint16_t speedCalibZeroFlg; //压力校零标志，0关闭 1开启校准 2完成校准
-    uint16_t humitCalibFlg; //湿度校准标志，1开启校准
+    uint16_t resv[5];
+	
+    uint16_t humitType;     //湿度传感器类型,0:A 1:B
+    float temAOOffset;      //温度20mA输出偏移
+    float temAOK;           //温度20mA输出系数
+    float pressAOOffset;    //静压20mA输出偏移
+    float pressAOK;         //静压20mA输出系数
+    float speedAOOffset;    //流速20mA输出偏移
+    float speedAOK;         //流速20mA输出系数
+    float humitAOOffset;    //湿度20mA输出偏移
+    float humitAOK;         //湿度20mA输出系数
     uint16_t factoryFlg;    //恢复出厂标志，1恢复出厂
-    
     uint16_t DO[4]; //电磁阀控制
+
+    uint16_t speedCalibZeroFlg; //流速（压力）校零标志，0关闭 1开启校准 2完成校准
 }PARA_DATA_T;
 
 

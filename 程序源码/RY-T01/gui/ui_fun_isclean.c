@@ -90,7 +90,27 @@ uint8_t is_clean(void)
 	{
 		res = 0;
 	}
-    if (ui_cur_state == PARA_SET_TWO_SELECT_3 && ui_pre_state == PARA_SET_TWO_SELECT_2)
+    if (ui_cur_state == PARA_SET_TWO_SELECT_3 && (ui_pre_state == PARA_SET_TWO_SELECT_2 || ui_pre_state == PARA_SET_TWO_SELECT_4))
+	{
+		res = 0;
+	}
+	if (ui_cur_state == PARA_SET_TWO_SELECT_4 && (ui_pre_state == PARA_SET_TWO_SELECT_3 || ui_pre_state == PARA_SET_TWO_SELECT_5))
+	{
+		res = 0;
+	}
+	if (ui_cur_state == PARA_SET_TWO_SELECT_5 && (ui_pre_state == PARA_SET_TWO_SELECT_4 || ui_pre_state == PARA_SET_THR_SELECT_1))
+	{
+		res = 0;
+	}
+    if (ui_cur_state == PARA_SET_THR_SELECT_1 && (ui_pre_state == PARA_SET_TWO_SELECT_5 || ui_pre_state == PARA_SET_THR_SELECT_2))
+	{
+		res = 0;
+	}
+	if (ui_cur_state == PARA_SET_THR_SELECT_2 && (ui_pre_state == PARA_SET_THR_SELECT_1 || ui_pre_state == PARA_SET_THR_SELECT_3))
+	{
+		res = 0;
+	}
+    if (ui_cur_state == PARA_SET_THR_SELECT_3 && ui_pre_state == PARA_SET_THR_SELECT_2)
 	{
 		res = 0;
 	}
@@ -142,6 +162,27 @@ uint8_t is_clean(void)
     }
     //恢复出厂设置
     if ((ui_cur_state == RESTORE_FACTORY_RIGHT) && ui_pre_state == RESTORE_FACTORY)
+    {
+        res = 0;
+    }
+    //湿度传感器类型
+    if ((ui_cur_state == HUMIT_SENSOR_TYPE_UP || ui_cur_state == HUMIT_SENSOR_TYPE_DOWN) && ui_pre_state == HUMIT_SENSOR_TYPE)
+    {
+        res = 0;
+    }
+    if ((ui_cur_state == TEM_AO_COMP_UP || ui_cur_state == TEM_AO_COMP_DOWN || ui_cur_state == TEM_AO_COMP_RIGHT) && ui_pre_state == TEM_AO_COMP)
+    {
+        res = 0;
+    }
+    if ((ui_cur_state == PRESS_AO_COMP_UP || ui_cur_state == PRESS_AO_COMP_DOWN || ui_cur_state == PRESS_AO_COMP_RIGHT) && ui_pre_state == PRESS_AO_COMP)
+    {
+        res = 0;
+    }
+    if ((ui_cur_state == SPEED_AO_COMP_UP || ui_cur_state == SPEED_AO_COMP_DOWN || ui_cur_state == SPEED_AO_COMP_RIGHT) && ui_pre_state == SPEED_AO_COMP)
+    {
+        res = 0;
+    }
+    if ((ui_cur_state == HUMIT_AO_COMP_UP || ui_cur_state == HUMIT_AO_COMP_DOWN || ui_cur_state == HUMIT_AO_COMP_RIGHT) && ui_pre_state == HUMIT_AO_COMP)
     {
         res = 0;
     }

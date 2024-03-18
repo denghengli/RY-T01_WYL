@@ -33,11 +33,13 @@ static void AD_Conver_Start(void)
     
     switch(g_ADCData.ChCnt + 1)
     {
-        case 1://PT100
+        case 1://PT100环境温度
             LL_ADC_REG_SetSequencerRanks(ADC1, LL_ADC_REG_RANK_1, LL_ADC_CHANNEL_2);
             break;
-            
-        case 2://大气压
+        case 2://PT100伴热温度
+            LL_ADC_REG_SetSequencerRanks(ADC1, LL_ADC_REG_RANK_1, LL_ADC_CHANNEL_3);
+            break;
+        case 3://大气压
             LL_ADC_REG_SetSequencerRanks(ADC1, LL_ADC_REG_RANK_1, LL_ADC_CHANNEL_9);
             break;                     
     }
@@ -119,7 +121,7 @@ static void AD_Data_Analysis(void)
 
 void App_AD(void *pvParameters)
 {
-    TickType_t sMaxBlockTime =	pdMS_TO_TICKS(500);   
+    TickType_t sMaxBlockTime =	pdMS_TO_TICKS(200);   
     
     while(1) 
     {

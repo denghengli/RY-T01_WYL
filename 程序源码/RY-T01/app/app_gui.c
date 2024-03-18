@@ -1,7 +1,5 @@
 #include "includes.h"
 
-#define UI_STATE_ARR_MAX 50
-
 #define KEY_NULL    0x00
 #define KEY_UP      0x01
 #define KEY_DOWN    0x02
@@ -12,8 +10,9 @@
 volatile uint8_t ex_sec_signal = 0;
 volatile uint8_t ui_pre_state = STATE_NULL;
 volatile uint8_t ui_cur_state = MAIN_WIND;
+uint8_t ui_user = 1; //用户等级，1:普通用户 2:高级用户
 
-const UI_STATE_TRANS UIStateArray[UI_STATE_ARR_MAX] =
+const UI_STATE_TRANS UIStateArray[] =
 {
     /*当前      上键      下键       右键       OK键   返回键*/
     {START_LOGO, START_LOGO, START_LOGO, START_LOGO, START_LOGO, START_LOGO}, 
@@ -28,6 +27,7 @@ const UI_STATE_TRANS UIStateArray[UI_STATE_ARR_MAX] =
     {CONFIG_MENU_ONE_SELECT_5,  CONFIG_MENU_ONE_SELECT_4, CONFIG_MENU_TWO_SELECT_1,  CONFIG_MENU_ONE_SELECT_5,  SECTION_AREA_SET_ENTER,  MAIN_WIND},
     {CONFIG_MENU_TWO_SELECT_1,  CONFIG_MENU_ONE_SELECT_5, CONFIG_MENU_TWO_SELECT_2,  CONFIG_MENU_ONE_SELECT_1,  BLOW_FREQ_SET_ENTER,  MAIN_WIND},
     {CONFIG_MENU_TWO_SELECT_2,  CONFIG_MENU_TWO_SELECT_1, CONFIG_MENU_TWO_SELECT_2,  CONFIG_MENU_TWO_SELECT_2,  PASSWORD_LOGIN_ENTER,  MAIN_WIND},
+    //{CONFIG_MENU_TWO_SELECT_2,  CONFIG_MENU_TWO_SELECT_1, CONFIG_MENU_TWO_SELECT_2,  CONFIG_MENU_TWO_SELECT_2,  PARA_SET_ONE_SELECT_1,  MAIN_WIND},
 
     //手动反吹界面
     {HANDLE_BLOW,  HANDLE_BLOW_UP, HANDLE_BLOW_DOWN,  HANDLE_BLOW,  HANDLE_BLOW_OK,  HANDLE_BLOW_RETURN},
@@ -64,7 +64,14 @@ const UI_STATE_TRANS UIStateArray[UI_STATE_ARR_MAX] =
     {PARA_SET_TWO_SELECT_1,  PARA_SET_ONE_SELECT_5, PARA_SET_TWO_SELECT_2,  PARA_SET_ONE_SELECT_1,  CANCEL_HUMIT_ZERO_ENTER,  CONFIG_MENU_TWO_SELECT_2},
     {PARA_SET_TWO_SELECT_2,  PARA_SET_TWO_SELECT_1, PARA_SET_TWO_SELECT_3,  PARA_SET_TWO_SELECT_2,  HUMIT_UNIT_SELECT_ENTER,  CONFIG_MENU_TWO_SELECT_2},
     {PARA_SET_TWO_SELECT_3,  PARA_SET_TWO_SELECT_2, PARA_SET_TWO_SELECT_3,  PARA_SET_TWO_SELECT_3,  RESTORE_FACTORY_ENTER,  CONFIG_MENU_TWO_SELECT_2},
-
+    //{PARA_SET_TWO_SELECT_3,  PARA_SET_TWO_SELECT_2, PARA_SET_TWO_SELECT_4,  PARA_SET_TWO_SELECT_3,  RESTORE_FACTORY_ENTER,  CONFIG_MENU_TWO_SELECT_2}, //高级参数设置
+    
+    {PARA_SET_TWO_SELECT_4,  PARA_SET_TWO_SELECT_3, PARA_SET_TWO_SELECT_5,  PARA_SET_TWO_SELECT_4,  HUMIT_SENSOR_TYPE_ENTER,  CONFIG_MENU_TWO_SELECT_2},
+    {PARA_SET_TWO_SELECT_5,  PARA_SET_TWO_SELECT_4, PARA_SET_THR_SELECT_1,  PARA_SET_TWO_SELECT_5,  TEM_AO_COMP_ENTER,  CONFIG_MENU_TWO_SELECT_2},
+    {PARA_SET_THR_SELECT_1,  PARA_SET_TWO_SELECT_5, PARA_SET_THR_SELECT_2,  PARA_SET_THR_SELECT_1,  PRESS_AO_COMP_ENTER,  CONFIG_MENU_TWO_SELECT_2},
+    {PARA_SET_THR_SELECT_2,  PARA_SET_THR_SELECT_1, PARA_SET_THR_SELECT_3,  PARA_SET_THR_SELECT_2,  SPEED_AO_COMP_ENTER,  CONFIG_MENU_TWO_SELECT_2},
+    {PARA_SET_THR_SELECT_3,  PARA_SET_THR_SELECT_2, PARA_SET_THR_SELECT_3,  PARA_SET_THR_SELECT_3,  HUMIT_AO_COMP_ENTER,  CONFIG_MENU_TWO_SELECT_2},
+    
     //反吹间隔界面
     {BLOW_INTER_SET,  BLOW_INTER_SET_UP, BLOW_INTER_SET_DOWN,  BLOW_INTER_SET_RIGHT,  BLOW_INTER_SET_OK,  BLOW_INTER_SET_RETURN},
     {BLOW_INTER_SET_OK,  BLOW_INTER_SET_OK, BLOW_INTER_SET_OK,  BLOW_INTER_SET_OK,  BLOW_INTER_SET_OK_RETURN,  BLOW_INTER_SET_OK_RETURN},
@@ -95,7 +102,27 @@ const UI_STATE_TRANS UIStateArray[UI_STATE_ARR_MAX] =
 	
 	//恢复出厂设置
     {RESTORE_FACTORY,  RESTORE_FACTORY, RESTORE_FACTORY,  RESTORE_FACTORY_RIGHT,  RESTORE_FACTORY_OK,  RESTORE_FACTORY_RETURN},
-    {RESTORE_FACTORY_OK,  RESTORE_FACTORY_OK, RESTORE_FACTORY_OK,  RESTORE_FACTORY_OK,  RESTORE_FACTORY_OK_RETURN,  RESTORE_FACTORY_OK_RETURN}
+    {RESTORE_FACTORY_OK,  RESTORE_FACTORY_OK, RESTORE_FACTORY_OK,  RESTORE_FACTORY_OK,  RESTORE_FACTORY_OK_RETURN,  RESTORE_FACTORY_OK_RETURN},
+
+    //湿度传感器类型
+    {HUMIT_SENSOR_TYPE,  HUMIT_SENSOR_TYPE_UP, HUMIT_SENSOR_TYPE_DOWN,  HUMIT_SENSOR_TYPE,  HUMIT_SENSOR_TYPE_OK,  HUMIT_SENSOR_TYPE_RETURN},
+    {HUMIT_SENSOR_TYPE_OK,  HUMIT_SENSOR_TYPE_OK, HUMIT_SENSOR_TYPE_OK,  HUMIT_SENSOR_TYPE_OK,  HUMIT_SENSOR_TYPE_OK_RETURN,  HUMIT_SENSOR_TYPE_OK_RETURN},
+
+    //温度模拟量补偿
+    {TEM_AO_COMP,  TEM_AO_COMP_UP, TEM_AO_COMP_DOWN,  TEM_AO_COMP_RIGHT,  TEM_AO_COMP_OK,  TEM_AO_COMP_RETURN},
+    {TEM_AO_COMP_OK,  TEM_AO_COMP_OK, TEM_AO_COMP_OK,  TEM_AO_COMP_OK,  TEM_AO_COMP_OK_RETURN,  TEM_AO_COMP_OK_RETURN},
+
+    //压力模拟量补偿
+    {PRESS_AO_COMP,  PRESS_AO_COMP_UP, PRESS_AO_COMP_DOWN,  PRESS_AO_COMP_RIGHT,  PRESS_AO_COMP_OK,  PRESS_AO_COMP_RETURN},
+    {PRESS_AO_COMP_OK,  PRESS_AO_COMP_OK, PRESS_AO_COMP_OK,  PRESS_AO_COMP_OK,  PRESS_AO_COMP_OK_RETURN,  PRESS_AO_COMP_OK_RETURN},
+
+    //流速模拟量补偿
+    {SPEED_AO_COMP,  SPEED_AO_COMP_UP, SPEED_AO_COMP_DOWN,  SPEED_AO_COMP_RIGHT,  SPEED_AO_COMP_OK,  SPEED_AO_COMP_RETURN},
+    {SPEED_AO_COMP_OK,  SPEED_AO_COMP_OK, SPEED_AO_COMP_OK,  SPEED_AO_COMP_OK,  SPEED_AO_COMP_OK_RETURN,  SPEED_AO_COMP_OK_RETURN},
+
+    //湿度模拟量补偿
+    {HUMIT_AO_COMP,  HUMIT_AO_COMP_UP, HUMIT_AO_COMP_DOWN,  HUMIT_AO_COMP_RIGHT,  HUMIT_AO_COMP_OK,  HUMIT_AO_COMP_RETURN},
+    {HUMIT_AO_COMP_OK,  HUMIT_AO_COMP_OK, HUMIT_AO_COMP_OK,  HUMIT_AO_COMP_OK,  HUMIT_AO_COMP_OK_RETURN,  HUMIT_AO_COMP_OK_RETURN},
 };
 
 const state_fun MenuFun[] = 
@@ -188,6 +215,11 @@ const state_fun MenuFun[] =
     para_set_two_select_1,
     para_set_two_select_2,	
     para_set_two_select_3,	
+    para_set_two_select_4,  
+    para_set_two_select_5,
+    para_set_thr_select_1,
+    para_set_thr_select_2,  
+    para_set_thr_select_3,
 
 	//反吹间隔设置界面
 	blow_inter_set_enter,
@@ -258,7 +290,56 @@ const state_fun MenuFun[] =
 	restore_factory_right,
 	restore_factory_return,
 	restore_factory_ok,
-	restore_factory_ok_return
+	restore_factory_ok_return,
+
+    //湿度传感器类型
+    humit_sensor_type_enter,
+    humit_sensor_type,
+    humit_sensor_type_up,
+    humit_sensor_type_down,
+    humit_sensor_type_return,
+    humit_sensor_type_ok,
+    humit_sensor_type_ok_return,
+
+    //温度20mA输出补偿
+    tem_ao_comp_enter,
+    tem_ao_comp,
+    tem_ao_comp_up,
+    tem_ao_comp_down,
+    tem_ao_comp_right,
+    tem_ao_comp_return,
+    tem_ao_comp_ok,    
+    tem_ao_comp_ok_return,
+
+    //压力20mA输出补偿
+    press_ao_comp_enter,
+    press_ao_comp,
+    press_ao_comp_up,
+    press_ao_comp_down,
+    press_ao_comp_right,
+    press_ao_comp_return,
+    press_ao_comp_ok,    
+    press_ao_comp_ok_return,
+
+    //流速20mA输出补偿
+    speed_ao_comp_enter,
+    speed_ao_comp,
+    speed_ao_comp_up,
+    speed_ao_comp_down,
+    speed_ao_comp_right,
+    speed_ao_comp_return,
+    speed_ao_comp_ok,    
+    speed_ao_comp_ok_return,
+
+    //湿度20mA输出补偿
+    humit_ao_comp_enter,
+    humit_ao_comp,
+    humit_ao_comp_up,
+    humit_ao_comp_down,
+    humit_ao_comp_right,
+    humit_ao_comp_return,
+    humit_ao_comp_ok,    
+    humit_ao_comp_ok_return,
 };
 
 /*清屏 */
@@ -310,15 +391,15 @@ int read_key_value(void)
         }
         else if (iostate & 0x08)
         {
-            key = KEY_DOWN;
+            key = KEY_OK;
         }
         else if (iostate & 0x04)
         {
-            key = KEY_RIGHT;
+            key = KEY_DOWN;
         }
         else if (iostate & 0x02)
         {
-            key = KEY_OK;
+            key = KEY_RIGHT;
         }
         else if (iostate & 0x01)
         {
@@ -337,11 +418,12 @@ void GUI_handle(void)
     uint8_t mpara = 0;
 	uint8_t clean_flag = 1;
 	uint8_t flash_menu_flag = 0;
+	int ui_num = sizeof(UIStateArray) / sizeof(UIStateArray[0]);
 	
     key = read_key_value();
     if (key != KEY_NULL)//有按键按下
     {
-        for (uint8_t i=0; i<UI_STATE_ARR_MAX; i++)
+        for (uint8_t i=0; i<ui_num; i++)
         {
             if (ui_cur_state == UIStateArray[i].cur_state)
             {
@@ -354,7 +436,14 @@ void GUI_handle(void)
                         break;
 
                     case KEY_DOWN:
-                        ui_cur_state = UIStateArray[i].down_state;
+                        if (ui_cur_state == PARA_SET_TWO_SELECT_3 && ui_user == 2)//高级用户
+                        {
+                            ui_cur_state = UIStateArray[i].down_state + 1;
+                        }
+                        else
+                        {
+                            ui_cur_state = UIStateArray[i].down_state;
+                        }
                         break;  
 
                     case KEY_RIGHT:

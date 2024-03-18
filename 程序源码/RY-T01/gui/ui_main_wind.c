@@ -76,7 +76,10 @@ void main_wind(void *para)
 
             /*湿度*/
             lcd_para.y = 60;
-            snprintf(tmp_str, sizeof(tmp_str), "  湿度： %7.2f  %%V", g_SysData.Data.Sample.humit);
+            if (g_SysData.Data.Para.humitDispUnit == 0) //绝对湿度
+                snprintf(tmp_str, sizeof(tmp_str), "  湿度： %7.2f  %%Vol", g_SysData.Data.Sample.abshumit);
+            else //相对湿度
+                snprintf(tmp_str, sizeof(tmp_str), "  湿度： %7.2f  %%RH", g_SysData.Data.Sample.relhumit);
             hal_lcd_driver_intface((void *)&lcd_para, (uint8_t *)tmp_str, strlen(tmp_str));
 
             /*流速*/

@@ -61,7 +61,7 @@ const float RTD_TAB_PT100[TAB_MAXNUM] =
 	280.98  //500
 };		
 
-float CalculateTemperature(float fR)
+float calTemByRes(float fR)
 {
 	float fTem = 0;
 	float fLowRValue = 0;
@@ -114,28 +114,15 @@ float CalculateTemperature(float fR)
 }
 
 
-static PT100_DATA_T   s_tPT100Data;  /*PT100数据*/
-static uint8_t  PT100_Ref_Flag;/*PT100参考值校准*/
+static PT100_DATA_T sPT100EnvTem;
+static PT100_DATA_T sPT100HeatTem;
+static uint8_t PT100_Ref_Flag;/*PT100参考值校准*/
 
-
-/********************************************************************************************************
-*	函 数 名: AtpPress_GetAD
-*	功能说明: 获取PT100电压AD值
-*	形    参: NONE
-*	返 回 值: 温度系数
-********************************************************************************************************/
-static unsigned short PT100_GetAD()
+static unsigned short get_pt100_ad(int index)
 {
-	return g_ADCData.Aver[0];
+	return g_ADCData.Aver[index];
 }
 
-
-/********************************************************************************************************
-*	函 数 名: PT100_RefCal_Flag
-*	功能说明: 开启温度参考值校准
-*	形    参: NONE
-*	返 回 值: 
-********************************************************************************************************/
 void PT100_RefCal_Flag(uint8_t flag)
 {
 	PT100_Ref_Flag = flag;
@@ -143,12 +130,12 @@ void PT100_RefCal_Flag(uint8_t flag)
 
 
 /********************************************************************************************************
-*	函 数 名: PT100_TempMeasure
+*	函 数 名: pt100_envtem_collect
 *	功能说明: 将ADS1247读取的电阻值换算成对应的温度
 *	形    参: 温度
 *	返 回 值: NONE
 ********************************************************************************************************/
-void PT100_TempMeasure(void)
+void pt100_envtem_collect(void)
 {
 	char  i;
 	static float fTempBuf[10] = {0.0};
@@ -156,15 +143,11 @@ void PT100_TempMeasure(void)
 	static uint8_t BufCnt = 0;
     float  fTemp = 0;
     
-	s_tPT100Data.AD = PT100_GetAD();//读取PT100的电压AD值
-	s_tPT100Data.Vol = (float)(3.0 / 4096.0) * s_tPT100Data.AD;//Pt100的电压值
-    
-//    fTemp = s_tPT100Data.Vol * 8.87 / 150 + 300.0 / 1100.0;
-//    s_tPT100Data.ResVal = 1000 * fTemp / (3 - fTemp);
-
-	fTemp = s_tPT100Data.Vol * 10 / 88.7 + 300.0 / 1100.0;
-	s_tPT100Data.ResVal = 1000 * fTemp / (3 - fTemp);
-	s_tPT100Data.Temp = CalculateTemperature(s_tPT100Data.ResVal);//根据电阻计算温度
+	sPT100EnvTem.AD = get_pt100_ad(0);//读取PT100的电压AD值
+	sPT100EnvTem.Vol = (float)(3.0 / 4096.0) * sPT100EnvTem.AD;//Pt100的电压值
+	fTemp = sPT100EnvTem.Vol * 10 / 88.7 + 300.0 / 1100.0;
+	sPT100EnvTem.ResVal = 1000 * fTemp / (3 - fTemp);
+	sPT100EnvTem.Temp = calTemByRes(sPT100EnvTem.ResVal);//根据电阻计算温度
 	
 	/*将数据存入环形buf中*/
 	if(BufCnt <= 10)
@@ -172,42 +155,79 @@ void PT100_TempMeasure(void)
 		if(BufCnt == 10)BufCnt = 0;
 		if(AvgCnt < 10)AvgCnt++;
 	}
-	fTempBuf[BufCnt++] = s_tPT100Data.Temp;
+	fTempBuf[BufCnt++] = sPT100EnvTem.Temp;
     /*对环形buf中数据求和*/
-	s_tPT100Data.Tempsum = 0.0;
+	sPT100EnvTem.Tempsum = 0.0;
 	for(i=0;i<AvgCnt;i++)
 	{
-		s_tPT100Data.Tempsum   +=  fTempBuf[i];
+		sPT100EnvTem.Tempsum   +=  fTempBuf[i];
 	}
 	/*计算环形buf中数据均值*/
-	s_tPT100Data.Tempavg  = s_tPT100Data.Tempsum / (float)AvgCnt;
+	sPT100EnvTem.Tempavg  = sPT100EnvTem.Tempsum / (float)AvgCnt;
 	
-//	if(s_tPT100Data.Tempavg > 0.0001 || s_tPT100Data.Tempavg < -0.0001)//置位测量完成标志,非0时说明有测量值
+//	if(sPT100EnvTem.Tempavg > 0.0001 || sPT100EnvTem.Tempavg < -0.0001)//置位测量完成标志,非0时说明有测量值
 //	{
 		SetFlg_Measover(FLG_MEASOVER_TEMP);
 //	}
     
     /* 把测量数据存入全局变量中 */
-    FloatLimit(&s_tPT100Data.Tempavg, FLOAT_DECNUM);
-    g_SysData.Data.Sample.ptTem = s_tPT100Data.Tempavg + g_SysData.Data.Para.ptTemRatioB;
+    FloatLimit(&sPT100EnvTem.Tempavg, FLOAT_DECNUM);
+    g_SysData.Data.Sample.ptTem = sPT100EnvTem.Tempavg + g_SysData.Data.Para.ptTemRatioB;
 	
 	/*参考值校准*/
 	if (PT100_Ref_Flag)
 	{
-		g_SysData.Data.Para.ptTemRatioB = g_SysData.Data.Para.ptTemRef - s_tPT100Data.Tempavg;
+		g_SysData.Data.Para.ptTemRatioB = g_SysData.Data.Para.ptTemRef - sPT100EnvTem.Tempavg;
 		PT100_Ref_Flag = 0;
 		ParaData_Save(0);//将校准参数存入FLASH
 	}
-	
-    SampleData_ToModbus();   
-    
-	LOG_PRINT(DEBUG_PT100,"T100.AD = %d  ",       s_tPT100Data.AD);
-	LOG_PRINT(DEBUG_PT100,"T100.Vol = %f  ",      s_tPT100Data.Vol);
-	LOG_PRINT(DEBUG_PT100,"T100.ResVal = %f ",    s_tPT100Data.ResVal);
-	LOG_PRINT(DEBUG_PT100,"T100.Temp = %f ",      s_tPT100Data.Temp);
-	LOG_PRINT(DEBUG_PT100,"T100.Tempavg = %f\r\n",s_tPT100Data.Tempavg);
 }
 
+void pt100_heatem_collect(void)
+{
+	char  i;
+	static float fTempBuf[10] = {0.0};
+	static uint8_t AvgCnt = 0;
+	static uint8_t BufCnt = 0;
+    float  fTemp = 0;
+    
+	sPT100HeatTem.AD = get_pt100_ad(1);//读取PT100的电压AD值
+	sPT100HeatTem.Vol = (float)(3.0 / 4096.0) * sPT100HeatTem.AD;//Pt100的电压值
+	fTemp = sPT100HeatTem.Vol * 10 / 88.7 + 300.0 / 1100.0;
+	sPT100HeatTem.ResVal = 1000 * fTemp / (3 - fTemp);
+	sPT100HeatTem.Temp = calTemByRes(sPT100HeatTem.ResVal);//根据电阻计算温度
+	
+	/*将数据存入环形buf中*/
+	if(BufCnt <= 10)
+	{
+		if(BufCnt == 10)BufCnt = 0;
+		if(AvgCnt < 10)AvgCnt++;
+	}
+	fTempBuf[BufCnt++] = sPT100HeatTem.Temp;
+    /*对环形buf中数据求和*/
+	sPT100HeatTem.Tempsum = 0.0;
+	for(i=0;i<AvgCnt;i++)
+	{
+		sPT100HeatTem.Tempsum   +=  fTempBuf[i];
+	}
+	/*计算环形buf中数据均值*/
+	sPT100HeatTem.Tempavg  = sPT100HeatTem.Tempsum / (float)AvgCnt;
+    
+    /* 把测量数据存入全局变量中 */
+    FloatLimit(&sPT100HeatTem.Tempavg, FLOAT_DECNUM);
+    g_SysData.Data.Sample.ptHeatTem = sPT100HeatTem.Tempavg;
+
+    //加热棒控制
+	if (g_SysData.Data.Sample.ptHeatTem > 80)
+	{
+	    DRV_Pin_Write(epin_DO_OUT, PIN_LOW);
+	}
+	else if (g_SysData.Data.Sample.ptHeatTem < 70)
+	{
+	    DRV_Pin_Write(epin_DO_OUT, PIN_HIGH);
+	}
+	
+}
 
 
 /**********************************************************************************************************
@@ -222,7 +242,9 @@ void APP_PT100(void  * argument)
     
 	while(1)
 	{
-        PT100_TempMeasure();
+        pt100_envtem_collect();
+        pt100_heatem_collect();
+        SampleData_ToModbus(); 
         
         LOG_PRINT(DEBUG_TASK,"APP_PT100 \r\n");
         vTaskDelay(sMaxBlockTime);

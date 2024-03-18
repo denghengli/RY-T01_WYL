@@ -90,7 +90,12 @@ typedef enum
     PARA_SET_TWO_SELECT_1,
     PARA_SET_TWO_SELECT_2,
     PARA_SET_TWO_SELECT_3,
-
+    PARA_SET_TWO_SELECT_4,
+    PARA_SET_TWO_SELECT_5,
+    PARA_SET_THR_SELECT_1,
+    PARA_SET_THR_SELECT_2,
+    PARA_SET_THR_SELECT_3,
+    
     //反吹间隔设置界面
     BLOW_INTER_SET_ENTER,
     BLOW_INTER_SET,
@@ -145,7 +150,7 @@ typedef enum
 	CANCEL_HUMIT_ZERO_OK,    
 	CANCEL_HUMIT_ZERO_OK_RETURN,
 	
-	//湿度控制
+	//湿度控制（单位选择）
 	HUMIT_UNIT_SELECT_ENTER,
 	HUMIT_UNIT_SELECT,
 	HUMIT_UNIT_SELECT_UP,
@@ -160,8 +165,56 @@ typedef enum
 	RESTORE_FACTORY_RIGHT,
 	RESTORE_FACTORY_RETURN,
 	RESTORE_FACTORY_OK,    
-	RESTORE_FACTORY_OK_RETURN
-	
+	RESTORE_FACTORY_OK_RETURN,
+
+    //湿度传感器类型
+    HUMIT_SENSOR_TYPE_ENTER,
+    HUMIT_SENSOR_TYPE,
+    HUMIT_SENSOR_TYPE_UP,
+    HUMIT_SENSOR_TYPE_DOWN,
+    HUMIT_SENSOR_TYPE_RETURN,
+    HUMIT_SENSOR_TYPE_OK,    
+    HUMIT_SENSOR_TYPE_OK_RETURN,
+
+    //温度20mA输出补偿
+    TEM_AO_COMP_ENTER,
+    TEM_AO_COMP,
+    TEM_AO_COMP_UP,
+    TEM_AO_COMP_DOWN,
+    TEM_AO_COMP_RIGHT,
+    TEM_AO_COMP_RETURN,
+    TEM_AO_COMP_OK,    
+    TEM_AO_COMP_OK_RETURN,
+
+    //压力20mA输出补偿
+    PRESS_AO_COMP_ENTER,
+    PRESS_AO_COMP,
+    PRESS_AO_COMP_UP,
+    PRESS_AO_COMP_DOWN,
+    PRESS_AO_COMP_RIGHT,
+    PRESS_AO_COMP_RETURN,
+    PRESS_AO_COMP_OK,    
+    PRESS_AO_COMP_OK_RETURN,
+
+    //流速20mA输出补偿
+    SPEED_AO_COMP_ENTER,
+    SPEED_AO_COMP,
+    SPEED_AO_COMP_UP,
+    SPEED_AO_COMP_DOWN,
+    SPEED_AO_COMP_RIGHT,
+    SPEED_AO_COMP_RETURN,
+    SPEED_AO_COMP_OK,    
+    SPEED_AO_COMP_OK_RETURN,
+
+    //湿度20mA输出补偿
+    HUMIT_AO_COMP_ENTER,
+    HUMIT_AO_COMP,
+    HUMIT_AO_COMP_UP,
+    HUMIT_AO_COMP_DOWN,
+    HUMIT_AO_COMP_RIGHT,
+    HUMIT_AO_COMP_RETURN,
+    HUMIT_AO_COMP_OK,    
+    HUMIT_AO_COMP_OK_RETURN,
 }UISTATE;
 
 typedef struct
@@ -179,6 +232,7 @@ typedef struct
 extern volatile uint8_t ex_sec_signal;
 extern volatile uint8_t ui_pre_state;
 extern volatile uint8_t ui_cur_state;
+extern uint8_t ui_user; //用户等级，1:普通用户 2:高级用户
 
 typedef void (*state_fun)(void *para);
 
@@ -272,6 +326,11 @@ void para_set_one_select_5(void *para);
 void para_set_two_select_1(void *para);
 void para_set_two_select_2(void *para);
 void para_set_two_select_3(void *para);
+void para_set_two_select_4(void *para);
+void para_set_two_select_5(void *para);
+void para_set_thr_select_1(void *para);
+void para_set_thr_select_2(void *para);
+void para_set_thr_select_3(void *para);
 
 //反吹间隔设置界面
 void blow_inter_set_enter(void *para);
@@ -343,5 +402,54 @@ void restore_factory_right(void *para);
 void restore_factory_return(void *para);
 void restore_factory_ok(void *para);
 void restore_factory_ok_return(void *para);
+
+//湿度控制
+void humit_sensor_type_enter(void *para);
+void humit_sensor_type(void *para);
+void humit_sensor_type_up(void *para);
+void humit_sensor_type_down(void *para);
+void humit_sensor_type_return(void *para);
+void humit_sensor_type_ok(void *para);
+void humit_sensor_type_ok_return(void *para);
+
+//温度20mA输出补偿
+void tem_ao_comp_enter(void *para);
+void tem_ao_comp(void *para);
+void tem_ao_comp_up(void *para);
+void tem_ao_comp_down(void *para);
+void tem_ao_comp_right(void *para);
+void tem_ao_comp_return(void *para);
+void tem_ao_comp_ok(void *para);
+void tem_ao_comp_ok_return(void *para);
+
+//压力20mA输出补偿
+void press_ao_comp_enter(void *para);
+void press_ao_comp(void *para);
+void press_ao_comp_up(void *para);
+void press_ao_comp_down(void *para);
+void press_ao_comp_right(void *para);
+void press_ao_comp_return(void *para);
+void press_ao_comp_ok(void *para);
+void press_ao_comp_ok_return(void *para);
+
+//流速20mA输出补偿
+void speed_ao_comp_enter(void *para);
+void speed_ao_comp(void *para);
+void speed_ao_comp_up(void *para);
+void speed_ao_comp_down(void *para);
+void speed_ao_comp_right(void *para);
+void speed_ao_comp_return(void *para);
+void speed_ao_comp_ok(void *para);
+void speed_ao_comp_ok_return(void *para);
+
+//湿度20mA输出补偿
+void humit_ao_comp_enter(void *para);
+void humit_ao_comp(void *para);
+void humit_ao_comp_up(void *para);
+void humit_ao_comp_down(void *para);
+void humit_ao_comp_right(void *para);
+void humit_ao_comp_return(void *para);
+void humit_ao_comp_ok(void *para);
+void humit_ao_comp_ok_return(void *para);
 
 #endif
