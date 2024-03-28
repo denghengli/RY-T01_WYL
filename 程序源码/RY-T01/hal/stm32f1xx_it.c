@@ -328,10 +328,11 @@ void TIM1_UP_IRQHandler(void)
 	{
 	    ex_sec_signal = !ex_sec_signal; //界面S变信号
 	    
-        soft_timer_exe(); //定时反吹
-        
         iFreq = LL_TIM_GetCounter(TIM2); //获取TIM2湿度传感器脉冲计数
         Humit_Freq_Set(iFreq);
+        
+        soft_timer_exe(); //定时反吹
+        
         LL_TIM_SetCounter(TIM2,0);
         
 		LL_TIM_SetCounter(TIM1,0);   //清空计数

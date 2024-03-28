@@ -113,6 +113,11 @@ void main_wind(void *para)
             lcd_para.y = 100;
             snprintf(tmp_str, sizeof(tmp_str), "  反吹： %7.2f  KPa", g_SysData.Data.Sample.blowGasPress / 1000.0);
             hal_lcd_driver_intface((void *)&lcd_para, (uint8_t *)tmp_str, strlen(tmp_str));
+            
+            /*湿度频率*/
+            lcd_para.y = 140;
+            snprintf(tmp_str, sizeof(tmp_str), "  频率： %04d   ", g_SysData.Data.Sample.MSN);
+            hal_lcd_driver_intface((void *)&lcd_para, (uint8_t *)tmp_str, strlen(tmp_str));
         }
         
         /*翻页*/
