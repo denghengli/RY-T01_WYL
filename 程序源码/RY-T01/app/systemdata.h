@@ -57,11 +57,10 @@ __packed typedef struct
     float totalPress;   //全压(Pa)
     float dynPress;     //动压(Pa)
     float sticPress;    //静压(Pa)
-    float airPress;     //大气压(KPa)
     float blowGasPress; //反吹气压力(KPa)
     float speed;        //流速(m/s)
     float flow;         //流量(m³/s)
-    float ptTem;        //温度
+    float ptTem;        //环境温度
     float ptHeatTem;    //伴热温度
     float abshumit;     //绝对湿度(%RH)
     float relhumit;     //相对湿度(%V)
@@ -100,6 +99,8 @@ __packed typedef struct
     float speedAOK;         //流速20mA输出系数
     float humitAOOffset;    //湿度20mA输出偏移
     float humitAOK;         //湿度20mA输出系数
+    uint16_t humitFrepTab[11];//湿度-频率对应表
+      
     uint16_t factoryFlg;    //恢复出厂标志，1恢复出厂
     uint16_t DO[4]; //电磁阀控制
 

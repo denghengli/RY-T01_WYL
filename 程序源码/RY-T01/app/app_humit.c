@@ -29,8 +29,8 @@ const static float relhumit_tem[NUM_ROWS][NUM_COLS] =
 };
 
 /* 湿度传感器频率与湿度对应表 */
-const static uint32_t A_HUMIT_FREQ_TAB[] = {7351, 7224, 7100, 6976, 6853, 6728, 6600, 6468, 6330, 6186, 6033};
-const static uint32_t B_HUMIT_FREQ_TAB[] = {285,290,295,300,304,309,313,318,322,327,331};
+//const static uint32_t A_HUMIT_FREQ_TAB[] = {7351, 7224, 7100, 6976, 6853, 6728, 6600, 6468, 6330, 6186, 6033};
+//const static uint32_t B_HUMIT_FREQ_TAB[] = {285,290,295,300,304,309,313,318,322,327,331};
 
 static uint32_t s_iFreqHumit = 0;/* 湿度传感器频率*/
 static uint32_t s_iFreqOverCnt = 0;/*湿度传感器频率计数溢出次数*/
@@ -138,7 +138,7 @@ void humitCollect(void)
     
 	if (g_SysData.Data.Para.humitType == 0) //A
 	{
-		if(iFreqHumit > A_HUMIT_FREQ_TAB[0] || iFreqHumit < A_HUMIT_FREQ_TAB[10])
+		if(iFreqHumit > g_SysData.Data.Para.humitFrepTab[0] || iFreqHumit < g_SysData.Data.Para.humitFrepTab[10])
 		{
 			humit = 0;
 		}
@@ -146,10 +146,10 @@ void humitCollect(void)
 		{
 			for(i=0;i<FREQ_TAB_NUM;i++)
 			{
-				if(iFreqHumit <= A_HUMIT_FREQ_TAB[i] && iFreqHumit >= A_HUMIT_FREQ_TAB[i+1])
+				if(iFreqHumit <= g_SysData.Data.Para.humitFrepTab[i] && iFreqHumit >= g_SysData.Data.Para.humitFrepTab[i+1])
 				{
-					fTemp1 = (float)(A_HUMIT_FREQ_TAB[i] - A_HUMIT_FREQ_TAB[i+1]) / FREQ_TAB_SCALE; //f/RH
-					fTemp2 = (float)(A_HUMIT_FREQ_TAB[i] - iFreqHumit) / fTemp1;
+					fTemp1 = (float)(g_SysData.Data.Para.humitFrepTab[i] - g_SysData.Data.Para.humitFrepTab[i+1]) / FREQ_TAB_SCALE; //f/RH
+					fTemp2 = (float)(g_SysData.Data.Para.humitFrepTab[i] - iFreqHumit) / fTemp1;
 						
 					humit = (float)FREQ_TAB_SCALE * i + fTemp2;
 					break;
@@ -159,7 +159,7 @@ void humitCollect(void)
 	}
 	else if (g_SysData.Data.Para.humitType == 1) //B
 	{
-		if(iFreqHumit > B_HUMIT_FREQ_TAB[0] || iFreqHumit < B_HUMIT_FREQ_TAB[10])
+		if(iFreqHumit > g_SysData.Data.Para.humitFrepTab[0] || iFreqHumit < g_SysData.Data.Para.humitFrepTab[10])
 		{
 			humit = 0;
 		}
@@ -167,10 +167,10 @@ void humitCollect(void)
 		{
 			for(i=0;i<FREQ_TAB_NUM;i++)
 			{
-				if(iFreqHumit <= B_HUMIT_FREQ_TAB[i] && iFreqHumit >= B_HUMIT_FREQ_TAB[i+1])
+				if(iFreqHumit <= g_SysData.Data.Para.humitFrepTab[i] && iFreqHumit >= g_SysData.Data.Para.humitFrepTab[i+1])
 				{
-					fTemp1 = (float)(B_HUMIT_FREQ_TAB[i] - B_HUMIT_FREQ_TAB[i+1]) / FREQ_TAB_SCALE; //f/RH
-					fTemp2 = (float)(B_HUMIT_FREQ_TAB[i] - iFreqHumit) / fTemp1;
+					fTemp1 = (float)(g_SysData.Data.Para.humitFrepTab[i] - g_SysData.Data.Para.humitFrepTab[i+1]) / FREQ_TAB_SCALE; //f/RH
+					fTemp2 = (float)(g_SysData.Data.Para.humitFrepTab[i] - iFreqHumit) / fTemp1;
 						
 					humit = (float)FREQ_TAB_SCALE * i + fTemp2;
 					break;

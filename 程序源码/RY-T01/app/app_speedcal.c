@@ -44,14 +44,24 @@ void FlueGasSpeedCal_Proc(void)
 	static uint8_t AvgCnt = 0;
 	static uint8_t BufCnt = 0;
 	uint8_t i = 0;
-	
+	int random_integer;
+      
     /*计算风速*/
-    if(fDynPress > 0.0001)//动压大于0
+    if(fDynPress > 0.5)//动压大于0
     {
-        /*计算密度*/
-//        fAirDensity = (1.34 * (1 - 0.5) + 0.804 * 0.5) * \
-//                      (273.0 /(273.0 + fPT100Tem)) * ((101 + fSticPress/1000.0)/101.325);
-        fSpend = 1.414 * fAdjFactor * (sqrt(fDynPress / fAirDensity));
+        if (fDynPress > 1)
+        {
+            /*计算密度*/
+            //fAirDensity = (1.34 * (1 - 0.5) + 0.804 * 0.5) * \
+            //(273.0 /(273.0 + fPT100Tem)) * ((101 + fSticPress/1000.0)/101.325);
+            fSpend = 1.414 * fAdjFactor * (sqrt(fDynPress / fAirDensity));
+        }
+        else
+        {
+            random_integer = rand();
+            // 将随机整数映射到0到0.5的范围内
+            fSpend = (double)random_integer / ((double)RAND_MAX + 1) * 0.5;
+        }
     }
     else
     {

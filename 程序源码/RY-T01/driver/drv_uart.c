@@ -165,10 +165,12 @@ void Modify_UART_BaudRate(USART_TypeDef *USARTx, UART_CONFIG *Config)
     }
     else if (Config->Parity == PARITY_ODD)
     {
+        USART_InitStruct.DataWidth = LL_USART_DATAWIDTH_9B; //需要设置成9Bbit
         USART_InitStruct.Parity = LL_USART_PARITY_ODD;
     }
     else if (Config->Parity == PARITY_EVEN)
     {
+        USART_InitStruct.DataWidth = LL_USART_DATAWIDTH_9B; //需要设置成9Bbit
         USART_InitStruct.Parity = LL_USART_PARITY_EVEN;
     }
     USART_InitStruct.TransferDirection   = LL_USART_DIRECTION_TX_RX;
