@@ -85,12 +85,12 @@ static MB_REG_REGION_T MbRegRegionList[] =
     //保持寄存器--命令
     {40001, 40002,  setBaudRateProc,        "tempTargetCalib"}, //设置波特率
     {40020, 40021,  tempTargetCalibProc,    "tempTargetCalib"}, //温度目标值校准
-    {40053, 40053,  restoreFactory,         "restoreFactory"},  //恢复出厂设置
+    {40064, 40064,  restoreFactory,         "restoreFactory"},  //恢复出厂设置
     
-    {40054, 40054,  do1Ctrl,                 "do1Ctrl"},  //电磁阀控制
-    {40055, 40055,  do2Ctrl,                 "do2Ctrl"},  //电磁阀控制
-    {40056, 40056,  do3Ctrl,                 "do3Ctrl"},  //电磁阀控制
-    {40057, 40057,  do4Ctrl,                 "do4Ctrl"},  //电磁阀控制
+    {40065, 40065,  do1Ctrl,                 "do1Ctrl"},  //电磁阀控制
+    {40066, 40066,  do2Ctrl,                 "do2Ctrl"},  //电磁阀控制
+    {40067, 40067,  do3Ctrl,                 "do3Ctrl"},  //电磁阀控制
+    {40068, 40068,  do4Ctrl,                 "do4Ctrl"},  //电磁阀控制
 };
 
 /**

@@ -64,20 +64,22 @@ void AtpPress_Measure(void)
 	temp = ((float)3.0 / 4096.0) * s_tAtpPressDat.AD;
 	s_tAtpPressDat.Vol = 1.5 * temp;//通过分压比计算出最终的传感器测量电压
 	 
-    if (s_tAtpPressDat.Vol < 0.2)
-    {
-        s_tAtpPressDat.airPress = 20;
-    }
+    if (s_tAtpPressDat.Vol > 4.1)
+        s_tAtpPressDat.airPress = (115 - 101.325) / (4.8 - 4.1) * (s_tAtpPressDat.Vol - 4.1);
     else
-    {
-        s_tAtpPressDat.airPress = (s_tAtpPressDat.Vol - 0.2) / (4.6/380.0) + 20;
-    }
-//	s_tAtpPressDat.TempFactor = MPX_GetTempFactor();
-//	s_tAtpPressDat.PressError = 0; //-1.5KPa - 1.5KPa
-//
-//	temp = s_tAtpPressDat.TempFactor * s_tAtpPressDat.PressError * 0.009 * MPXHZ_VCC;
-//	s_tAtpPressDat.airPress = (((float)s_tAtpPressDat.Vol/MPXHZ_VCC + 0.095) / 0.009) + temp;
-	
+        s_tAtpPressDat.airPress = 0;
+    
+//    //20 - 115KPa对应 0.2 - 4.8V
+//    if (s_tAtpPressDat.Vol < 0.2){
+//        s_tAtpPressDat.airPress = 20;
+//    } else {
+//        s_tAtpPressDat.airPress = 95.0 / 4.6 * s_tAtpPressDat.Vol + 20;
+//    }
+//    if (s_tAtpPressDat.airPress < 101.325)
+//        s_tAtpPressDat.airPress = 0;
+//    else
+//        s_tAtpPressDat.airPress -= 101.325;
+
     /* 把测量数据存入全局变量中 */
     FloatLimit(&s_tAtpPressDat.airPress,FLOAT_DECNUM);
 	g_SysData.Data.Sample.blowGasPress = s_tAtpPressDat.airPress;

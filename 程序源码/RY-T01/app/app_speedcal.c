@@ -67,6 +67,8 @@ void FlueGasSpeedCal_Proc(void)
     {
         fSpend = 0;
     }
+    if (fSpend > 40)
+        fSpend = 40;
 
     /*将数据存入环形buf中*/
     if(BufCnt <= SPEEDCAL_AVG_NUM)

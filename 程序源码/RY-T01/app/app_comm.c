@@ -91,7 +91,7 @@ void dealMbWriteCmd(UART_TRANS_T *_pTrans)
     else if (_pTrans->RxBuf[1] == MODBUS_SIMHOLD_REG_WR)/*0x6写单个保持寄存器*/
     {
         //控制类
-        if(reg_addr >= 50)
+        if(reg_addr >= 64)
         {
             ParaData_Updata();
             dealMbCmd(MODBUS_SIMHOLD_REG_WR, reg_addr + 40000, 1);
@@ -109,7 +109,7 @@ void dealMbWriteCmd(UART_TRANS_T *_pTrans)
         reg_num = (_pTrans->RxBuf[4] << 8) | _pTrans->RxBuf[5];
 
         //控制类
-        if(reg_addr >= 50)
+        if(reg_addr >= 64)
         {
             ParaData_Updata();
             dealMbCmd(MODBUS_MULHOLD_REG_WR, reg_addr + 40000, reg_num);
