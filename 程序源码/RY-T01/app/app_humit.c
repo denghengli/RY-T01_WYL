@@ -77,7 +77,6 @@ uint32_t Humit_Freq_Get(void)
 
 float findAbsoluteHumidity(float relativeHumidity, float temperature) 
 {
-    
     int row,col; // 将相对湿度和温度转换为数组索引
     
     //范围限制
