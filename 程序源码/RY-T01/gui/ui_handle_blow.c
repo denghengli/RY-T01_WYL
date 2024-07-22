@@ -65,8 +65,8 @@ void handle_blow_down(void *para)
 
 void handle_blow_return(void *para)
 {
-    ui_cur_state = CONFIG_MENU_ONE_SELECT_2;
-    config_menu_one_select_2(NULL);
+    ui_cur_state = CONFIG_MENU_ONE_SELECT_1;
+    config_menu_one_select_1(NULL);
 }
 
 void handle_blow_ok(void *para)
@@ -163,8 +163,8 @@ void handle_blow_finish(void *para)
 
 void handle_blow_finish_return(void *para)
 {
-    ui_cur_state = CONFIG_MENU_ONE_SELECT_2;
-    config_menu_one_select_2(NULL);
+    ui_cur_state = CONFIG_MENU_ONE_SELECT_1;
+    config_menu_one_select_1(NULL);
 }
 
 

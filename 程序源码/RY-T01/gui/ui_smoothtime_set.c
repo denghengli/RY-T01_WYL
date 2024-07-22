@@ -134,8 +134,8 @@ void smooth_time_set_right(void *para)
 
 void smooth_time_set_return(void *para)
 {
-    ui_cur_state = CONFIG_MENU_ONE_SELECT_4;
-    config_menu_one_select_4(NULL);
+    ui_cur_state = CONFIG_MENU_ONE_SELECT_3;
+    config_menu_one_select_3(NULL);
 }
 
 void smooth_time_set_ok(void *para)
@@ -162,8 +162,8 @@ void smooth_time_set_ok(void *para)
 
 void smooth_time_set_ok_return(void *para)
 {
-    ui_cur_state = CONFIG_MENU_ONE_SELECT_4;
-    config_menu_one_select_4(NULL);
+    ui_cur_state = CONFIG_MENU_ONE_SELECT_3;
+    config_menu_one_select_3(NULL);
 }
 
 

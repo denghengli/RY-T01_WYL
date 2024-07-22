@@ -15,7 +15,6 @@ typedef enum
     CONFIG_MENU_ONE_SELECT_4,
     CONFIG_MENU_ONE_SELECT_5,
     CONFIG_MENU_TWO_SELECT_1,
-    CONFIG_MENU_TWO_SELECT_2,
 
     //手动反吹界面
     HANDLE_BLOW_ENTER,
@@ -251,7 +250,6 @@ void config_menu_one_select_3(void *para);
 void config_menu_one_select_4(void *para);
 void config_menu_one_select_5(void *para);
 void config_menu_two_select_1(void *para);
-void config_menu_two_select_2(void *para);
 
 //手动反吹界面
 void handle_blow_enter(void *para);

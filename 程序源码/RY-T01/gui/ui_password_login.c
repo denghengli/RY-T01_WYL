@@ -126,8 +126,8 @@ void password_login_right(void *para)
 
 void password_login_return(void *para)
 {
-    ui_cur_state = CONFIG_MENU_TWO_SELECT_2;
-    config_menu_two_select_2(NULL);
+    ui_cur_state = CONFIG_MENU_TWO_SELECT_1;
+    config_menu_two_select_1(NULL);
 }
 
 void password_login_ok(void *para)
@@ -165,8 +165,8 @@ void password_login_ok(void *para)
 
 void password_login_error_return(void *para)
 {
-    ui_cur_state = CONFIG_MENU_TWO_SELECT_2;
-    config_menu_two_select_2(NULL);
+    ui_cur_state = CONFIG_MENU_TWO_SELECT_1;
+    config_menu_two_select_1(NULL);
 }
 
 

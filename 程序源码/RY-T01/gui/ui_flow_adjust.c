@@ -71,8 +71,8 @@ void flow_adjust_down(void *para)
 
 void flow_adjust_return(void *para)
 {
-    ui_cur_state = CONFIG_MENU_ONE_SELECT_3;
-    config_menu_one_select_3(NULL);
+    ui_cur_state = CONFIG_MENU_ONE_SELECT_2;
+    config_menu_one_select_2(NULL);
 }
 
 void flow_adjust_ok(void *para)
@@ -173,8 +173,8 @@ void flow_adjust_finish(void *para)
 
 void flow_adjust_finish_return(void *para)
 {
-    ui_cur_state = CONFIG_MENU_ONE_SELECT_3;
-    config_menu_one_select_3(NULL);
+    ui_cur_state = CONFIG_MENU_ONE_SELECT_2;
+    config_menu_one_select_2(NULL);
 }
 
 

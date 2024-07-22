@@ -2,7 +2,7 @@
 
 const char *menu_list[] = 
 {
-	"设备状态    ",
+//	"设备状态    ",
 	"手动反吹    ",
 	"流速零点校准",		
 	"平滑时间    ",		
@@ -139,9 +139,4 @@ void config_menu_two_select_1(void *para)
 	config_menu(&i);    
 }
 
-void config_menu_two_select_2(void *para)
-{
-    unsigned int i = 6;
-	config_menu(&i);    
-}
 

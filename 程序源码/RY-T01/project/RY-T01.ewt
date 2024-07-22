@@ -2368,6 +2368,12 @@
         </file>
     </group>
     <group>
+        <name>CMSIS-Pack</name>
+        <file>
+            <name>$PROJ_DIR$\RTE\RTE_Components.h</name>
+        </file>
+    </group>
+    <group>
         <name>driver</name>
         <group>
             <name>lcd</name>
@@ -2632,18 +2638,6 @@
         </file>
         <file>
             <name>$PROJ_DIR$\..\os\timers.c</name>
-        </file>
-    </group>
-    <group>
-        <name>CMSIS-Pack</name>
-        <group>
-            <name>CMSIS CORE</name>
-            <file>
-                <name>${CMSIS_PACK_PATH_ARM#CMSIS#5.4.0}$\CMSIS\Documentation\Core\html\index.html</name>
-            </file>
-        </group>
-        <file>
-            <name>$PROJ_DIR$\RTE\RTE_Components.h</name>
         </file>
     </group>
 </project>

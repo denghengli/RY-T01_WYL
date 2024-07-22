@@ -31,11 +31,7 @@ uint8_t is_clean(void)
 	{
 		res = 0;
 	}
-	if (ui_cur_state == CONFIG_MENU_TWO_SELECT_1 && (ui_pre_state == CONFIG_MENU_ONE_SELECT_5 || ui_pre_state == CONFIG_MENU_TWO_SELECT_2))
-	{
-		res = 0;
-	}
-	if (ui_cur_state == CONFIG_MENU_TWO_SELECT_2 && ui_pre_state == CONFIG_MENU_TWO_SELECT_1)
+	if (ui_cur_state == CONFIG_MENU_TWO_SELECT_1 && ui_pre_state == CONFIG_MENU_ONE_SELECT_5)
 	{
 		res = 0;
 	}

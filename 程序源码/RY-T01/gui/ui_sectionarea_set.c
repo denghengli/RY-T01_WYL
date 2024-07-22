@@ -109,8 +109,8 @@ void section_area_set_right(void *para)
 
 void section_area_set_return(void *para)
 {
-    ui_cur_state = CONFIG_MENU_ONE_SELECT_5;
-    config_menu_one_select_5(NULL);
+    ui_cur_state = CONFIG_MENU_ONE_SELECT_4;
+    config_menu_one_select_4(NULL);
 }
 
 void section_area_set_ok(void *para)
@@ -138,8 +138,8 @@ void section_area_set_ok(void *para)
 
 void section_area_set_ok_return(void *para)
 {
-    ui_cur_state = CONFIG_MENU_ONE_SELECT_5;
-    config_menu_one_select_5(NULL);
+    ui_cur_state = CONFIG_MENU_ONE_SELECT_4;
+    config_menu_one_select_4(NULL);
 }
 
 

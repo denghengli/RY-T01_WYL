@@ -130,8 +130,8 @@ void blow_freq_set_right(void *para)
 
 void blow_freq_set_return(void *para)
 {
-    ui_cur_state = CONFIG_MENU_TWO_SELECT_1;
-    config_menu_two_select_1(NULL);
+    ui_cur_state = CONFIG_MENU_ONE_SELECT_5;
+    config_menu_one_select_5(NULL);
 }
 
 void blow_freq_set_ok(void *para)
@@ -156,8 +156,8 @@ void blow_freq_set_ok(void *para)
 
 void blow_freq_set_ok_return(void *para)
 {
-    ui_cur_state = CONFIG_MENU_TWO_SELECT_1;
-    config_menu_two_select_1(NULL);
+    ui_cur_state = CONFIG_MENU_ONE_SELECT_5;
+    config_menu_one_select_5(NULL);
 }
 
 

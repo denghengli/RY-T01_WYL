@@ -3,8 +3,6 @@
 #include "FreeRTOS.h"
 #include "cmsis_os.h"
 
-#define SOFTVER 100
-
 /*浮点数据小数位数*/
 #define FLOAT_DECNUM 3
 
