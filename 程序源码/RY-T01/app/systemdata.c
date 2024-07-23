@@ -1,6 +1,6 @@
 #include "includes.h"
 
-#define SOFTWARE_VERSION 104
+#define SOFTWARE_VERSION 105
 
 //初次上点判断标识,不要变!!!!
 #define FLASH_INITFLG 0x22223355 

@@ -238,6 +238,27 @@ void ZXP3010D_StartP(_I2C_T  I2C_Interface)
     buf[1] = 0x11; //输出校准数据
     _I2C_WriteBytes(I2C_Interface, ZXP3010D_Address, buf, 2);
 
+    //以下设置过采样率选择一种设置
+	//设置过采样率A6寄存器的Bit0-Bit2位
+	//000：1024x;(默认值)
+	//001：2048x;
+	//010: 4096x;
+	//011: 8192x;
+	//110: 16384x;
+	//111: 32768x
+	buf[0] = 0xA6;
+    _I2C_ReadBytes(I2C_Interface, ZXP3010D_Address, buf, 1); //读A6寄存器，返回值到Buf[0]中
+
+	buf[0]=buf[0]&0xF8; 							//保留高5位
+	//更改采样率为32768x
+	buf[1]=buf[0]|0x07;								//A6低三位设置过采样率为32768x
+	//更改采样率为16384x
+	//buf[1]=buf[0]|0x06;							////A6低三位设置过采样率为16384x
+	//更改采样率为2048x
+	//buf[1]=buf[0]|0x01;							////A6低三位设置过采样率为2048x
+	buf[0]=0xA6;									//设置A6寄存器地址
+	_I2C_WriteBytes(I2C_Interface, ZXP3010D_Address, buf, 2);        //写入A6值
+    
     buf[0] = 0x30;
     buf[1] = 0x09;
     _I2C_WriteBytes(I2C_Interface, ZXP3010D_Address, buf, 2);
