@@ -1,9 +1,9 @@
 #include "includes.h"
 
-#define SOFTWARE_VERSION 105
+#define SOFTWARE_VERSION 107
 
 //初次上点判断标识,不要变!!!!
-#define FLASH_INITFLG 0x22223355 
+#define FLASH_INITFLG 0x22223366 
 //每次修改或新增参数后新增如下格式宏
 #define PARA_MODIFY_ADDR_20231112 STM32_FLASH_ADDR_PARA_MODFYFLG
 #define PARA_MODIFY_ADDR_20231113 (PARA_MODIFY_ADDR_20231112 + 4)
@@ -62,6 +62,7 @@ void ParaData_Init(void)
         s_ParaData.Para.humitDispUnit = 1;
         s_ParaData.Para.sectionArea = 50;
         s_ParaData.Para.smoothTime = 5;
+        s_ParaData.Para.speedCalibZeroInterval = 24;
         s_ParaData.Para.humitType = 0;
         s_ParaData.Para.temAOOffset = 0;
         s_ParaData.Para.temAOK = 1;
@@ -99,6 +100,7 @@ void ParaData_Init(void)
         s_FactoryParaData.Para.humitDispUnit = 1;
         s_FactoryParaData.Para.sectionArea = 50;
         s_FactoryParaData.Para.smoothTime = 5;
+        s_FactoryParaData.Para.speedCalibZeroInterval = 24;
         s_FactoryParaData.Para.humitType = 0;
         s_FactoryParaData.Para.temAOOffset = 0;
         s_FactoryParaData.Para.temAOK = 1;

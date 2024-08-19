@@ -173,7 +173,12 @@ static void FlueGasPress_AutoAdj(void)
         //自动定时校零，采集满后自动退出
 		if (AdjAvgCnt == AUTOADJ_FREQ && timing_adj_start_flag)
 		{
-		    timing_adj_start_flag = 0;
+            //自动校零结束后关闭管路
+            if (timing_adj_start_flag)
+            {
+                timing_adj_start_flag = 0;
+                valve_ctrl(eSYSSTA_HAVE_BLOW_CALIB_ZERO, 0);
+            }
 		    g_SysData.Data.Para.speedCalibZeroFlg = 2;
 		}
 	}
@@ -248,6 +253,9 @@ void FlueGasPress_Measure(void)
 
 void timg_adj_timer_cb(void *param)
 {
+    //开启管路
+    valve_ctrl(eSYSSTA_HAVE_BLOW_CALIB_ZERO, 1);
+    
     timing_adj_start_flag = 1;
     g_SysData.Data.Para.speedCalibZeroFlg = 1;
 }
@@ -262,9 +270,12 @@ static void timing_adj_proc(void)
 {
     static uint8_t last_autoCalibZero = 0;
     uint8_t cur_autoCalibZero = g_SysData.Data.Para.autoCalibZero;
-
+    uint16_t cur_calibInterval = g_SysData.Data.Para.speedCalibZeroInterval;
+    
     if (last_autoCalibZero != cur_autoCalibZero)
     {
+        last_autoCalibZero = cur_autoCalibZero;
+        
         //1 --> 0关闭自动校零定时
         if (cur_autoCalibZero == 0)
         {
@@ -273,7 +284,7 @@ static void timing_adj_proc(void)
         //0 --> 1开启自动校零定时
         else if (cur_autoCalibZero == 1)
         {
-            soft_timer_config(timg_adj_timer, 24*60, 
+            soft_timer_config(timg_adj_timer, cur_calibInterval * 60, 
                               SOFT_TIMER_MODE_RERIOD, SOFT_TIMER_UNIT_MIN,
                               NULL, timg_adj_timer_cb);
             soft_timer_start(timg_adj_timer);
@@ -291,7 +302,8 @@ static void timing_adj_proc(void)
 void APP_FlueGasP(void  * argument)
 {
     TickType_t sMaxBlockTime = pdMS_TO_TICKS(1000);
-
+    uint32_t exitBlowDelay = 0;
+    
     //定时自动校零定时器
     timg_adj_timer = creat_soft_timer();
     
@@ -299,13 +311,22 @@ void APP_FlueGasP(void  * argument)
 	
 	while(1)
 	{
-//	    if (g_SysData.Data.Sample.sysSta == SYS_STA_MEASU)
-//		{
-			FlueGasPress_Measure();       
-            timing_adj_proc();
-            
-			LOG_PRINT(DEBUG_TASK,"APP_FlueGasP \r\n");
-//		}
+	    if (g_SysData.Data.Sample.sysSta == eSYSSTA_MEASU)
+		{
+            if (exitBlowDelay) exitBlowDelay--;
+            if (!exitBlowDelay)
+            {
+                FlueGasPress_Measure();       
+                timing_adj_proc();
+                
+                LOG_PRINT(DEBUG_TASK,"APP_FlueGasP \r\n");
+            }
+		}
+        else 
+        {
+            exitBlowDelay = 3; //退出反吹后延时3s才开始显示数据
+        }
+        
         vTaskDelay(sMaxBlockTime);
 	}
 }

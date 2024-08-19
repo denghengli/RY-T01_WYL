@@ -86,7 +86,8 @@ __packed typedef struct
     uint16_t humitDispUnit; //湿度显示单位，1=相对 0=绝对
     float sectionArea;      //烟道截面积(㎡)
     uint16_t smoothTime;    //平滑时间(s),越大响应时间越长,平滑度越好，越小则相反，最大50，默认20
-    uint16_t resv[5];
+    uint16_t speedCalibZeroInterval; //流速自动校零间隔（h）
+    uint16_t resv[4];
 	
     uint16_t humitType;     //湿度传感器类型,0:A 1:B
     float temAOOffset;      //温度20mA输出偏移

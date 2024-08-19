@@ -56,12 +56,18 @@ void main_wind(void *para)
 {
     char tmp_str[64] = {0};
     FNC_LCD_DISP_DRAW_PARA lcd_para;
-    static int sec_display_flag = 1;
-
-    if (ex_sec_signal != sec_display_flag)    
+    static int _ex_sec_signal = 1;
+    static int display_sec = 0;
+    
+    if (ex_sec_signal != _ex_sec_signal)    
     {
-        sec_display_flag = ex_sec_signal;
-        
+        _ex_sec_signal = ex_sec_signal;
+        display_sec++;
+    }
+     
+    if (display_sec >= 3)
+    {
+        display_sec = 0;
         if (cur_main_pagenum == 1)
         {
             /*ÎÂ¶È*/

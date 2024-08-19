@@ -32,7 +32,7 @@ static void DAC_Output(void)
         else Vs_Old = Vs = temp;
         
         /* 压力（静压）-5KPa - +5KPa,分辨率为 0.0016mA/1Pa*/
-        temp = g_SysData.Data.Sample.sticPress / 10000.0 * 16 + 4;
+        temp = (g_SysData.Data.Sample.sticPress + 5000) / 10000.0 * 16 + 4;
         temp = temp + g_SysData.Data.Para.pressAOOffset;
         temp = (temp * g_SysData.Data.Para.pressAOK) / 10.0;
         if (temp <= 0.4) Vps_Old = Vps = 0.4;

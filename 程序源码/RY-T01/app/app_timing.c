@@ -19,7 +19,7 @@ void blow_seq_timer_cb(void *param)
     {
         case 0: //全压管吹 1 秒
             DRV_Pin_Write(epin_VALVE1, PIN_HIGH);
-            DRV_Pin_Write(epin_VALVE2, PIN_LOW);
+            DRV_Pin_Write(epin_VALVE2, PIN_HIGH);
             DRV_Pin_Write(epin_VALVE3, PIN_LOW);
             DRV_Pin_Write(epin_VALVE4, PIN_LOW);
             blow_sta++;
@@ -27,7 +27,7 @@ void blow_seq_timer_cb(void *param)
 
         case 1: //暂停 1 秒
             DRV_Pin_Write(epin_VALVE1, PIN_LOW);
-            DRV_Pin_Write(epin_VALVE2, PIN_LOW);
+            DRV_Pin_Write(epin_VALVE2, PIN_HIGH);
             DRV_Pin_Write(epin_VALVE3, PIN_LOW);
             if (timing_blow_start_flag)
                 DRV_Pin_Write(epin_VALVE4, PIN_HIGH); //进行湿度管反吹
@@ -36,7 +36,7 @@ void blow_seq_timer_cb(void *param)
 
         case 2: //静压管吹 1 秒
             DRV_Pin_Write(epin_VALVE1, PIN_LOW);
-            DRV_Pin_Write(epin_VALVE2, PIN_LOW);
+            DRV_Pin_Write(epin_VALVE2, PIN_HIGH);
             DRV_Pin_Write(epin_VALVE3, PIN_HIGH);
             DRV_Pin_Write(epin_VALVE4, PIN_LOW);
             blow_sta++;
@@ -44,7 +44,7 @@ void blow_seq_timer_cb(void *param)
 
         case 3: //暂停 1 秒
             DRV_Pin_Write(epin_VALVE1, PIN_LOW);
-            DRV_Pin_Write(epin_VALVE2, PIN_LOW);
+            DRV_Pin_Write(epin_VALVE2, PIN_HIGH);
             DRV_Pin_Write(epin_VALVE3, PIN_LOW);
             if (timing_blow_start_flag)
                 DRV_Pin_Write(epin_VALVE4, PIN_HIGH); //进行湿度管反吹
@@ -82,17 +82,19 @@ void blow_seq_timer_cb(void *param)
 static void timing_blow_proc(void)
 {
     static uint8_t last_blowInterval = 0;
-    uint8_t cur_blowInterval = g_SysData.Data.Para.blowInterval;
+    uint16_t cur_blowInterval = g_SysData.Data.Para.blowInterval;
 
     if (last_blowInterval != cur_blowInterval)
     {
+        last_blowInterval = cur_blowInterval;
+        
         //1 --> 0关闭自动反吹定时
         if (cur_blowInterval == 0)
         {
             soft_timer_stop(timg_blow_timer);
         }
         //0 --> 1开启自动反吹定时
-        else if (cur_blowInterval == 1)
+        else if (cur_blowInterval)
         {
             soft_timer_config(timg_blow_timer, cur_blowInterval, 
                               SOFT_TIMER_MODE_RERIOD, SOFT_TIMER_UNIT_MIN,

@@ -191,7 +191,10 @@ void humitCollect(void)
         g_SysData.Data.Sample.relhumit = humit;
     }
 
-    humit = findAbsoluteHumidity(g_SysData.Data.Sample.relhumit, g_SysData.Data.Sample.ptTem); //g/m3
+    //溫度采用環境溫度跟伴熱溫度的最大值
+    float temMax = g_SysData.Data.Sample.ptTem > g_SysData.Data.Sample.ptHeatTem ? 
+                    g_SysData.Data.Sample.ptTem : g_SysData.Data.Sample.ptHeatTem;
+    humit = findAbsoluteHumidity(g_SysData.Data.Sample.relhumit, temMax); //g/m3
     humit = humit * 1000.0 * 22.4 / 18.0; //ppm
     humit = humit / 10000.0; //%vol
     if (humit < 40)

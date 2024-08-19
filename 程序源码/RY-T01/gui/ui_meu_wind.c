@@ -12,6 +12,7 @@ const char *menu_list[] =
     "            ",
     "            ",
     "            ",
+    "            ",
 };
 
 void config_menu(void *para)
