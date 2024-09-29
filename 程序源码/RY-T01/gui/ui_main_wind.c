@@ -52,7 +52,7 @@ void start_logo(void *para)
 	clean_sercen();
 }
 
-void main_wind(void *para)
+void main_wind11(void *para)
 {
     char tmp_str[64] = {0};
     FNC_LCD_DISP_DRAW_PARA lcd_para;
@@ -143,10 +143,55 @@ void main_wind(void *para)
     }
 }
 
+
+void main_wind(void *para)
+{
+    char tmp_str[64] = {0};
+    FNC_LCD_DISP_DRAW_PARA lcd_para;
+    static int _ex_sec_signal = 1;
+    static int display_sec = 0;
+    
+    if (ex_sec_signal != _ex_sec_signal)    
+    {
+        _ex_sec_signal = ex_sec_signal;
+        display_sec++;
+    }
+     
+    if (display_sec >= 3)
+    {
+        display_sec = 0;
+        
+        /*温度*/
+        lcd_para.cmd = FNC_LCD_DISP_DRAW_STRING;
+        lcd_para.x = 20;
+        lcd_para.y = 20;
+        lcd_para.bc = DARKBLUE;
+        lcd_para.fc = WHITE;
+        lcd_para.mode = 24;
+        snprintf(tmp_str, sizeof(tmp_str), "  温度： %7.2f  ℃", g_SysData.Data.Sample.ptTem);
+        hal_lcd_driver_intface((void *)&lcd_para, (uint8_t *)tmp_str, strlen(tmp_str));
+
+        /*流速*/
+        lcd_para.y = 60;
+        snprintf(tmp_str, sizeof(tmp_str), "  流速： %7.2f  m/s", g_SysData.Data.Sample.speed);
+        hal_lcd_driver_intface((void *)&lcd_para, (uint8_t *)tmp_str, strlen(tmp_str));
+
+        /*静压*/
+        lcd_para.y = 100;
+        snprintf(tmp_str, sizeof(tmp_str), "  静压： %7.2f  Pa", g_SysData.Data.Sample.sticPress);
+        hal_lcd_driver_intface((void *)&lcd_para, (uint8_t *)tmp_str, strlen(tmp_str));
+        
+        /*动压*/
+        lcd_para.y = 140;
+        snprintf(tmp_str, sizeof(tmp_str), "  动压： %7.2f  Pa", g_SysData.Data.Sample.dynPress);
+        hal_lcd_driver_intface((void *)&lcd_para, (uint8_t *)tmp_str, strlen(tmp_str));
+    }
+}
+
 void main_wind_right(void *para)
 {
-	if (cur_main_pagenum == 1) cur_main_pagenum = 2;
-    else if (cur_main_pagenum == 2) cur_main_pagenum = 1;
+//	if (cur_main_pagenum == 1) cur_main_pagenum = 2;
+//    else if (cur_main_pagenum == 2) cur_main_pagenum = 1;
     
 	ui_cur_state = MAIN_WIND;
 }

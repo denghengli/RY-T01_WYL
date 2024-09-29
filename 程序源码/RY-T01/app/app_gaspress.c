@@ -243,9 +243,32 @@ static void PiTG_Dir(void)
 ********************************************************************************************************/
 void FlueGasPress_Measure(void)
 {
-	FlueGasDynPress_Measure();
-	FlueGasSticPress_Measure();
-	PiTG_Dir();
+    static uint32_t exitBlowDelay = 0;
+    int delayTime = 0;
+    
+    //采集传感器数据
+    FlueGasDynPress_Measure();
+    FlueGasSticPress_Measure();
+    
+    //计算压力值
+    if (g_SysData.Data.Para.smoothTime > 20) //反吹固定20s
+        delayTime = g_SysData.Data.Para.smoothTime + 5;
+    else
+        delayTime = 5;
+    if (g_SysData.Data.Sample.sysSta == eSYSSTA_PITG_BLOW || g_SysData.Data.Sample.sysSta == eSYSSTA_HUMIT_BLOW)
+    {
+        exitBlowDelay = delayTime; //退出反吹后延时5s才开始显示数据
+    }
+    else
+    {
+        if (exitBlowDelay) exitBlowDelay--;
+        if (!exitBlowDelay)
+        {
+            PiTG_Dir();
+        }
+    }
+                
+    //校准
 	FlueGasPress_AutoAdj();
     
     SampleData_ToModbus();
@@ -302,7 +325,6 @@ static void timing_adj_proc(void)
 void APP_FlueGasP(void  * argument)
 {
     TickType_t sMaxBlockTime = pdMS_TO_TICKS(1000);
-    uint32_t exitBlowDelay = 0;
     
     //定时自动校零定时器
     timg_adj_timer = creat_soft_timer();
@@ -311,21 +333,10 @@ void APP_FlueGasP(void  * argument)
 	
 	while(1)
 	{
-	    if (g_SysData.Data.Sample.sysSta == eSYSSTA_MEASU)
-		{
-            if (exitBlowDelay) exitBlowDelay--;
-            if (!exitBlowDelay)
-            {
-                FlueGasPress_Measure();       
-                timing_adj_proc();
-                
-                LOG_PRINT(DEBUG_TASK,"APP_FlueGasP \r\n");
-            }
-		}
-        else 
-        {
-            exitBlowDelay = 3; //退出反吹后延时3s才开始显示数据
-        }
+        FlueGasPress_Measure();       
+        timing_adj_proc();
+        
+        LOG_PRINT(DEBUG_TASK,"APP_FlueGasP \r\n");
         
         vTaskDelay(sMaxBlockTime);
 	}
