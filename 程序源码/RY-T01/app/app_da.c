@@ -15,6 +15,23 @@ static void DAC_Output(void)
     /* 根据电路DAC输出1V对应10mA输出可知，要输出4-20mA，DAC输出范围为0.4-2V */
     if (g_SysData.Data.Sample.sysSta == eSYSSTA_MEASU)
     {
+#if DZ_VERSION
+        /* 温度 0-300℃,分辨率为 0.032mA/1℃*/
+        temp = g_SysData.Data.Sample.ptTem / 300.0 * 16 + 4;
+        temp = temp + g_SysData.Data.Para.temAOOffset;
+        temp = (temp * g_SysData.Data.Para.temAOK) / 10.0;
+        if (temp <= 0.4) Vt_Old = Vt = 0.4;
+        else if (temp >= 2) Vt_Old = Vt = 2;
+        else Vt_Old = Vt = temp;
+        
+        /* 压力（静压）-2.5KPa - +2.5KPa,分辨率为 0.0016mA/1Pa*/
+        temp = (g_SysData.Data.Sample.sticPress + 2500) / 5000.0 * 16 + 4;
+        temp = temp + g_SysData.Data.Para.pressAOOffset;
+        temp = (temp * g_SysData.Data.Para.pressAOK) / 10.0;
+        if (temp <= 0.4) Vps_Old = Vps = 0.4;
+        else if (temp >= 2) Vps_Old = Vps = 2;
+        else Vps_Old = Vps = temp;
+#else
         /* 温度 0-500℃,分辨率为 0.032mA/1℃*/
         temp = g_SysData.Data.Sample.ptTem / 500.0 * 16 + 4;
         temp = temp + g_SysData.Data.Para.temAOOffset;
@@ -23,14 +40,6 @@ static void DAC_Output(void)
         else if (temp >= 2) Vt_Old = Vt = 2;
         else Vt_Old = Vt = temp;
         
-        /* 流速 0-40m/s, 分辨率为 0.4mA/1m/s*/
-        temp = g_SysData.Data.Sample.speed / 40.0 * 16 + 4;
-        temp = temp + g_SysData.Data.Para.speedAOOffset;
-        temp = (temp * g_SysData.Data.Para.speedAOK) / 10.0;
-        if (temp <= 0.4) Vs_Old = Vs = 0.4;
-        else if (temp >= 2) Vs_Old = Vs = 2;
-        else Vs_Old = Vs = temp;
-        
         /* 压力（静压）-5KPa - +5KPa,分辨率为 0.0016mA/1Pa*/
         temp = (g_SysData.Data.Sample.sticPress + 5000) / 10000.0 * 16 + 4;
         temp = temp + g_SysData.Data.Para.pressAOOffset;
@@ -38,6 +47,15 @@ static void DAC_Output(void)
         if (temp <= 0.4) Vps_Old = Vps = 0.4;
         else if (temp >= 2) Vps_Old = Vps = 2;
         else Vps_Old = Vps = temp;
+#endif
+        
+        /* 流速 0-40m/s, 分辨率为 0.4mA/1m/s*/
+        temp = g_SysData.Data.Sample.speed / 40.0 * 16 + 4;
+        temp = temp + g_SysData.Data.Para.speedAOOffset;
+        temp = (temp * g_SysData.Data.Para.speedAOK) / 10.0;
+        if (temp <= 0.4) Vs_Old = Vs = 0.4;
+        else if (temp >= 2) Vs_Old = Vs = 2;
+        else Vs_Old = Vs = temp;
         
         /* 湿度 0-40%V,分辨率为 0.4mA/1%V*/
         temp = g_SysData.Data.Sample.abshumit / 40.0 * 16 + 4;

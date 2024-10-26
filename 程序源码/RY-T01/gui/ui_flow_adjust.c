@@ -117,11 +117,11 @@ void flow_adjust_ing(void *para)
             adjust_time_s++;
         }
     }
-    snprintf(tmp_str, sizeof(tmp_str), "计时：%02d/20s", adjust_time_s);
+    snprintf(tmp_str, sizeof(tmp_str), "计时：%02d/60s", adjust_time_s);
     hal_lcd_driver_intface((void *)&lcd_para, (uint8_t *)tmp_str, strlen(tmp_str));
     
     //校准完成
-    if (adjust_time_s == 20)
+    if (adjust_time_s == 60)
     {
         adjust_success_flag = 1; //校准成功
         g_SysData.Data.Para.speedCalibZeroFlg = 2; //校准完成
