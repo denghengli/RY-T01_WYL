@@ -62,8 +62,8 @@ __packed typedef struct
     float flow;         //流量(m³/s)
     float ptTem;        //环境温度
     float ptHeatTem;    //伴热温度
-    float abshumit;     //绝对湿度(%RH)
-    float relhumit;     //相对湿度(%V)
+    float abshumit;     //绝对湿度(%V)
+    float relhumit;     //相对湿度(%RH)
 }SAMPLE_DATA_T;
 
 /*掉电存储的参数，当有不是4字节时一定要强制单字节对齐*/

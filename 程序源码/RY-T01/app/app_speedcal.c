@@ -85,8 +85,17 @@ void FlueGasSpeedCal_Proc(void)
     }
     fSpeedavg = sum / (float)AvgCnt;/*计算环形buf中数据均值*/
     
+#if !DZ_VERSION
+    float temp = 0;
     fSpeedavg = fSpeedavg * fAssistFactor;//乘以辅助系数
     fFlow = fSpeedavg * g_SysData.Data.Para.sectionArea;
+    temp = (273.0 / (273 + g_SysData.Data.Sample.ptTem)) * 
+           ((101325 + g_SysData.Data.Sample.sticPress) / 101325.0) * (1 - g_SysData.Data.Sample.relhumit / 100.0);
+    fFlow = fFlow * temp;
+#else
+    fSpeedavg = fSpeedavg * fAssistFactor;//乘以辅助系数
+    fFlow = fSpeedavg * g_SysData.Data.Para.sectionArea;
+#endif
     
     /* 把测量数据存入全局变量中 */
     FloatLimit(&fDynPress, FLOAT_DECNUM);
